@@ -12,5 +12,8 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return response()->json(['message' => 'complaints available']);
 });
+
+//api routes
+Route::get('api/v1/complaints','ComplaintController@GetComplaints');

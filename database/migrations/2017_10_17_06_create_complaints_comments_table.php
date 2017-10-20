@@ -18,6 +18,7 @@ class CreateComplaintsCommentsTable extends Migration
             $table->integer('complaint_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->text('comment');
+            $table->timestamps();
 
             $table->foreign('complaint_id')->references('id')->on('complaints');
             $table->foreign('user_id')->references('id')->on('users');
