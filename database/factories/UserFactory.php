@@ -30,8 +30,8 @@ $factory->define(User::class, function (Faker $faker) {
         'room_no' => $faker->randomDigit,
         'auth_user_id' => $faker->randomElement($authorizationLevelIDs->toArray()),
         'hostel_id' => $faker->randomElement($hostelIDs->toArray()),
-        'phone_contact' => $faker->unique()->randomNumber(7),
-        'whatsapp_contact' => $faker->unique()->randomNumber(7),
+        'phone_contact' => $faker->regexify('[0-9]{10}'),
+        'whatsapp_contact' => $faker->regexify('[0-9]{10}'),
         'email' => $faker->unique()->safeEmail,
         'fcm_id' => str_random(10),
     ];

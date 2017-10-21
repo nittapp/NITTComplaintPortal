@@ -20,8 +20,8 @@ class CreateUsersTable extends Migration
             $table->integer('room_no');
             $table->integer('auth_user_id')->unsigned();
             $table->integer('hostel_id')->unsigned();
-            $table->integer('phone_contact')->unique();
-            $table->integer('whatsapp_contact')->unique();
+            $table->string('phone_contact',10)->unique();
+            $table->string('whatsapp_contact',10)->unique();
             $table->string('email')->unique();
             $table->string('fcm_id');
             $table->timestamps();

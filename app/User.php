@@ -11,22 +11,43 @@ class User extends Authenticatable
 
     protected $table = "users";
 
+    /**
+     * each User belongs to one hostel
+     * @return App::Hostel
+     */
     public function hostel(){
         return $this->belongsTo('App\Hostel');
     }
 
+    /**
+     * Each User has a alloted Authorization level which allows - edit, create and delete access
+     * to complaints
+     * @return App::AuthorizationLevel
+     */
     public function authorizationLevel(){
         return $this->belongsTo('App\AuthorizationLevel');
     }
 
+    /**
+     * Every User can register multiple complaints
+     * @return [collection] App::Complaint
+     */
     public function complaints(){
     	return $this->hasMany('App\Complaints');
     }
 
+    /**
+     * Each User can have multiple Comments on his/her own complaints
+     * @return [collection] App::ComplaintComment
+     */
     public function complaintComments(){
     	return $this->hasMany('App\ComplaintComment');
     }
 
+    /**
+     * Each User can have multiple replies on his/her own complaints
+     * @return [collection] App::ComplaintReply
+     */
     public function complaintReplies(){
     	return $this->hasMany('App\ComplaintReply');
     }

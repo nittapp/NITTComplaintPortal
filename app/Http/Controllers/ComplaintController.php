@@ -10,12 +10,13 @@ use App\AuthorizationLevel;
 
 class ComplaintController extends Controller
 {
-   public function GetComplaints(Request $request){
+   public function getComplaints(Request $request){
 	$complaintIDs = Complaint::pluck('id');
 	$complaintID = array_rand($complaintIDs->toArray(), 1);
 	//return $complaintID;
-	$userID = ((Complaint::find($complaintID))->user)->id;
-   	return $userID;
+	$user = ((Complaint::find($complaintID))->user);
+   	//return $userID;
+   	return response()->json($user,200);
    }
 
 
