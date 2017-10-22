@@ -51,4 +51,12 @@ class User extends Authenticatable
     public function complaintReplies(){
     	return $this->hasMany('App\ComplaintReply');
     }
+
+    /**
+     *  Retrieves the user_id from the session set. Right now using a dummy value
+     *  @return [int] user_id
+     */
+    static public function getUserID(){
+        return 2;
+    }
 }
