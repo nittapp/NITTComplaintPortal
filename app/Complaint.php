@@ -25,9 +25,8 @@ class Complaint extends Model
     }
 
     /**
-     * By using the params - user_id, start_date(SD) and end_date(ED), the complaints are retieved by the
-     * available combinations of parameters like SD is given and ED is not / SD and ED are both given.
-     * It is supposed to fail if session is not set.
+     * By using the params - userID, startDate and endDate, the complaints are retieved by the
+     * available combinations of parameters of startDate & endDate.
      * @param  userID    
      * @param  startDate 
      * @param  endDate   

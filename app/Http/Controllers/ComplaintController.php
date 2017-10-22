@@ -20,9 +20,9 @@ class ComplaintController extends Controller
    	$userID = User::getUserID();
    	$response = Complaint::getComplaints($userID, $request['start_date'], $request['end_date']);		
    	
-   	if($response['message'] == "User not logged in")
+   	if($response['message'] == "User not logged in") //cannot retieve for user who has not logged in
    		return response()->json($response,403);
-   	if($response['message'] == "Complaint available")
+   	if($response['message'] == "Complaint available") //successful retrieval based on params
    		return response()->json($response,200);
    	
    }
