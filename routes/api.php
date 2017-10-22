@@ -18,5 +18,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/v1/complaints','ComplaintController@GetComplaints');
-Route::delete('/v1/complaints','ComplaintController@deleteComplaints')
+Route::get('/v1/complaints','ComplaintController@getComplaints');
+Route::delete('/v1/complaints','ComplaintController@deleteComplaints');

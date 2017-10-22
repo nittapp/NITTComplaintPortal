@@ -46,7 +46,7 @@ class Complaint extends Model
             $complaints = $complaints->where('created_at','<=',$endDate);
 
 
-        $response['message'] = "Complaint available";
+        $response['message'] = "Complaints available";
         $response['data'] = $complaints;
         return $response; 
     }
