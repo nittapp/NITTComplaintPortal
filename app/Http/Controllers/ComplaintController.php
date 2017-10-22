@@ -22,7 +22,7 @@ class ComplaintController extends Controller
    	
    	if($response['message'] == "User not logged in") //cannot retieve for user who has not logged in
    		return response()->json($response,403);
-   	if($response['message'] == "Complaint available") //successful retrieval based on params
+   	if($response['message'] == "Complaints available") //successful retrieval based on params
    		return response()->json($response,200);
    	
    }
