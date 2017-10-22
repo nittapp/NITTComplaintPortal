@@ -17,4 +17,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/v1/complaint','ComplaintController@GetComplaint');
+Route::get('/v1/complaints','ComplaintController@GetComplaint');

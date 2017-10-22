@@ -33,32 +33,22 @@ class Complaint extends Model
      * @param  endDate   
      * @return [array] response 
      */
-    static public function getComplaint($userID, $startDate, $endDate){
+    static public function getComplaints($userID, $startDate, $endDate){
         $response = [];
         if(!isset($userID)){
-            $response['message'] = "User not logged in, please login";
+            $response['message'] = "User not logged in";
             return $response;
         }
-        if(isset($startDate) || isset($endDate)){
 
-            if(!isset($endDate))
-                $complaint = Complaint::where('user_id',$userID)->where('created_at','>=',$startDate)->get();
-            else if(!isset($startDate))
-                $complaint = Complaint::where('user_id',$userID)->where('created_at','<=',$endDate)->get();
-            else
-                $complaint = Complaint::where('user_id',$userID)->where('created_at','>=',$startDate)
-                                                                ->where('created_at','<=',$endDate)
-                                                                ->get();
+        $complaints = Complaint::where('user_id',$userID)->get();
+        if(isset($startDate))
+            $complaints = $complaints->where('created_at','>=',$startDate);
+        if(isset($endDate))
+            $complaints = $complaints->where('created_at','<=',$endDate);
 
-            $response['message'] = "Complaints found the user with the given dates";
-            $response['data'] = $complaint;
-            return $response;                                             
-        }
 
-        $complaint = Complaint::where('user_id',$userID)->get();
-
-        $response['message'] = "All Complaints registered by the user";
-        $response['data'] = $complaint;
+        $response['message'] = "Complaint available";
+        $response['data'] = $complaints;
         return $response; 
     }
 }
