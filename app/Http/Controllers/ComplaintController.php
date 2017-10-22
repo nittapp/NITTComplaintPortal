@@ -17,14 +17,21 @@ class ComplaintController extends Controller
     * @return [collection of complaints] 
     */
    public function getComplaints(Request $request){
+   	
    	$userID = User::getUserID();
-   	$response = Complaint::getComplaints($userID, $request['start_date'], $request['end_date']);		
    	
-   	if($response['message'] == "User not logged in") //cannot retieve for user who has not logged in
-   		return response()->json($response,403);
-   	if($response['message'] == "Complaints available") //successful retrieval based on params
-   		return response()->json($response,200);
-   	
+   	if($userID){
+   		$response = Complaint::getComplaints($userID, $request['start_date'], $request['end_date']);		
+   		return response()->json([
+   			   					"message" => "complaints available",
+   			   					"data" => $response,
+   			   					], 200); 	
+   	}
+
+   	return response()->json([
+   							 "message" => "user not logged in",
+   							 "data" => "unavailable"
+   							], 403);
    }
 
 

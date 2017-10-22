@@ -33,21 +33,14 @@ class Complaint extends Model
      * @return [array] response 
      */
     static public function getComplaints($userID, $startDate, $endDate){
-        $response = [];
-        if(!isset($userID)){
-            $response['message'] = "User not logged in";
-            return $response;
-        }
-
-        $complaints = Complaint::where('user_id',$userID)->get();
+        $complaints = Complaint::select('id','title','description','image_url','created_at')
+                               ->where('user_id',$userID)
+                               ->get();                
         if(isset($startDate))
             $complaints = $complaints->where('created_at','>=',$startDate);
         if(isset($endDate))
             $complaints = $complaints->where('created_at','<=',$endDate);
 
-
-        $response['message'] = "Complaints available";
-        $response['data'] = $complaints;
-        return $response; 
+        return $complaints->values()->all(); 
     }
 }
