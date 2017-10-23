@@ -13,7 +13,7 @@ class Complaint extends Model
      * @return App::ComplaintStatus 
      */
     public function complaintStatus(){
-    	return $this->belongsTo('App\ComplaintStatus');
+        return $this->belongsTo('App\ComplaintStatus');
     }
 
     /**
@@ -21,7 +21,7 @@ class Complaint extends Model
      * @return App::User
      */
     public function user(){
-    	return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User');
     }
 
     /**
@@ -35,7 +35,7 @@ class Complaint extends Model
     static public function getComplaints($userID, $startDate, $endDate){
         $complaints = Complaint::select('id','title','description','image_url','created_at')
                                ->where('user_id',$userID)
-                               ->get();                
+                               ->get();
         if(isset($startDate))
             $complaints = $complaints->where('created_at','>=',$startDate);
         if(isset($endDate))

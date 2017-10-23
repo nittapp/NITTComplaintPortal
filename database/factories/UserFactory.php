@@ -19,7 +19,6 @@ use Faker\Generator as Faker;
 */
 
 $factory->define(User::class, function (Faker $faker) {
-    static $password;
     
     $hostelIDs = Hostel::pluck('id');
     $authorizationLevelIDs = AuthorizationLevel::pluck('id');
