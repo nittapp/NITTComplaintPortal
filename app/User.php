@@ -59,4 +59,8 @@ class User extends Authenticatable
     static public function getUserID(){
         return 2;
     }
+
+    static public function isUserAdmin(){
+        return true;
+    }
 }
