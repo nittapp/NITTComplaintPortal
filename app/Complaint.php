@@ -13,7 +13,7 @@ class Complaint extends Model
      * @return App::ComplaintStatus 
      */
     public function complaintStatus(){
-        return $this->belongsTo('App\ComplaintStatus');
+    	return $this->belongsTo('App\ComplaintStatus','status_id');
     }
 
     /**
@@ -30,9 +30,9 @@ class Complaint extends Model
      * @param  userID    
      * @param  startDate 
      * @param  endDate   
-     * @return [array] response 
+     * @return [array] complaints
      */
-    static public function getComplaints($userID, $startDate, $endDate){
+    static public function getUserComplaints($userID, $startDate, $endDate, $hostel){
         $complaints = Complaint::select('id','title','description','image_url','created_at')
                                ->where('user_id',$userID)
                                ->get();
@@ -42,5 +42,46 @@ class Complaint extends Model
             $complaints = $complaints->where('created_at','<=',$endDate);
 
         return $complaints->values()->all(); 
+    }
+
+
+     /**
+     * This is for the admin GET route. 
+     * By using the complaint->user, complaint->status, user->hostel relationships, 
+     * the data for the admin's complaint-feed is retrieved.   
+     * @param  startDate 
+     * @param  endDate
+     * @param  hostel
+     * @param  status   
+     * @return [array] response 
+     */
+    static public function getAllComplaints($startDate, $endDate, $hostel, $status){
+        $complaints = Complaint::select('id','user_id','title','description',
+                                        'status_id','image_url','created_at')
+                               ->get();
+
+        foreach ($complaints as $complaint) {
+            $complaint->status = $complaint->complaintStatus()->select('name','message')->first();
+            $complaint->user = $complaint->user()->select('username','name','room_no','hostel_id',
+                                                          'phone_contact','whatsapp_contact','email')
+                                                 ->first();
+
+            $complaint->user->hostel = $complaint->user->hostel()->value('name');
+        }
+
+        if(isset($startDate))
+            $complaints = $complaints->where('created_at','>=',$startDate);
+        if(isset($endDate))
+            $complaints = $complaints->where('created_at','<=',$endDate);
+        if(isset($status))
+            $complaints = $complaints->filter(function($complaint) use($status){
+                return $complaint->status->name == $status;
+            });
+        if(isset($hostel))
+            $complaints = $complaints->filter(function($complaint) use($hostel){
+                return $complaint->user->hostel == $hostel;
+            });
+        
+        return $complaints->values()->all();
     }
 }
