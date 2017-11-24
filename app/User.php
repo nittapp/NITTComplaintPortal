@@ -33,7 +33,7 @@ class User extends Authenticatable
      * @return [collection] App::Complaint
      */
     public function complaints(){
-    	return $this->hasMany('App\Complaints');
+        return $this->hasMany('App\Complaints');
     }
 
     /**
@@ -41,7 +41,7 @@ class User extends Authenticatable
      * @return [collection] App::ComplaintComment
      */
     public function complaintComments(){
-    	return $this->hasMany('App\ComplaintComment');
+        return $this->hasMany('App\ComplaintComment');
     }
 
     /**
@@ -49,7 +49,7 @@ class User extends Authenticatable
      * @return [collection] App::ComplaintReply
      */
     public function complaintReplies(){
-    	return $this->hasMany('App\ComplaintReply');
+        return $this->hasMany('App\ComplaintReply');
     }
 
     /**

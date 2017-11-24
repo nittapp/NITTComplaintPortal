@@ -13,6 +13,6 @@ class Hostel extends Model
      * @return [collection] App::User
      */
     public function users(){
-    	return $this->hasMany('App\User');
+        return $this->hasMany('App\User');
     }
 }

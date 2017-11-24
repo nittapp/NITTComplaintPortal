@@ -13,6 +13,6 @@ class AuthorizationLevel extends Model
      * @return [collection] App::User
      */
     public function users(){
-    	return $this->hasMany('App\Users');
+        return $this->hasMany('App\Users');
     }
 }

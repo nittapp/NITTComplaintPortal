@@ -19,7 +19,7 @@ class ComplaintTest extends TestCase
         $startDate = NULL;
         $endDate = NULL;
 
-        $complaints = Complaint::getComplaints($userID, $startDate, $endDate);
+        $complaints = Complaint::getUserComplaints($userID, $startDate, $endDate);
 
         foreach ($complaints as $complaint) {
             $this->assertArrayHasKey('id', $complaint);
@@ -39,7 +39,7 @@ class ComplaintTest extends TestCase
         $startDate = '2017-10-11 00:00:00';
         $endDate = NULL;
 
-        $complaints = Complaint::getComplaints($userID, $startDate, $endDate);
+        $complaints = Complaint::getUserComplaints($userID, $startDate, $endDate);
 
         foreach ($complaints as $complaint) {
             $this->assertArrayHasKey('id', $complaint);
@@ -60,7 +60,7 @@ class ComplaintTest extends TestCase
         $startDate = '2017-10-13 00:00:00';
         $endDate = '2017-10-17 00:00:00';
 
-        $complaints = Complaint::getComplaints($userID, $startDate, $endDate);
+        $complaints = Complaint::getUserComplaints($userID, $startDate, $endDate);
 
         foreach ($complaints as $complaint) {
             $this->assertArrayHasKey('id', $complaint);
