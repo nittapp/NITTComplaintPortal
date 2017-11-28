@@ -18,6 +18,7 @@ class User extends Authenticatable
     public function hostel(){
         return $this->belongsTo('App\Hostel');
     }
+ 
 
     /**
      * Each User has a alloted Authorization level which allows - edit, create and delete access

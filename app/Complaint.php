@@ -15,6 +15,13 @@ class Complaint extends Model
     public function complaintStatus(){
     	return $this->belongsTo('App\ComplaintStatus','status_id');
     }
+    /**
+     * each Complaint will have a timestamp of creation 
+     * @return timestamp
+     */
+    public function timeCreated(){
+        return time();
+    }
 
     /**
      * Each Complaints are made by a User
@@ -43,6 +50,8 @@ class Complaint extends Model
 
         return $complaints->values()->all(); 
     }
+
+
 
 
      /**
@@ -84,4 +93,30 @@ class Complaint extends Model
         
         return $complaints->values()->all();
     }
+    /*
+     * This is for the user POST route. 
+     * By using the complaint description, hostel name, user ID,  
+     * a new instance of the table is created
+     * @param title
+     * @param  description
+     * @param  image_url
+     * @return 1 for sucessfully created and 0 if not
+    */
+    static public function createComplaint($title, $description,$image_url){
+        $startDate = Complaint::timeCreated();
+        $userID = User::getUserID();
+        $hostel = User::hostel();
+        $status_id = 0;
+        if(isset($description)&&isset($title)){
+            Complaint::insert(
+                    [ 'title'=>$title ,'description' => $description],
+                    ['image_url' => $image_url,'created_at' => $startDate],
+                    ['status_id' => $status_id,'user'=> $user]
+                );
+                                -
+
+        }
+    }
+
+
 }

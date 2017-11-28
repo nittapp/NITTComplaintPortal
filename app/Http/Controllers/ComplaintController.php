@@ -8,6 +8,29 @@ use App\User;
 use App\Hostel;
 use App\AuthorizationLevel;
 
+class CreateComplaint extends Controller
+{
+  /*
+   By using the USER ID from the session and the complaint description, the timestamp is 
+   added and the status by default is 
+  */
+
+
+  public function createComplaint(Request $request){
+      $userID = User::getUserID();
+      //start date will be the current time stamp
+      if($userID){
+        $response = Complaint::createComplaints($userID,$request['title'],$request['description'], 
+          $request['image_url']);
+          return response()->json([
+                    "message" => "complaints sucessfully created",
+                    "data" => $response,
+                    ], 200);  
+          }  
+      }
+  }
+}
+
 class ComplaintController extends Controller
 {
     /**
