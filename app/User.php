@@ -9,21 +9,59 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+    protected $table = "users";
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
+     * each User belongs to one hostel
+     * @return App::Hostel
      */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    public function hostel(){
+        return $this->belongsTo('App\Hostel');
+    }
+ 
+
+    /**
+     * Each User has a alloted Authorization level which allows - edit, create and delete access
+     * to complaints
+     * @return App::AuthorizationLevel
+     */
+    public function authorizationLevel(){
+        return $this->belongsTo('App\AuthorizationLevel');
+    }
+
+    /**
+     * Every User can register multiple complaints
+     * @return [collection] App::Complaint
+     */
+    public function complaints(){
+    	return $this->hasMany('App\Complaints');
+    }
+
+    /**
+     * Each User can have multiple Comments on his/her own complaints
+     * @return [collection] App::ComplaintComment
+     */
+    public function complaintComments(){
+    	return $this->hasMany('App\ComplaintComment');
+    }
+
+    /**
+     * Each User can have multiple replies on his/her own complaints
+     * @return [collection] App::ComplaintReply
+     */
+    public function complaintReplies(){
+    	return $this->hasMany('App\ComplaintReply');
+    }
+
+    /**
+     *  Retrieves the user_id from the session set. Right now using a dummy value
+     *  @return [int] user_id
+     */
+    static public function getUserID(){
+        return 2;
+    }
+
+    static public function isUserAdmin(){
+        return true;
+    }
 }
