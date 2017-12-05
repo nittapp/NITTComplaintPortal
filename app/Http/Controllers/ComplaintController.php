@@ -7,6 +7,48 @@ use App\Complaint;
 use App\User;
 use App\Hostel;
 use App\AuthorizationLevel;
+use App\ComplaintComment;
+use App\ComplaintReply;
+use App\ComplaintStatus;
+
+
+class DeleteController extends Controller 
+{
+    /**
+     * By using the ID of complaint given by user, the function deletes the complaint, complaintComment  
+     * and complaintStatus from the Complaint, ComplaintComment and ComplaintStatus tables respectively
+     *@param $id
+     * @return previous state, updated after deletion
+     */
+
+   public function deleteComplaint(Request $request){
+
+    $userID = User::getUserID();
+    $isUserAdmin = User::isUserAdmin();
+    
+   
+    if(! $userID)
+    return response()->json([
+                 "message" => "user not logged in",
+                 "data" => "unavailable"
+                ], 403);   
+ 
+    if(! $isUserAdmin)
+    return response()->json([
+                 "message" => "user not admin",
+                 "data" => "unavailable"
+                ], 403);
+    
+    
+    $response = Complaint::deleteComplaint($userID, $request['id']);
+
+    return response()->json([
+           "message" => "complaint deleted",
+            "data" => $response,
+             ], 200);
+    }
+
+}
 
 class ComplaintController extends Controller
 {
