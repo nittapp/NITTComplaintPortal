@@ -84,4 +84,48 @@ class Complaint extends Model
         
         return $complaints->values()->all();
     }
+
+    /*
+     * This is for the user DELETE route. 
+     * By using the complaint id,  
+     * the instance of the table with given id is deleted
+     * @param id
+     * @param userID
+     * @return 1 for sucessfully created and 0 if not
+    */
+   
+     static public function deleteComplaint($id){
+         
+         if ($id){
+            Complaint::findOrFail($id)->delete();
+            ComplainComment::findOrFail($id)->delete();
+            ComplaintReply::findOrFail($id)->delete();
+            ComplaintStatus::findOrFail($id)->delete();
+
+          }
+
+      } 
+     
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
