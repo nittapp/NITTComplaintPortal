@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
+
+use Exception;
 
 class Complaint extends Model
 {
@@ -32,7 +35,12 @@ class Complaint extends Model
      * @param  endDate   
      * @return [array] complaints
      */
-    static public function getUserComplaints($userID, $startDate, $endDate, $hostel){
+     static public function getUserComplaints($startDate, $endDate, $hostel = NULL){
+ 
+        $userID = User::getUserID();
+        if(! $userID)
+             throw new Exception("user not logged in", 1);  
+
         $complaints = Complaint::select('id','title','description','image_url','created_at')
                                ->where('user_id',$userID)
                                ->get();
@@ -56,7 +64,15 @@ class Complaint extends Model
      * @return [array] response 
      */
     static public function getAllComplaints($startDate, $endDate, $hostel, $status){
-        $complaints = Complaint::select('id','user_id','title','description',
+         
+        $userID = User::getUserID();
+        if(! $userID)
+            throw new Exception("user not logged in", 1);
+             
+        if(! User::isUserAdmin())
+            throw new Exception("user not admin", 2);
+ 
+         $complaints = Complaint::select('id','user_id','title','description',
                                         'status_id','image_url','created_at')
                                ->get();
 
@@ -95,17 +111,25 @@ class Complaint extends Model
     */
    
      static public function deleteComplaint($id){
-         
-         if ($id){
-            Complaint::findOrFail($id)->delete();
-            ComplainComment::findOrFail($id)->delete();
-            ComplaintReply::findOrFail($id)->delete();
-            ComplaintStatus::findOrFail($id)->delete();
-
-          }
-
-      } 
+        
+         $userID = User::getUserID();
+         $isUserAdmin = User::isUserAdmin();
+    
+   
+         if(! $userID)
+             throw new Exception("user not logged in", 1);
+             
+         if(! User::isUserAdmin())
+             throw new Exception("user not admin", 2);
      
+         if (! $id)
+              throw new Exception("complaint doesn't exist",3); 
+
+         Complaint::findOrFail($id)->delete();
+         ComplainComment::findOrFail($id)->delete();
+         ComplaintReply::findOrFail($id)->delete();
+         ComplaintStatus::findOrFail($id)->delete();
+     } 
 }
 
 
@@ -128,4 +152,4 @@ class Complaint extends Model
 
 
 
-}
+
