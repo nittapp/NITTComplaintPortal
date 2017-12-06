@@ -11,43 +11,41 @@ use App\ComplaintComment;
 use App\ComplaintReply;
 use App\ComplaintStatus;
 
+use Exception;
 
 class DeleteController extends Controller 
 {
     /**
-     * By using the ID of complaint given by user, the function deletes the complaint, complaintComment  
-     * and complaintStatus from the Complaint, ComplaintComment and ComplaintStatus tables respectively
-     *@param $id
+     * By using the ID of complaint given by user, the function deletes the * complaint, complaintComment and complaintStatus from the Complaint, 
+     * ComplaintComment and ComplaintStatus tables respectively
+     * @param $id
      * @return previous state, updated after deletion
      */
 
    public function deleteComplaint(Request $request){
-
-    $userID = User::getUserID();
-    $isUserAdmin = User::isUserAdmin();
-    
-   
-    if(! $userID)
-    return response()->json([
-                 "message" => "user not logged in",
-                 "data" => "unavailable"
-                ], 403);   
  
-    if(! $isUserAdmin)
-    return response()->json([
-                 "message" => "user not admin",
-                 "data" => "unavailable"
-                ], 403);
-    
-    
-    $response = Complaint::deleteComplaint($userID, $request['id']);
-
-    return response()->json([
-           "message" => "complaint deleted",
-            "data" => $response,
-             ], 200);
-    }
-
+      try{  
+         $response = Complaint::deleteComplaint($userID, $request['id']);
+         return response()->json([
+                                 "message" => "complaint deleted",
+                                 "data" => $response,
+                                 ], 200);
+      } catch (Exception $e) {
+           if ($e->getCode() == 1)
+               return response()->json([
+                                        "message" => $e->getMessage(),
+                                        ], 401);
+           if ($e->getCode() == 2)
+               return response()->json([
+                                        "message" => $e->getMessage(),
+                                        ], 403);   
+      
+           if ($e->getCode() == 3)
+               return response()->json([
+                                        "message" => $e->getMessage(),
+                                        ], 404);  
+      }
+   }
 }
 
 class ComplaintController extends Controller
@@ -58,54 +56,46 @@ class ComplaintController extends Controller
      * @param  Request $request - start_date, end_date
      * @return [collection of complaints]
      */
-
-   public function getUserComplaints(Request $request){
-   	
-   	$userID = User::getUserID();
-   	
-   	if($userID){
-   		$response = Complaint::getUserComplaints($userID, $request['start_date'], $request['end_date']);		
-   		return response()->json([
-   			   					"message" => "complaints available",
-   			   					"data" => $response,
-   			   					], 200); 	
-   	}
-
-    return response()->json([
-    						"message" => "user not logged in",
-    						"data" => "unavailable",
-    						], 403);
-   }
-
-   /**
+    public function getUserComplaints(Request $request) {
+        try {
+            $response = Complaint::getUserComplaints($request['start_date'], $request['end_date']);
+            return response()->json([
+                                    "message" => "complaints available",
+                                    "data" => $response,
+                                    ], 200);
+        }
+        catch (Exception $e){
+            if($e->getCode() == 1)
+                return response()->json([
+                                        "message" => $e->getMessage(),
+                                        ], 401);
+        }
+    }
+    
+    /**
     * By using the session data, the user is checked for logged in and admin.
     * If both are true, then all the complaints are retrieved for the admin for the 
     * sake of populating the admin feed.
     * @param  Request $request 
     * @return [json]           
     */
-   public function getAllComplaints(Request $request){
-
-   	$userID = User::getUserID();
-   	$isUserAdmin = User::isUserAdmin();
-
-   	if(! $userID)
-		return response()->json([
-								 "message" => "user not logged in",
-								 "data" => "unavailable"
-								], 403);   		
-	if(! $isUserAdmin)
-		return response()->json([
-								 "message" => "user not admin",
-								 "data" => "unavailable"
-								], 403);   	
-	$response = Complaint::getAllComplaints($request['start_date'], $request['end_date'],
-										 	$request['hostel'], $request['status']);
-	return response()->json([
-		   					"message" => "complaints available",
-		   					"data" => $response,
-		   					], 200); 	
-   }
-
+    public function getAllComplaints(Request $request) {
+        try {
+            $response = Complaint::getAllComplaints($request['start_date'], $request['end_date'], $request['hostel'], $request['status']);
+            return response()->json([
+                                    "message" => "complaints available",
+                                    "data" => $response,
+                                    ], 200);
+        } catch (Exception $e) {
+            if ($e->getCode() == 1)
+                return response()->json([
+                                        "message" => $e->getMessage(),
+                                        ], 401);
+            if ($e->getCode() == 2)
+                return response()->json([
+                                        "message" => $e->getMessage(),
+                                        ], 403);
+        }
+    }
 
 }
