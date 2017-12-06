@@ -1,5 +1,10 @@
 <?php
 
+
+use App\AuthorizationLevel;
+use App\Hostel;
+use App\User;
+
 use Faker\Generator as Faker;
 
 /*
@@ -13,13 +18,20 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\User::class, function (Faker $faker) {
-    static $password;
+$factory->define(User::class, function (Faker $faker) {
+    
+    $hostelIDs = Hostel::pluck('id');
+    $authorizationLevelIDs = AuthorizationLevel::pluck('id');
 
     return [
+        'username' => str_random(10),
         'name' => $faker->name,
+        'room_no' => $faker->randomDigit,
+        'auth_user_id' => $faker->randomElement($authorizationLevelIDs->toArray()),
+        'hostel_id' => $faker->randomElement($hostelIDs->toArray()),
+        'phone_contact' => $faker->regexify('[0-9]{10}'),
+        'whatsapp_contact' => $faker->regexify('[0-9]{10}'),
         'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10),
+        'fcm_id' => str_random(10),
     ];
 });
