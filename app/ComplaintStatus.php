@@ -13,6 +13,6 @@ class ComplaintStatus extends Model
      * @return [collection] App::Complaint
      */
     public function complaints(){
-    	return $this->hasMany('App\Complaint');
+        return $this->hasMany('App\Complaint');
     }
 }

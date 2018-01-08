@@ -13,7 +13,7 @@ class ComplaintReply extends Model
      * @return App::ComplaintComment
      */
     public function comment(){
-    	return $this->belongsTo('App\ComplaintComment');
+        return $this->belongsTo('App\ComplaintComment');
     }
 
     /**
@@ -21,6 +21,6 @@ class ComplaintReply extends Model
      * @return App::User
      */
     public function user(){
-    	return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User');
     }
 }
