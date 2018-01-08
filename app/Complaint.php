@@ -75,7 +75,8 @@ class Complaint extends Model
             
         $complaints = Complaint::select('id','user_id','title','description',
                                         'status_id','image_url','created_at')
-                               ->get();
+                                ->orderBy('created_at','desc')
+                                ->paginate(5);;
 
         foreach ($complaints as $complaint) {
             $complaint->status = $complaint->complaintStatus()->select('name','message')->first();
