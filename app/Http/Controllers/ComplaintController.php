@@ -57,14 +57,11 @@ class ComplaintController extends Controller
 
          } catch (Exception $e) {
             //For bad arguments
-              if ($e->getCode() == 1)
+              if ( $e->getCode() == 1 )
                 return response()->json([
                                         "message" => $e->getMessage(),
                                         ], 160);
-              if ($e->getCode() == 2)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 160);
+
 
          }
      
