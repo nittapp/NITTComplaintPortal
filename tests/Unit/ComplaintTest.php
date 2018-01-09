@@ -143,8 +143,8 @@ class ComplaintTest extends TestCase
     public function testCreateNewComplaintWithOutOfBoundsTitle(){
        
         $complaints = Complaint::createComplaint(
-              "title" => $faker->sentence($maxNbChars = 200),
-              "description" => $faker->text
+              "title" => $faker->sentence,
+              "description" => $faker->text($maxNbChars = 2000)
             );
 
     }
