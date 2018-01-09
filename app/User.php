@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App;
@@ -57,7 +58,7 @@ class User extends Authenticatable
      *  @return [int] user_id
      */
     static public function getUserID(){
-        return 3;
+        return 2;
     }
 
     static public function isUserAdmin(){
