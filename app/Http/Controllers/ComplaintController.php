@@ -36,6 +36,44 @@ class ComplaintController extends Controller
                                         ], 403);
         }
     }
+    /**
+    * Using the User ID from the session, title, description and image url as input parameters
+    * this function creates a new complaint in the database
+    * @param Request $request - title, description
+    * @return json response 
+    */
+    public function createComplaint(Request $request){
+
+      try{
+
+          if($userID){
+             $response = Complaint::createComplaints(User::getUserID(),$request['title'],$request['description'], 
+             $request['image_url']);
+             return response()->json([
+                     "message" => "complaints sucessfully created",
+                     "data" => $response,
+                     ], 200);  
+            } 
+
+         } catch (Exception $e) {
+            //For bad arguments
+              if ($e->getCode() == 1)
+                return response()->json([
+                                        "message" => $e->getMessage(),
+                                        ], 160);
+              if ($e->getCode() == 2)
+                return response()->json([
+                                        "message" => $e->getMessage(),
+                                        ], 160);
+
+         }
+     
+      }
+  
+
+
+
+
 
     /**
     * By using the session data, the user is checked for logged in and admin.

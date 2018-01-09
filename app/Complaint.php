@@ -102,4 +102,37 @@ class Complaint extends Model
         
         return $complaints->values()->all();
     }
+
+    /**
+     * This is for the user POST route. 
+     * By using the complaint description, hostel name, user ID,  
+     * a new instance of the table is created
+     * @param title
+     * @param  description
+     * @param  image_url
+     * @return 1 for sucessfully created and 0 if not
+    */
+    static public function createComplaint($title, $description,$image_url=null){
+        $userID = User::getUserID();
+        $hostel = User::hostel();
+        $status_id = 0;
+
+        if(!$title)
+            throw new Exception("title not entered",1)
+        if(!$description)
+            throw new Exception("description not entered",2)
+
+
+        if(isset($description)&&isset($title)){
+            Complaint::insert([
+                    'title'=>$title,
+                    'description' => $description,
+                    'image_url' => $image_url,
+                    'status_id' => $status_id,
+                    'user'=> $user
+                ]);
+                                
+        }
+    }
+
 }
