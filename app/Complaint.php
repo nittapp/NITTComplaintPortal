@@ -4,8 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
-
+use App\ComplaintValidator;
 use Exception;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class Complaint extends Model
 {
@@ -116,12 +117,11 @@ class Complaint extends Model
         $hostel = User::hostel();
         $status_id = 0;
 
-        if(!$title)
-            throw new Exception("title not entered",1)
-        if(!$description)
-            throw new Exception("description not entered",2)
-
-
+        $validatedData = ComplaintValidator::validateArguements($title, $description,$image_url);
+        if($validatedData->fails()){
+            throw new Exception($validatedData->$errors->first(),1)
+        }
+     
         if(isset($description)&&isset($title)){
             Complaint::insert([
                     'title'=>$title,
