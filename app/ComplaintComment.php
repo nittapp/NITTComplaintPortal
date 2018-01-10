@@ -78,4 +78,14 @@ class ComplaintComment extends Model
         $complaintComment->comment = $comment;
         $complaintComment->save();
     }
+
+    static public function deleteComplaintComments($complaintCommentID){
+        $complaintComment = ComplaintComment::find($complaintCommentID);
+        if(empty($complaintComment))
+            throw new Exception("Comment not found", 3);
+
+        if($complaintComment->user_id != User::getUserID())
+            throw new Exception("action not allowed", 2);
+        $complaintComment->delete();   
+    }
 }

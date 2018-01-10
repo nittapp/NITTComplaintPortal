@@ -70,4 +70,23 @@ class ComplaintCommentController extends Controller
 	    								],500);	
     	}
     }
+
+    public function deleteComments(Request $request){
+    	try {
+    		$response = ComplaintComment::deleteComplaintComments($request['complaint_comment_id']);
+    		return response()->json([
+    								"message" => "comment deleted successfully"
+    								],200);    		
+    	} 
+    	catch (Exception $e) {
+    		if($e->getCode() == 2)
+	    		return response()->json([
+	    								"message" => $e->getMessage(),
+	    								],403);
+    		if($e->getCode() == 3)	
+	    		return response()->json([
+	    								"message" => $e->getMessage(),
+	    								],500);	    		
+    	}
+    }
 }
