@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Exception;
 
 class ComplaintComment extends Model
 {
@@ -22,5 +23,25 @@ class ComplaintComment extends Model
      */
     public function user(){
         return  $this->belongsTo('App\User');
+    }
+
+    static public function getComplaintComments($complaintID){
+        
+        if(empty(Complaint::find($complaintID)))
+            throw new Exception("Complaint not found", 3);
+
+        if(empty(ComplaintComment::where('complaint_id',$complaintID)->first()))
+            throw new Exception("comments not found", 3);
+            
+        if(Complaint::find($complaintID)->user()->value('id') != User::getUserID() &&
+           ! User::isUserAdmin())
+            throw new Exception("user not allowed", 2);
+
+        $comments = ComplaintComment::where('complaint_id',$complaintID)
+                                    ->orderBy('created_at')
+                                    ->get();
+
+        return $comments->values()->all();
+            
     }
 }

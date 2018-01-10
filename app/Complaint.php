@@ -120,7 +120,7 @@ class Complaint extends Model
 
         $validatedData = ComplaintValidator::validateArguements($title, $description,$image_url);
         if($validatedData->fails()){
-            throw new Exception($validatedData->$errors->first(),1)
+            throw new Exception($validatedData->$errors->first(),1);
         }
      
         if(isset($description)&&isset($title)){
