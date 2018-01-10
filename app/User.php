@@ -57,7 +57,7 @@ class User extends Authenticatable
      *  @return [int] user_id
      */
     static public function getUserID(){
-        return 5;
+        return 1;
     }
 
     static public function isUserAdmin(){

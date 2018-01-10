@@ -14,29 +14,77 @@ class ComplaintReplyController extends Controller
     		return response()->json([
     								"message" => "replies available",
     								"data" => $response
-    								],200);
+    								], 200);
     	}
     	catch (Exception $e) {
     		if($e->getCode() == 2)
 	    		return response()->json([
 	    								"message" => $e->getMessage(),
-	    								],403);
+	    								], 403);
     		if($e->getCode() == 3)	
 	    		return response()->json([
 	    								"message" => $e->getMessage(),
-	    								],500);	    	
+	    								], 500);	    	
     	}
     }
 
-    public function createComments(Request $request){
-
+    public function createReplies(Request $request){
+    	try {
+    		$response = ComplaintReply::createComplaintReplies($request['complaint_comment_id'],
+    														   $request['comment']);
+    		return response()->json([
+    								"message" => "reply created successfully"
+    								], 200);	
+    	} 
+    	catch (Exception $e) {
+    		if($e->getCode() == 2)
+	    		return response()->json([
+	    								"message" => $e->getMessage(),
+	    								], 403);
+    		if($e->getCode() == 3)	
+	    		return response()->json([
+	    								"message" => $e->getMessage(),
+	    								], 500);	    	    		
+    	}
     }
 
-    public function editComments(Request $request){
-
+    public function editReplies(Request $request){
+    	try {
+    		$response = ComplaintReply::editComplaintReplies($request['complaint_reply_id'],
+    														 $request['comment']);
+     		return response()->json([
+    								"message" => "reply updated successfully"
+    								]);	   		
+    	} 
+    	catch (Exception $e) {
+     		if($e->getCode() == 2)
+	    		return response()->json([
+	    								"message" => $e->getMessage(),
+	    								], 403);
+    		if($e->getCode() == 3)	
+	    		return response()->json([
+	    								"message" => $e->getMessage(),
+	    								], 500);	     		
+    	}
     }
 
-    public function deleteComments(Request $request){
+    public function deleteReplies(Request $request){
+    	try {
+    		$response = ComplaintReply::deleteComplaintReplies($request['complaint_reply_id']);
 
+     		return response()->json([
+    								"message" => "reply deleted successfully"
+    								], 200);	 
+    	} 
+    	catch (Exception $e) {
+     		if($e->getCode() == 2)
+	    		return response()->json([
+	    								"message" => $e->getMessage(),
+	    								], 403);
+    		if($e->getCode() == 3)	
+	    		return response()->json([
+	    								"message" => $e->getMessage(),
+	    								], 500);    		
+    	}
     }
 }

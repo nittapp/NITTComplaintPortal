@@ -25,6 +25,11 @@ class ComplaintComment extends Model
         return  $this->belongsTo('App\User');
     }
 
+
+    public function complaintReplies(){
+        return $this->hasMany('App\ComplaintReply','parent_id');
+    }
+
     /**
      * Each complaint has comments which are fetched only with complaintID
      * @param  [int] $complaintID 
