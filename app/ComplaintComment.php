@@ -25,6 +25,11 @@ class ComplaintComment extends Model
         return  $this->belongsTo('App\User');
     }
 
+    /**
+     * Each complaint has comments which are fetched only with complaintID
+     * @param  [int] $complaintID 
+     * @return  [collection] App::ComplaintComment
+     */
     static public function getComplaintComments($complaintID){
         
         if(empty(Complaint::find($complaintID)))
@@ -43,5 +48,21 @@ class ComplaintComment extends Model
 
         return $comments->values()->all();
             
+    }
+
+    static public function createComplaintComments($complaintID, $comment){
+        if(empty(Complaint::find($complaintID)))
+            throw new Exception("Complaint not found", 3);
+
+        if(Complaint::find($complaintID)->user()->value('id') != User::getUserID() &&
+           ! User::isUserAdmin())
+            throw new Exception("user not allowed", 2);
+
+        $complaintCommentModel = new ComplaintComment;
+        $complaintCommentModel->user_id = User::getUserID();
+        $complaintCommentModel->comment = $comment;
+
+        $complaint = Complaint::find($complaintID);
+        $response = $complaint->complaintComments()->save($complaintCommentModel);
     }
 }

@@ -28,6 +28,14 @@ class Complaint extends Model
         return $this->belongsTo('App\User');
     }
 
+        /**
+     * Each Complaints are made by a User
+     * @return App::User
+     */
+    public function complaintComments(){
+        return $this->hasMany('App\ComplaintComment');
+    }
+
     /**
      * By using the params - userID, startDate and endDate, the complaints are retieved by the
      * available combinations of parameters of startDate & endDate.
