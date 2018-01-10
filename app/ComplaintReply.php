@@ -25,6 +25,17 @@ class ComplaintReply extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function valdiateRequest(Request $request){
+        $validator = Validator::make($request->all(), [
+                    'complaint_comment_id' => 'integer|required',
+                    'comment' => 'required',
+                    ]);
+
+        if ($validator->fails())
+            throw new Exception($validator->errors()->first(), 4);
+
+    }
+
     static public function getComplaintReplies($complaintCommentID){
 
        $complaintComment = ComplaintComment::find($complaintCommentID); 
