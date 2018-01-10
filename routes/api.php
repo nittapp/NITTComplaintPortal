@@ -28,4 +28,9 @@ Route::post('/v1/comments','ComplaintCommentController@createComments');
 Route::put('/v1/comments','ComplaintCommentController@editComments');
 Route::delete('/v1/comments','ComplaintCommentController@deleteComments');
 
+Route::get('/v1/replies','ComplaintReplyController@getReplies');
+Route::post('/v1/replies','ComplaintReplyController@createReplies');
+Route::put('/v1/replies','ComplaintReplyController@editReplies');
+Route::delete('/v1/replies','ComplaintReplyController@deleteReplies');
+
 Route::get('/v1/admin/complaints','ComplaintController@getAllComplaints');
