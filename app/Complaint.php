@@ -16,7 +16,7 @@ class Complaint extends Model
      * @return App::ComplaintStatus 
      */
     public function complaintStatus(){
-    	return $this->belongsTo('App\ComplaintStatus','status_id');
+        return $this->belongsTo('App\ComplaintStatus','status_id');
     }
 
     /**
@@ -35,22 +35,21 @@ class Complaint extends Model
      * @param  endDate   
      * @return [array] complaints
      */
-    static public function getUserComplaints($startDate, $endDate, $hostel = NULL){
-
+     static public function getUserComplaints($startDate, $endDate, $hostel = NULL){
+ 
         $userID = User::getUserID();
         if(! $userID)
-            throw new Exception("user not logged in", 1);
-            
+             throw new Exception("user not logged in", 1);  
+
         $complaints = Complaint::select('id','title','description','image_url','created_at')
                                ->where('user_id',$userID)
                                ->get();
-            
         if(isset($startDate))
             $complaints = $complaints->where('created_at','>=',$startDate);
         if(isset($endDate))
             $complaints = $complaints->where('created_at','<=',$endDate);
 
-        return $complaints->values()->all();
+        return $complaints->values()->all(); 
     }
 
 
@@ -65,18 +64,17 @@ class Complaint extends Model
      * @return [array] response 
      */
     static public function getAllComplaints($startDate, $endDate, $hostel, $status){
-
+         
         $userID = User::getUserID();
         if(! $userID)
             throw new Exception("user not logged in", 1);
-            
+             
         if(! User::isUserAdmin())
             throw new Exception("user not admin", 2);
-            
-        $complaints = Complaint::select('id','user_id','title','description',
+ 
+         $complaints = Complaint::select('id','user_id','title','description',
                                         'status_id','image_url','created_at')
-                                ->orderBy('created_at','desc')
-                                ->paginate(5);;
+                               ->get();
 
         foreach ($complaints as $complaint) {
             $complaint->status = $complaint->complaintStatus()->select('name','message')->first();
@@ -102,4 +100,60 @@ class Complaint extends Model
         
         return $complaints->values()->all();
     }
+
+    /**
+     * This is for the user DELETE route. 
+     * By using the complaint id,  
+     * the instance of the table with given id is deleted
+     * @param id
+     * @param userID
+     * @return 1 for sucessfully created and 0 if not
+    */
+   
+     static public function deleteComplaint($id){
+        
+         $userID = User::getUserID();
+         $isUserAdmin = User::isUserAdmin();
+     
+         if(! $userID)
+             throw new Exception("user not logged in", 1);
+             
+         if(! $isUserAdmin)
+             throw new Exception("user not admin", 2);
+     
+        if(!Complaint::where('id',$id)->exists())        
+              throw new Exception("complaint doesn't exist",3); 
+        
+         Complaint::where('id',$id)->delete();
+         
+         $idList = ComplaintComment::where('complaint_id',$id)->pluck('id');
+         
+         ComplaintComment::where('complaint_id',$id)->delete();
+
+         foreach($idList as $Id){
+            ComplaintReply::where('parent_id',$Id)->delete();
+         }
+     } 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

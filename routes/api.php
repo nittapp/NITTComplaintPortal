@@ -19,7 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/v1/complaints','ComplaintController@getUserComplaints');
-Route::delete('/v1/complaints','ComplaintController@deleteComplaints');
+Route::delete('/v1/complaints','ComplaintController@deleteComplaint');
 
 
 Route::get('/v1/admin/complaints','ComplaintController@getAllComplaints');
