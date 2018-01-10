@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\ComplaintValidator;
 use Exception;
+use Validator;
+use Illuminate\Http\Request;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class Complaint extends Model
@@ -35,6 +37,20 @@ class Complaint extends Model
     public function complaintComments(){
         return $this->hasMany('App\ComplaintComment');
     }
+
+
+    static public function validateRequest(Request $request){
+        $validator = Validator::make($request->all(), [
+                          'title' => 'required|alpha_num|max:255',
+                          'description' => 'required|alpha_num|max:1023',
+                          'image_url' => 'nullable|active_url'
+                    ]);
+
+        if ($validator->fails())
+            throw new Exception($validator->errors()->first());
+                 
+    }
+
 
     /**
      * By using the params - userID, startDate and endDate, the complaints are retieved by the
@@ -110,6 +126,8 @@ class Complaint extends Model
         return $complaints->values()->all();
     }
 
+
+
     /**
      * This is for the user POST route. 
      * By using the complaint description, hostel name, user ID,  
@@ -119,23 +137,19 @@ class Complaint extends Model
      * @param  image_url
      * @return 1 for sucessfully created and 0 if not
     */
-    static public function createComplaint($title, $description,$image_url=null){
+    static public function createComplaints($title, $description,$image_url=null){
         $userID = User::getUserID();
-        $hostel = User::hostel();
-        $status_id = 0;
+        $hostelID = User::hostel();
+        $statusID = 0;
 
-        $validatedData = ComplaintValidator::validateArguements($title, $description,$image_url);
-        if($validatedData->fails()){
-            throw new Exception($validatedData->$errors->first(),1);
-        }
-     
         if(isset($description)&&isset($title)){
             Complaint::insert([
                     'title'=>$title,
                     'description' => $description,
                     'image_url' => $image_url,
-                    'status_id' => $status_id,
-                    'user'=> $user
+                    'status_id' => $statusID,
+                    'hostel_id' => $hostelID;
+                    'user_id'=> $userID
                 ]);
                                 
         }
