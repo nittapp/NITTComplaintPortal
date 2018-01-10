@@ -23,3 +23,4 @@ This is the API for the NITT complaint portal built with PHP using Laravel frame
 <b>`1`</b> : user not logged in / session not set / session not found <br/>
 <b>`2`</b> : permission not valid <br/>
 <b>`3`</b> : resource not found <br/>
+<b>`4`</b> : bad arguments <br/>
