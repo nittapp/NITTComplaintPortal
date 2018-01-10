@@ -5,6 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Exception;
 
+use Validator;
+use Illuminate\Http\Request;
+
 class ComplaintComment extends Model
 {
     protected $table = "complaints_comments";
@@ -28,6 +31,18 @@ class ComplaintComment extends Model
 
     public function complaintReplies(){
         return $this->hasMany('App\ComplaintReply','parent_id');
+    }
+
+    
+    static public function validateRequest(Request $request){
+        $validator = Validator::make($request->all(), [
+                    'complaint_id' => 'integer|required',
+                    'comment' => 'required',
+                    ]);
+
+        if ($validator->fails())
+            throw new Exception($validator->errors()->first());
+                 
     }
 
     /**

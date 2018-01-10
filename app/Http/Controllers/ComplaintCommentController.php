@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\ComplaintComment;
 
 use Illuminate\Http\Request;
-
 use Exception;
 
 class ComplaintCommentController extends Controller
@@ -31,6 +30,7 @@ class ComplaintCommentController extends Controller
 
     public function createComments(Request $request){
     	try {
+            $response = ComplaintComment::validateRequest($request);
     		$response = ComplaintComment::createComplaintComments($request['complaint_id'],
     															  $request['comment']);
 
@@ -46,12 +46,16 @@ class ComplaintCommentController extends Controller
     		if($e->getCode() == 3)	
 	    		return response()->json([
 	    								"message" => $e->getMessage(),
-	    								],500);	    	
+	    								],500);
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],422);    	
     	}
     }
 
     public function editComments(Request $request){
     	try{
+            $response = ComplaintComment::validateRequest($request);
     		$response = ComplaintComment::editComplaintComments($request['complaint_comment_id'],
     															$request['comment']
     															);
@@ -68,6 +72,9 @@ class ComplaintCommentController extends Controller
 	    		return response()->json([
 	    								"message" => $e->getMessage(),
 	    								],500);	
+             return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],422);            
     	}
     }
 
