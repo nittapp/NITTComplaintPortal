@@ -40,7 +40,7 @@ class ComplaintComment extends Model
             
         if(Complaint::find($complaintID)->user()->value('id') != User::getUserID() &&
            ! User::isUserAdmin())
-            throw new Exception("user not allowed", 2);
+            throw new Exception("action not allowed", 2);
 
         $comments = ComplaintComment::where('complaint_id',$complaintID)
                                     ->orderBy('created_at')
@@ -56,7 +56,7 @@ class ComplaintComment extends Model
 
         if(Complaint::find($complaintID)->user()->value('id') != User::getUserID() &&
            ! User::isUserAdmin())
-            throw new Exception("user not allowed", 2);
+            throw new Exception("action not allowed", 2);
 
         $complaintCommentModel = new ComplaintComment;
         $complaintCommentModel->user_id = User::getUserID();
@@ -64,5 +64,18 @@ class ComplaintComment extends Model
 
         $complaint = Complaint::find($complaintID);
         $response = $complaint->complaintComments()->save($complaintCommentModel);
+    }
+
+    static public function editComplaintComments($complaintCommentID, $comment){
+
+        $complaintComment = ComplaintComment::find($complaintCommentID);
+        if(empty($complaintComment))
+            throw new Exception("Comment not found", 3);
+
+        if($complaintComment->user_id != User::getUserID())
+            throw new Exception("action not allowed", 2);
+         
+        $complaintComment->comment = $comment;
+        $complaintComment->save();
     }
 }

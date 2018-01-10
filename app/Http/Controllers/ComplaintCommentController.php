@@ -49,4 +49,25 @@ class ComplaintCommentController extends Controller
 	    								],500);	    	
     	}
     }
+
+    public function editComments(Request $request){
+    	try{
+    		$response = ComplaintComment::editComplaintComments($request['complaint_comment_id'],
+    															$request['comment']
+    															);
+    		return response()->json([
+    								"message" => "comment updated successfully"
+    								],200);    		
+    	}
+    	catch(Exception $e){
+    		if($e->getCode() == 2)
+	    		return response()->json([
+	    								"message" => $e->getMessage(),
+	    								],403);
+    		if($e->getCode() == 3)	
+	    		return response()->json([
+	    								"message" => $e->getMessage(),
+	    								],500);	
+    	}
+    }
 }
