@@ -47,9 +47,10 @@ class ComplaintCommentController extends Controller
 	    		return response()->json([
 	    								"message" => $e->getMessage(),
 	    								],500);
-            return response()->json([
-                                    "message" => $e->getMessage(),
-                                    ],422);    	
+            if($e->getCode == 4)
+                return response()->json([
+                                        "message" => $e->getMessage(),
+                                        ],422);    	
     	}
     }
 
@@ -72,7 +73,8 @@ class ComplaintCommentController extends Controller
 	    		return response()->json([
 	    								"message" => $e->getMessage(),
 	    								],500);	
-             return response()->json([
+            if($e->getCode() == 4)  
+                return response()->json([
                                     "message" => $e->getMessage(),
                                     ],422);            
     	}

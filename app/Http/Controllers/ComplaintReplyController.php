@@ -30,6 +30,7 @@ class ComplaintReplyController extends Controller
 
     public function createReplies(Request $request){
     	try {
+            $response = ComplaintReply::validateRequest(Request $request);
     		$response = ComplaintReply::createComplaintReplies($request['complaint_comment_id'],
     														   $request['comment']);
     		return response()->json([
@@ -44,12 +45,17 @@ class ComplaintReplyController extends Controller
     		if($e->getCode() == 3)	
 	    		return response()->json([
 	    								"message" => $e->getMessage(),
-	    								], 500);	    	    		
+	    								], 500);
+            if($e->getCode() == 4)  
+                return response()->json([
+                                        "message" => $e->getMessage(),
+                                        ], 422);                        	    	    		
     	}
     }
 
     public function editReplies(Request $request){
     	try {
+            $response = ComplaintReply::validateRequest(Request $request);
     		$response = ComplaintReply::editComplaintReplies($request['complaint_reply_id'],
     														 $request['comment']);
      		return response()->json([
@@ -64,7 +70,11 @@ class ComplaintReplyController extends Controller
     		if($e->getCode() == 3)	
 	    		return response()->json([
 	    								"message" => $e->getMessage(),
-	    								], 500);	     		
+	    								], 500);
+            if($e->getCode() == 4)  
+                return response()->json([
+                                        "message" => $e->getMessage(),
+                                        ], 422); 	     		
     	}
     }
 
