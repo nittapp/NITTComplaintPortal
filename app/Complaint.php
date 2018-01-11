@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\ComplaintValidator;
-
+use App\ComplaintStatus;
 use App\Exceptions\AppCustomHttpException;
 use Exception;
 use Validator;
@@ -135,6 +135,7 @@ class Complaint extends Model
      * This is for the user POST route. 
      * By using the complaint description, hostel name, user ID,
      * a new instance of the table is created
+     *default status is referred from the ComplaintStatus model
      * @param title
      * @param  description
      * @param  image_url
@@ -142,24 +143,56 @@ class Complaint extends Model
     */
     static public function createComplaints($title, $description,$image_url=null){
         $userID = User::getUserID();
-        $hostelID = User::hostel();
-        $statusID = 0;
 
         $validatedData = Complaint::validateRequest($title, $description,$image_url);
         if($validatedData->fails()){
             throw new AppCustomHttpException($validatedData->$errors->first(), 422);
         }
 
+         
+        $complaintModel = new Complaint;
+        $complaintModel->title = $title; 
+        $complaintModel->description = $description; 
+        $complaintModel->image_url = $image_url; 
+        $complaintModel->status_id = ComplaintStatus::initialStatus();
 
-        if(isset($description)&&isset($title)){
-            Complaint::insert([
-                    'title'=>$title,
-                    'description' => $description,
-                    'image_url' => $image_url,
-                    'status_id' => $statusID,
-                    'hostel_id' => $hostelID;
-                    'user_id'=> $userID
-                ]);
-        }
+        $user = User::find($userID);
+
+        $response = $user->complaints()->save($complaintModel);
+
+
     }
+
+    /**
+    * This is the user PUT route
+    * By using the update id, description,title and image url
+    * we are update the instance of the complaint using the id given
+    * @param id
+    * @param title
+    * @param description
+    * @param image_url
+    * @return 1 for sucessfully created and 0 if not
+    */
+    
+    static public function editComplaints($ComplaintID,$title,$description,$image_url){
+
+        $complaint = Complaint::find($ComplaintID);
+        if(empty($complaint))
+            throw new AppCustomHttpException("Complaint not found",404)
+        
+
+        if($complaint->user_id != User::getUserID() && ! User::isUserAdmin())
+            throw new AppCustomHttpException("Action not allowed",403)
+        
+
+        $complaint->title = $title; 
+        $complaint->description = $description;
+        $complaint->image_url = $image_url;
+        $complaint->save();
+
+    }
+
+
+
+
 }

@@ -21,7 +21,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/v1/complaints','ComplaintController@getUserComplaints');
 Route::delete('/v1/complaints','ComplaintController@deleteComplaints');
+Route::put('/v1/complaints','ComplaintController@editComplaints');
 Route::post('/v1/complaints','ComplaintController@createComplaints');
+
 
 Route::get('/v1/comments/{complaint_id}','ComplaintCommentController@getComments');
 Route::post('/v1/comments','ComplaintCommentController@createComments');
