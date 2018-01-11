@@ -157,13 +157,13 @@ class Complaint extends Model
                     'description' => $description,
                     'image_url' => $image_url,
                     'status_id' => $statusID,
-                    'hostel_id' => $hostelID;
-                    'user_id'=> $userID
+                    'hostel_id' => $hostelID,
+                    'user_id'=> $userID,
                 ]);
         }
     }
 
-    static public function editComplaintStatus($complaintID, $status_id) {
+    static public function editComplaintStatus($complaintID, $statusID) {
         if(! User::isUserAdmin())
             throw new AppCustomHttpException("action not allowed", 403);
 
@@ -172,7 +172,7 @@ class Complaint extends Model
         if(empty($complaint))
             throw new AppCustomHttpException("complaint not found", 404);
          
-        $complaint->status_id = $status_id;
+        $complaint->status_id = $statusID;
         $complaint->save();    
     }
 
