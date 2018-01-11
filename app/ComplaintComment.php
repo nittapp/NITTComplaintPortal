@@ -41,7 +41,7 @@ class ComplaintComment extends Model
                     ]);
 
         if ($validator->fails())
-            throw new Exception($validator->errors()->first(),  4);                 
+            throw new Exception($validator->errors()->first(), 4);                 
     }
 
     /**

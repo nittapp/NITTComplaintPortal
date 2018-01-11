@@ -18,8 +18,6 @@ class ComplaintController extends Controller
      * @param  Request $request - start_date, end_date
      * @return [collection of complaints]
      */
-
-
     public function getUserComplaints(Request $request) {
 
         try {
