@@ -40,25 +40,25 @@ class ComplaintController extends Controller
     * @param Request $request - title, description
     * @return json response 
     */
-    public function createComplaints(Request $request){
+    public function createComplaint(Request $request){
 
       try{
 
-             $response = Complaint::validateRequest($request);
+          if($userID){
              $response = Complaint::createComplaints(User::getUserID(),$request['title'],$request['description'], 
              $request['image_url']);
              return response()->json([
-                     "message" => "complaint sucessfully created",
+                     "message" => "complaints sucessfully created",
                      "data" => $response,
                      ], 200);  
-            
+            } 
 
          } catch (Exception $e) {
             //For bad arguments
-              if ( $e->getCode() == 4 )
+              if ( $e->getCode() == 1 )
                 return response()->json([
                                         "message" => $e->getMessage(),
-                                        ], 422);
+                                        ], 160);
 
 
          }
