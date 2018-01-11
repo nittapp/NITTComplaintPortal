@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Http\Request;
@@ -37,5 +36,6 @@ Route::put('/v1/replies','ComplaintReplyController@editReplies');
 Route::delete('/v1/replies/complaint_reply_id','ComplaintReplyController@deleteReplies');
 
 Route::get('/v1/admin/complaints','ComplaintController@getAllComplaints');
+Route::get('/v1/admin/statuses','ComplaintStatusController@getComplaintStatuses');
 
-Route::put('/v1/complaints/{complaint_id}/status/{status_id}','ComplaintController@editComplaintStatus');
+Route::put('/v1/admin/complaints/status','ComplaintController@editComplaintStatus');

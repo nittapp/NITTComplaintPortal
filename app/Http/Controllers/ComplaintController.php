@@ -51,21 +51,18 @@ class ComplaintController extends Controller
     * @param Request $request - title, description
     * @return json response 
     */
-    public function createComplaints(Request $request){
+    public function createComplaint(Request $request){
 
       try  {
 
            $response = Complaint::validateRequest($request);
            $response = Complaint::createComplaints($request['title'],$request['description'], 
            $request['image_url']);
-
            return response()->json([
-                     "message" => "complaint sucessfully created",
-                     "data" => $response,
-                     ], 200);  
-            
-
-         } 
+                                 "message" => "complaint sucessfully created",
+                                 "data" => $response,
+                                 ], 200);  
+            } 
 
       catch (AppCustomHttpException $e){
 

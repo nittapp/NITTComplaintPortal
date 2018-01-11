@@ -153,7 +153,6 @@ class Complaint extends Model
         $user = User::find($userID);
         $response = $user->complaints()->save($complaintModel);
 
-
     }
 
     /**
@@ -197,7 +196,7 @@ class Complaint extends Model
         if(empty($complaint))
             throw new AppCustomHttpException("complaint not found", 404);
          
-        $complaint->status_id = $status_id;
+        $complaint->status_id = $statusID;
         $complaint->save();    
     }
 
