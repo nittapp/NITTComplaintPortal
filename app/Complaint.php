@@ -139,4 +139,18 @@ class Complaint extends Model
                 ]);
         }
     }
+
+    static public function editComplaintStatus($complaintID, $status_id) {
+        if(! User::isUserAdmin())
+            throw new AppCustomHttpException("action not allowed", 403);
+
+        $complaint = Complaint::find($complaintID);
+        
+        if(empty($complaint))
+            throw new AppCustomHttpException("complaint not found", 404);
+         
+        $complaint->status_id = $status_id;
+        $complaint->save();    
+    }
+
 }

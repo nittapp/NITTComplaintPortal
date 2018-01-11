@@ -99,4 +99,24 @@ class ComplaintController extends Controller
 
     }
 
+    public function editComplaintStatus(Request $request){
+        try{
+            $response = Complaint::editComplaintStatus($request['complaint_id'], $request['status']);
+            return response()->json([
+                                    "message" => "status updated successfully",
+                                    "data" => $response,
+                                    ], 200);            
+        }
+        catch (AppCustomHttpException $e){
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],$e->getCode());
+        }
+        catch (Exception $e) {
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],500);
+        }
+    }
+
 }
