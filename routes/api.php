@@ -23,14 +23,14 @@ Route::get('/v1/complaints','ComplaintController@getUserComplaints');
 Route::delete('/v1/complaints','ComplaintController@deleteComplaints');
 Route::post('/v1/complaints','ComplaintController@createComplaints');
 
-Route::get('/v1/comments','ComplaintCommentController@getComments');
+Route::get('/v1/comments/{complaint_id}','ComplaintCommentController@getComments');
 Route::post('/v1/comments','ComplaintCommentController@createComments');
 Route::put('/v1/comments','ComplaintCommentController@editComments');
-Route::delete('/v1/comments','ComplaintCommentController@deleteComments');
+Route::delete('/v1/comments/{complaint_comment_id}','ComplaintCommentController@deleteComments');
 
-Route::get('/v1/replies','ComplaintReplyController@getReplies');
+Route::get('/v1/replies/complaint_comment_id','ComplaintReplyController@getReplies');
 Route::post('/v1/replies','ComplaintReplyController@createReplies');
 Route::put('/v1/replies','ComplaintReplyController@editReplies');
-Route::delete('/v1/replies','ComplaintReplyController@deleteReplies');
+Route::delete('/v1/replies/complaint_reply_id','ComplaintReplyController@deleteReplies');
 
 Route::get('/v1/admin/complaints','ComplaintController@getAllComplaints');
