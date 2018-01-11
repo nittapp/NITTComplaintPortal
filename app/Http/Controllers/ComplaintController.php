@@ -56,7 +56,7 @@ class ComplaintController extends Controller
       try  {
 
            $response = Complaint::validateRequest($request);
-           $response = Complaint::createComplaints(User::getUserID(),$request['title'],$request['description'], 
+           $response = Complaint::createComplaints($request['title'],$request['description'], 
            $request['image_url']);
 
            return response()->json([
@@ -76,7 +76,7 @@ class ComplaintController extends Controller
       catch (Exception $e){
             
             return response()->json([
-                                    "message" => "Internal server error",
+                                    "message" => $e->getMessage(),
                                     ], 500);
         }
      

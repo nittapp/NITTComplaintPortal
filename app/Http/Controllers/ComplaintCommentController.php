@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 use App\ComplaintComment;
-
 use Illuminate\Http\Request;
 use Exception;
 use App\Exceptions\AppCustomHttpException;
@@ -91,4 +90,5 @@ class ComplaintCommentController extends Controller
                                     ],500);
         }
     }
+
 }

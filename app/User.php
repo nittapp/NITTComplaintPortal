@@ -33,7 +33,7 @@ class User extends Authenticatable
      * @return [collection] App::Complaint
      */
     public function complaints(){
-        return $this->hasMany('App\Complaints');
+        return $this->hasMany('App\Complaint');
     }
 
     /**

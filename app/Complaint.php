@@ -50,7 +50,7 @@ class Complaint extends Model
                     ]);
 
         if ($validator->fails())
-            throw new Exception($validator->errors()->first());
+            throw new AppCustomHttpException($validator->errors()->first(), 422);
                  
     }
 
@@ -143,12 +143,6 @@ class Complaint extends Model
     */
     static public function createComplaints($title, $description,$image_url=null){
         $userID = User::getUserID();
-
-        $validatedData = Complaint::validateRequest($title, $description,$image_url);
-        if($validatedData->fails()){
-            throw new AppCustomHttpException($validatedData->$errors->first(), 422);
-        }
-
          
         $complaintModel = new Complaint;
         $complaintModel->title = $title; 
@@ -157,7 +151,6 @@ class Complaint extends Model
         $complaintModel->status_id = ComplaintStatus::initialStatus();
 
         $user = User::find($userID);
-
         $response = $user->complaints()->save($complaintModel);
 
 
@@ -178,11 +171,11 @@ class Complaint extends Model
 
         $complaint = Complaint::find($ComplaintID);
         if(empty($complaint))
-            throw new AppCustomHttpException("Complaint not found",404)
+            throw new AppCustomHttpException("Complaint not found",404);
         
 
         if($complaint->user_id != User::getUserID() && ! User::isUserAdmin())
-            throw new AppCustomHttpException("Action not allowed",403)
+            throw new AppCustomHttpException("Action not allowed",403);
         
 
         $complaint->title = $title; 
