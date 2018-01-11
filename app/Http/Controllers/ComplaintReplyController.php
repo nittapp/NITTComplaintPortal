@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\ComplaintReply;
 use Illuminate\Http\Request;
+
+use App\Exceptions\AppCustomHttpException;
 use Exception;
 
 class ComplaintReplyController extends Controller
@@ -16,15 +18,11 @@ class ComplaintReplyController extends Controller
                                     "data" => $response
                                     ], 200);
         }
+        catch (AppCustomHttpException $e) {
+            return response()->json(["message" => $e->getMessage()], $e->getCode());
+        }
         catch (Exception $e) {
-            if($e->getCode() == 2)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 403);
-            if($e->getCode() == 3)  
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 500);            
+            return response()->json(["message" => "Internal Server Error"], 500);
         }
     }
 
@@ -37,19 +35,11 @@ class ComplaintReplyController extends Controller
                                     "message" => "reply created successfully"
                                     ], 200);    
         } 
+        catch (AppCustomHttpException $e) {
+            return response()->json(["message" => $e->getMessage()], $e->getCode());
+        }
         catch (Exception $e) {
-            if($e->getCode() == 2)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 403);
-            if($e->getCode() == 3)  
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 500);
-            if($e->getCode() == 4)  
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 422);                                                
+            return response()->json(["message" => "Internal Server Error"], 500);
         }
     }
 
@@ -62,19 +52,11 @@ class ComplaintReplyController extends Controller
                                     "message" => "reply updated successfully"
                                     ]);         
         } 
+        catch (AppCustomHttpException $e) {
+            return response()->json(["message" => $e->getMessage()], $e->getCode());
+        }
         catch (Exception $e) {
-            if($e->getCode() == 2)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 403);
-            if($e->getCode() == 3)  
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 500);
-            if($e->getCode() == 4)  
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 422);                
+            return response()->json(["message" => "Internal Server Error"], 500);
         }
     }
 
@@ -86,15 +68,11 @@ class ComplaintReplyController extends Controller
                                     "message" => "reply deleted successfully"
                                     ], 200);     
         } 
+        catch (AppCustomHttpException $e) {
+            return response()->json(["message" => $e->getMessage()], $e->getCode());
+        }
         catch (Exception $e) {
-            if($e->getCode() == 2)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 403);
-            if($e->getCode() == 3)  
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 500);            
+            return response()->json(["message" => "Internal Server Error"], 500);
         }
     }
 }

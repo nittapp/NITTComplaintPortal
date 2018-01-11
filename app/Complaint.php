@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\ComplaintValidator;
-use Exception;
+use App\Exceptions\AppCustomHttpException;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class Complaint extends Model
@@ -48,7 +48,7 @@ class Complaint extends Model
  
         $userID = User::getUserID();
         if(! $userID)
-             throw new Exception("user not logged in", 1);  
+             throw new AppCustomHttpException("user not logged in", 401);
 
         $complaints = Complaint::select('id','title','description','image_url','created_at')
                                ->where('user_id',$userID)
@@ -58,7 +58,7 @@ class Complaint extends Model
         if(isset($endDate))
             $complaints = $complaints->where('created_at','<=',$endDate);
 
-        return $complaints->values()->all(); 
+        return $complaints->values()->all();
     }
 
 
@@ -69,17 +69,17 @@ class Complaint extends Model
      * @param  startDate 
      * @param  endDate
      * @param  hostel
-     * @param  status   
+     * @param  status
      * @return [array] response 
      */
     static public function getAllComplaints($startDate, $endDate, $hostel, $status){
          
         $userID = User::getUserID();
         if(! $userID)
-            throw new Exception("user not logged in", 1);
-             
+            throw new AppCustomHttpException("user not logged in", 401);
+
         if(! User::isUserAdmin())
-            throw new Exception("user not admin", 2);
+            throw new AppCustomHttpException("user not admin", 403);
  
          $complaints = Complaint::select('id','user_id','title','description',
                                         'status_id','image_url','created_at')
@@ -106,13 +106,13 @@ class Complaint extends Model
             $complaints = $complaints->filter(function($complaint) use($hostel){
                 return $complaint->user->hostel == $hostel;
             });
-        
+
         return $complaints->values()->all();
     }
 
     /**
      * This is for the user POST route. 
-     * By using the complaint description, hostel name, user ID,  
+     * By using the complaint description, hostel name, user ID,
      * a new instance of the table is created
      * @param title
      * @param  description
@@ -126,9 +126,9 @@ class Complaint extends Model
 
         $validatedData = ComplaintValidator::validateArguements($title, $description,$image_url);
         if($validatedData->fails()){
-            throw new Exception($validatedData->$errors->first(),1);
+            throw new AppCustomHttpException($validatedData->$errors->first(), 422);
         }
-     
+
         if(isset($description)&&isset($title)){
             Complaint::insert([
                     'title'=>$title,
@@ -137,30 +137,6 @@ class Complaint extends Model
                     'status_id' => $status_id,
                     'user'=> $user
                 ]);
-                                
         }
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

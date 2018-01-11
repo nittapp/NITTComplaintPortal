@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Exception;
+use App\Exceptions\AppCustomHttpException;
 
 class ComplaintReply extends Model
 {
@@ -32,7 +32,7 @@ class ComplaintReply extends Model
                     ]);
 
         if ($validator->fails())
-            throw new Exception($validator->errors()->first(), 4);
+            throw new AppCustomHttpException($validator->errors()->first(), 500);
 
     }
 
@@ -40,11 +40,11 @@ class ComplaintReply extends Model
 
        $complaintComment = ComplaintComment::find($complaintCommentID); 
        if(empty($complaintComment))
-            throw new Exception("comment not found", 3);
+            throw new AppCustomHttpException("comment not found", 404);
             
         if($complaintComment->user_id != User::getUserID() &&
            ! User::isUserAdmin())
-            throw new Exception("action not allowed", 2);
+            throw new AppCustomHttpException("action not allowed", 403);
 
         $complaintReplies = $complaintComment->complaintReplies()->orderBy('created_at','desc')->get();
 
@@ -56,11 +56,11 @@ class ComplaintReply extends Model
 
         $complaintComment = ComplaintComment::find($complaintCommentID);
         if(empty($complaintComment))
-            throw new Exception("comment not found", 3);
+            throw new AppCustomHttpException("comment not found", 404);
             
         if($complaintComment->user_id != User::getUserID() &&
            ! User::isUserAdmin())
-            throw new Exception("action not allowed", 2);
+            throw new AppCustomHttpException("action not allowed", 403);
 
         $complaintReplyModel = new ComplaintReply;
         $complaintReplyModel->user_id = User::getUserID();
@@ -71,22 +71,22 @@ class ComplaintReply extends Model
     static public function editComplaintReplies($complaintReplyID, $comment){
         $complaintReply = ComplaintReply::find($complaintReplyID);
         if(empty($complaintReply))
-            throw new Exception("reply not found", 3);
+            throw new AppCustomHttpException("reply not found", 404);
 
         if($complaintReply->user_id != User::getUserID() && ! User::isUserAdmin())
-            throw new Exception("action not allowed", 2);
-        
+            throw new AppCustomHttpException("action not allowed", 403);
+
         $complaintReply->comment = $comment;
-        $response = $complaintReply->save();     
+        $response = $complaintReply->save();
     }
 
     static public function deleteComplaintReplies($complaintReplyID){
         $complaintReply = ComplaintReply::find($complaintReplyID);
         if(empty($complaintReply))
-            throw new Exception("reply not found", 3);
+            throw new AppCustomHttpException("reply not found", 404);
 
         if($complaintReply->user_id != User::getUserID() && ! User::isUserAdmin())
-            throw new Exception("action not allowed", 2);
+            throw new AppCustomHttpException("action not allowed", 403);
 
         $response = $complaintReply->delete();        
     }
