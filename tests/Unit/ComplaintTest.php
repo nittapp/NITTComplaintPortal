@@ -105,7 +105,7 @@ class ComplaintTest extends TestCase
     public function testCreateNewComplaintWithoutUrl() {
         
 
-        $complaints = Complaint::createComplaint(
+        $complaints = Complaint::createComplaints(
               "title" => $faker->sentence,
               "description" => $faker->text
             );
@@ -115,7 +115,7 @@ class ComplaintTest extends TestCase
 
     public function testCreateNewComplaintWithUrl(){
 
-          $complaints = Complaint::createComplaint(
+          $complaints = Complaint::createComplaints(
               "title" => $faker->sentence,
               "description" => $faker->text,
               "image_url" => $faker->imageUrl
@@ -125,14 +125,14 @@ class ComplaintTest extends TestCase
 
     public function testCreateNewComplaintWithoutTitle(){
 
-           $complaints = Complaint::createComplaint(
+           $complaints = Complaint::createComplaints(
               "description" => $faker->text
             );
 
     }
 
     public function testCreateNewComplaintWithInvalidTitle(){
-              $complaints = Complaint::createComplaint(
+              $complaints = Complaint::createComplaints(
               "title" => $faker->regexify('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}'),
               "description" => $faker->text
             );
@@ -142,7 +142,7 @@ class ComplaintTest extends TestCase
 
     public function testCreateNewComplaintWithOutOfBoundsTitle(){
        
-        $complaints = Complaint::createComplaint(
+        $complaints = Complaint::createComplaints(
               "title" => $faker->sentence,
               "description" => $faker->text($maxNbChars = 2000)
             );
