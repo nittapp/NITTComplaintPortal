@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\ComplaintStatus;
+use Exceptions;
+use App\Exceptions\AppCustomHttpException;
 
 class ComplaintStatusController extends Controller
 {

@@ -24,7 +24,7 @@ class ComplaintCommentController extends Controller
         }
         catch (Exception $e) {
             return response()->json([
-                                    "message" => $e->getMessage(),
+                                    "message" => "internal server error",
                                     ],500);
         }
     }
@@ -46,7 +46,7 @@ class ComplaintCommentController extends Controller
         }
         catch (Exception $e) {
             return response()->json([
-                                    "message" => $e->getMessage(),
+                                    "message" => "internal server error",
                                     ],500);
         }
     }
@@ -68,11 +68,16 @@ class ComplaintCommentController extends Controller
         }
         catch (Exception $e) {
             return response()->json([
-                                    "message" => $e->getMessage(),
+                                    "message" => "internal server error",
                                     ],500);
         }
     }
 
+    /**
+     * [deleteComments description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
     public function deleteComments(Request $request){
         try {
             $response = ComplaintComment::deleteComplaintComments($request['complaint_comment_id']);
@@ -87,7 +92,7 @@ class ComplaintCommentController extends Controller
         }
         catch (Exception $e) {
             return response()->json([
-                                    "message" => $e->getMessage(),
+                                    "message" => "internal server error",
                                     ],500);
         }
     }

@@ -91,7 +91,7 @@ class ComplaintComment extends Model
         if(empty($complaintComment))
             throw new AppCustomHttpException("Comment not found", 404);
 
-        if($complaintComment->user_id != User::getUserID())
+        if($complaintComment->user_id != User::getUserID() && ! User::isUserAdmin())
             throw new AppCustomHttpException("action not allowed", 403);
          
         $complaintComment->comment = $comment;
@@ -104,7 +104,7 @@ class ComplaintComment extends Model
             throw new AppCustomHttpException("Comment not found", 404);
 
         if($complaintComment->user_id != User::getUserID())
-            throw new AppCustomHttpException("action not allowed", 403);
+            throw new AppCustomHttpException("Action not allowed", 403);
         $complaintComment->delete();
     }
 }
