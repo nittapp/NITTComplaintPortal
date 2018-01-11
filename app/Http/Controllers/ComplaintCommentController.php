@@ -5,6 +5,7 @@ use App\ComplaintComment;
 
 use Illuminate\Http\Request;
 use Exception;
+use App\Exceptions\AppCustomHttpException;
 
 class ComplaintCommentController extends Controller
 {
@@ -16,15 +17,15 @@ class ComplaintCommentController extends Controller
                                     "data" => $response
                                     ],200);
         }
+        catch (AppCustomHttpException $e){
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],$e->getCode());
+        }
         catch (Exception $e) {
-            if($e->getCode() == 2)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ],403);
-            if($e->getCode() == 3)  
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ],500);         
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],500);
         }
     }
 
@@ -38,19 +39,15 @@ class ComplaintCommentController extends Controller
                                     "message" => "comment created successfully"
                                     ],200);
         } 
+        catch (AppCustomHttpException $e){
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],$e->getCode());
+        }
         catch (Exception $e) {
-            if($e->getCode() == 2)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ],403);
-            if($e->getCode() == 3)  
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ],500);
-            if($e->getCode == 4)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ],422);     
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],500);
         }
     }
 
@@ -64,19 +61,15 @@ class ComplaintCommentController extends Controller
                                     "message" => "comment updated successfully"
                                     ],200);         
         }
-        catch(Exception $e){
-            if($e->getCode() == 2)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ],403);
-            if($e->getCode() == 3)  
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ],500); 
-            if($e->getCode() == 4)  
-                return response()->json([
+        catch (AppCustomHttpException $e){
+            return response()->json([
                                     "message" => $e->getMessage(),
-                                    ],422);            
+                                    ],$e->getCode());
+        }
+        catch (Exception $e) {
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],500);
         }
     }
 
@@ -87,15 +80,15 @@ class ComplaintCommentController extends Controller
                                     "message" => "comment deleted successfully"
                                     ],200);         
         } 
+        catch (AppCustomHttpException $e){
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],$e->getCode());
+        }
         catch (Exception $e) {
-            if($e->getCode() == 2)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ],403);
-            if($e->getCode() == 3)  
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ],500);             
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],500);
         }
     }
 }
