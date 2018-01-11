@@ -15,4 +15,8 @@ class ComplaintStatus extends Model
     public function complaints(){
         return $this->hasMany('App\Complaint');
     }
+
+    public function initialStatus(){
+    	return 0; 
+    }
 }
