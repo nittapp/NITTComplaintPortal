@@ -44,8 +44,8 @@ class Complaint extends Model
 
     static public function validateRequest(Request $request){
         $validator = Validator::make($request->all(), [
-                          'title' => 'required|alpha_num|max:255',
-                          'description' => 'required|alpha_num|max:1023',
+                          'title' => 'required|string|max:255',
+                          'description' => 'required|string|max:1023',
                           'image_url' => 'nullable|active_url'
                     ]);
 
@@ -57,9 +57,9 @@ class Complaint extends Model
 
     static public function validateEditRequest(Request $request){
         $validator = Validator::make($request->all(), [
-                          'title' => 'alpha_num|max:255',
-                          'description' => 'required_without_all:title|alpha_num|max:1023',
-                          'image_url' => 'required_without_all:title,description|nullable|active_url'
+                          'title' => 'string|nullable|max:255',
+                          'description' => 'nullable|string|max:1023',
+                          'image_url' => 'required_without_all:title,description|active_url'
                     ]);
 
         if ($validator->fails())

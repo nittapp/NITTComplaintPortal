@@ -37,7 +37,7 @@ class ComplaintComment extends Model
     static public function validateRequest(Request $request){
         $validator = Validator::make($request->all(), [
                     'complaint_id' => 'integer|required',
-                    'comment' => 'required',
+                    'comment' => 'required|string',
                     ]);
 
         if ($validator->fails())

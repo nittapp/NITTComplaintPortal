@@ -100,7 +100,7 @@ class ComplaintController extends Controller
 
       catch (Exception $e){
         return response()->json([
-                                "message" => $e->getMessage()
+                                "message" => "Internal Server error"
                                  ],500);
       }
     }
@@ -161,7 +161,7 @@ class ComplaintController extends Controller
         }
         catch (Exception $e) {
             return response()->json([
-                                    "message" => $e->getMessage(),
+                                    "message" => "Internal Server error",
                                     ],500);
         }
     }
