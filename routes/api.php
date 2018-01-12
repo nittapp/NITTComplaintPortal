@@ -17,6 +17,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/v1/users','UserController@getUser');
+Route::post('/v1/users','UserController@createUser');
+Route::put('/v1/users','UserController@editUser');
+Route::delete('/v1/users','UserController@deleteUser');
 
 Route::get('/v1/complaints','ComplaintController@getUserComplaints');
 Route::post('/v1/complaints','ComplaintController@createComplaints');
@@ -39,3 +43,4 @@ Route::get('/v1/admin/complaints','ComplaintController@getAllComplaints');
 Route::get('/v1/admin/statuses','ComplaintStatusController@getComplaintStatuses');
 
 Route::put('/v1/admin/complaints/status','ComplaintController@editComplaintStatus');
+Route::put('/v1/admin/users','UserController@editUserAuthId');
