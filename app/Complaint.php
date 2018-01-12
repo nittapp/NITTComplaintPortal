@@ -55,6 +55,21 @@ class Complaint extends Model
     }
 
 
+    static public function validateEditRequest(Request $request){
+        $validator = Validator::make($request->all(), [
+                          'title' => 'alpha_num|max:255',
+                          'description' => 'required_without_all:title|alpha_num|max:1023',
+                          'image_url' => 'required_without_all:title,description|nullable|active_url'
+                    ]);
+
+        if ($validator->fails())
+            throw new AppCustomHttpException($validator->errors()->first(), 422);
+                 
+    }
+
+
+
+
     /**
      * By using the params - userID, startDate and endDate, the complaints are retieved by the
      * available combinations of parameters of startDate & endDate.
@@ -135,7 +150,7 @@ class Complaint extends Model
      * This is for the user POST route. 
      * By using the complaint description, hostel name, user ID,
      * a new instance of the table is created
-     *default status is referred from the ComplaintStatus model
+     * default status is referred from the ComplaintStatus model
      * @param title
      * @param  description
      * @param  image_url
@@ -166,9 +181,9 @@ class Complaint extends Model
     * @return 1 for sucessfully created and 0 if not
     */
     
-    static public function editComplaints($ComplaintID,$title,$description,$image_url){
+    static public function editComplaints($complaint_id,$title,$description,$image_url){
 
-        $complaint = Complaint::find($ComplaintID);
+        $complaint = Complaint::find($complaint_id);
         if(empty($complaint))
             throw new AppCustomHttpException("Complaint not found",404);
         
@@ -176,16 +191,18 @@ class Complaint extends Model
         if($complaint->user_id != User::getUserID() && ! User::isUserAdmin())
             throw new AppCustomHttpException("Action not allowed",403);
         
+        if(!empty($title))
+            $complaint->title = $title; 
+        
+        if(!empty($description))
+            $complaint->description = $description;
 
-        $complaint->title = $title; 
-        $complaint->description = $description;
-        $complaint->image_url = $image_url;
+        if(!empty($image_url))
+            $complaint->image_url = $image_url;
+ 
         $complaint->save();
 
     }
-
-
-
 
     static public function editComplaintStatus($complaintID, $status_id) {
         if(! User::isUserAdmin())
@@ -202,3 +219,4 @@ class Complaint extends Model
 
 
 }
+

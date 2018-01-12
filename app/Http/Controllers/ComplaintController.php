@@ -51,7 +51,7 @@ class ComplaintController extends Controller
     * @param Request $request - title, description
     * @return json response 
     */
-    public function createComplaint(Request $request){
+    public function createComplaints(Request $request){
 
       try  {
 
@@ -59,21 +59,19 @@ class ComplaintController extends Controller
            $response = Complaint::createComplaints($request['title'],$request['description'], 
            $request['image_url']);
            return response()->json([
-                                 "message" => "complaint sucessfully created",
-                                 "data" => $response,
-                                 ], 200);  
+                                 "message" => "complaint sucessfully created"], 200);  
             } 
 
-      catch (AppCustomHttpException $e){
+      catch (AppCustomHttpException $e) {
 
             return response()->json([
                                     "message" => $e->getMessage(),
                                     ], $e->getCode());
         }
-      catch (Exception $e){
+      catch (Exception $e) {
             
             return response()->json([
-                                    "message" => $e->getMessage(),
+                                    "message" => "Internal Server error",
                                     ], 500);
         }
      
@@ -85,12 +83,11 @@ class ComplaintController extends Controller
 
     public function editComplaints(Request $request){
       try {
-          $response = Complaint::validateRequest($request);
-          $response = Complaint::editComplaints($request['title'],$request['description'],
-              $request['image_url']);
+          $response = Complaint::validateEditRequest($request);
+          $response = Complaint::editComplaints($request['complaint_id'],$request['title'],
+                                                $request['description'],$request['image_url']);
           return response()->json([
-                     "message" => "complaint sucessfully edited",
-                     "data" => $response,
+                     "message" => "complaint sucessfully edited"
                      ], 200);  
       }
 
@@ -103,7 +100,7 @@ class ComplaintController extends Controller
 
       catch (Exception $e){
         return response()->json([
-                                "message" => "Internal server error",
+                                "message" => $e->getMessage()
                                  ],500);
       }
     }
