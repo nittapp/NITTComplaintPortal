@@ -54,7 +54,6 @@ class ComplaintController extends Controller
     public function createComplaints(Request $request){
 
       try  {
-
            $response = Complaint::validateRequest($request);
            $response = Complaint::createComplaints($request['title'],$request['description'], 
            $request['image_url']);
@@ -83,7 +82,7 @@ class ComplaintController extends Controller
 
     public function editComplaints(Request $request){
       try {
-          $response = Complaint::validateEditRequest($request);
+          $response = Complaint::validateRequest($request);
           $response = Complaint::editComplaints($request['complaint_id'],$request['title'],
                                                 $request['description'],$request['image_url']);
           return response()->json([

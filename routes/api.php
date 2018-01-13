@@ -27,8 +27,6 @@ Route::post('/v1/complaints','ComplaintController@createComplaints');
 Route::put('/v1/complaints','ComplaintController@editComplaints');
 Route::delete('/v1/complaints','ComplaintController@deleteComplaints');
 
-
-
 Route::get('/v1/comments/{complaint_id}','ComplaintCommentController@getComments');
 Route::post('/v1/comments','ComplaintCommentController@createComments');
 Route::put('/v1/comments','ComplaintCommentController@editComments');
