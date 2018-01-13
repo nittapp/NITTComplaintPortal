@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
@@ -11,8 +10,10 @@ class UserController extends Controller{
     public function createUser(Request $request){
 
         try {
-            $response = User::validatedRequest($request);
-            $response = User::createUser($request['username'],$request['name'],$request['room_no'],$request['hostel_id'],$request['phone_contact'],$request['whatsapp_contact'],$request['email'],$request['fcm_id']);
+            $response = User::validateRequest($request);
+            $response = User::createUser($request['username'],$request['name'],
+                $request['room_no'],$request['hostel_id'],$request['phone_contact'],
+                $request['whatsapp_contact'],$request['email'],$request['fcm_id']);
         }
 
         catch (AppCustomHttpException $e) {
@@ -24,7 +25,7 @@ class UserController extends Controller{
 
         catch (Exception $e) {
             return response()->json([
-                                    "message" => "Internal server error",
+                                    "message" =>$e->getMessage(),
                                     ],500);
         }
 
@@ -50,8 +51,9 @@ class UserController extends Controller{
         }
 
         catch (Exception $e) {
+
             return response()->json([
-                                    "message" => "Internal server error",
+                                    "message" =>$e->getMessage(),
                                     ],500);
         }
     }
@@ -59,7 +61,7 @@ class UserController extends Controller{
 
      public function editUser(Request $request){
         try {
-            $response = User::getUserDetails($request['user_id'],$request['name'],$request['room_no'],$request['hostel_id'],$request['phone_contact'],$request['whatsapp_contact'],$request['email']); 
+            $response = User::editUser($request['user_id'],$request['name'],$request['room_no'],$request['hostel_id'],$request['phone_contact'],$request['whatsapp_contact'],$request['email']); 
 
              return response()->json([
                                     "message" => "user detail edited",
@@ -76,21 +78,17 @@ class UserController extends Controller{
 
         catch (Exception $e) {
             return response()->json([
-                                    "message" => "Internal server error",
+                                    "message" =>$e->getMessage(),
                                     ],500);
         }
     }
 
 
 
-
-
-
-
     public function deleteUser(Request $request){
         
         try {
-            $response = User::getUserDetails($request['user_id']); 
+            $response = User::deleteUser($request['user_id']); 
 
              return response()->json([
                                     "message" => "user deleted",
@@ -107,7 +105,7 @@ class UserController extends Controller{
 
         catch (Exception $e) {
             return response()->json([
-                                    "message" => "Internal server error",
+                                    "message" =>$e->getMessage(),
                                     ],500);
         }
     }
@@ -116,7 +114,7 @@ class UserController extends Controller{
     public function changeUserAuthId(Request $request){
 
         try {
-            $response = User::getUserDetails($request['user_id']); 
+            $response = User::changeUserAuthId($request['user_id']); 
 
              return response()->json([
                                     "message" => "authentication level changed",
@@ -133,7 +131,7 @@ class UserController extends Controller{
 
         catch (Exception $e) {
             return response()->json([
-                                    "message" => "Internal server error",
+                                    "message" =>$e->getMessage(),
                                     ],500);
         }
     }
@@ -141,4 +139,4 @@ class UserController extends Controller{
     }
 
 
-}
+
