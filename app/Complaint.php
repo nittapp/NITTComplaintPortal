@@ -168,14 +168,6 @@ class Complaint extends Model
                  throw new AppCustomHttpException("complaint not found", 404);
  
          Complaint::where('id',$id)->delete();
-         
-         $idList = ComplaintComment::where('complaint_id',$id)->pluck('id');
-         
-         ComplaintComment::where('complaint_id',$id)->delete();
-
-         foreach($idList as $Id){
-            ComplaintReply::where('parent_id',$Id)->delete();
-         }
      } 
 
 
