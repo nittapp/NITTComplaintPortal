@@ -14,6 +14,10 @@ class UserController extends Controller{
             $response = User::createUser($request['username'],$request['name'],
                 $request['room_no'],$request['hostel_id'],$request['phone_contact'],
                 $request['whatsapp_contact'],$request['email'],$request['fcm_id']);
+
+            return response()->json([
+                                    "message" => "user created",
+                                    ],200);
         }
 
         catch (AppCustomHttpException $e) {
@@ -61,7 +65,8 @@ class UserController extends Controller{
 
      public function editUser(Request $request){
         try {
-            $response = User::editUser($request['user_id'],$request['name'],$request['room_no'],$request['hostel_id'],$request['phone_contact'],$request['whatsapp_contact'],$request['email']); 
+            $response = User::editUser($request['user_id'],$request['name'],$request['room_no'],
+                $request['hostel_id'],$request['phone_contact'],$request['whatsapp_contact'],$request['email']); 
 
              return response()->json([
                                     "message" => "user detail edited",
