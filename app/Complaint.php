@@ -4,8 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
-
+use App\ComplaintValidator;
+use App\ComplaintStatus;
+use App\Exceptions\AppCustomHttpException;
 use Exception;
+use Validator;
+use Illuminate\Http\Request;
+
+
 
 class Complaint extends Model
 {
@@ -27,6 +33,43 @@ class Complaint extends Model
         return $this->belongsTo('App\User');
     }
 
+        /**
+     * Each Complaints are made by a User
+     * @return App::User
+     */
+    public function complaintComments(){
+        return $this->hasMany('App\ComplaintComment');
+    }
+
+
+    static public function validateRequest(Request $request){
+        $validator = Validator::make($request->all(), [
+                          'title' => 'required|string|max:255',
+                          'description' => 'required|string|max:1023',
+                          'image_url' => 'nullable|active_url'
+                    ]);
+
+        if ($validator->fails())
+            throw new AppCustomHttpException($validator->errors()->first(), 422);
+                 
+    }
+
+
+    static public function validateEditRequest(Request $request){
+        $validator = Validator::make($request->all(), [
+                          'title' => 'string|nullable|max:255',
+                          'description' => 'nullable|string|max:1023',
+                          'image_url' => 'required_without_all:title,description|active_url'
+                    ]);
+
+        if ($validator->fails())
+            throw new AppCustomHttpException($validator->errors()->first(), 422);
+                 
+    }
+
+
+
+
     /**
      * By using the params - userID, startDate and endDate, the complaints are retieved by the
      * available combinations of parameters of startDate & endDate.
@@ -39,7 +82,7 @@ class Complaint extends Model
  
         $userID = User::getUserID();
         if(! $userID)
-             throw new Exception("user not logged in", 1);  
+             throw new AppCustomHttpException("user not logged in", 401);
 
         $complaints = Complaint::select('id','title','description','image_url','created_at')
                                ->where('user_id',$userID)
@@ -60,17 +103,17 @@ class Complaint extends Model
      * @param  startDate 
      * @param  endDate
      * @param  hostel
-     * @param  status   
+     * @param  status
      * @return [array] response 
      */
     static public function getAllComplaints($startDate, $endDate, $hostel, $status){
          
         $userID = User::getUserID();
         if(! $userID)
-            throw new Exception("user not logged in", 1);
-             
+            throw new AppCustomHttpException("user not logged in", 401);
+
         if(! User::isUserAdmin())
-            throw new Exception("user not admin", 2);
+            throw new AppCustomHttpException("user not admin", 403);
  
          $complaints = Complaint::select('id','user_id','title','description',
                                         'status_id','image_url','created_at')
@@ -97,7 +140,7 @@ class Complaint extends Model
             $complaints = $complaints->filter(function($complaint) use($hostel){
                 return $complaint->user->hostel == $hostel;
             });
-        
+
         return $complaints->values()->all();
     }
 
@@ -116,14 +159,14 @@ class Complaint extends Model
          $isUserAdmin = User::isUserAdmin();
      
          if(! $userID)
-             throw new Exception("user not logged in", 1);
-             
+              throw new AppCustomHttpException("user not logged in", 401);
+
          if(! $isUserAdmin)
-             throw new Exception("user not admin", 2);
-     
+               throw new AppCustomHttpException("user not admin", 403);
+ 
         if(!Complaint::where('id',$id)->exists())        
-              throw new Exception("complaint doesn't exist",3); 
-        
+                 throw new AppCustomHttpException("complaint not found", 404);
+ 
          Complaint::where('id',$id)->delete();
          
          $idList = ComplaintComment::where('complaint_id',$id)->pluck('id');
@@ -134,26 +177,81 @@ class Complaint extends Model
             ComplaintReply::where('parent_id',$Id)->delete();
          }
      } 
+
+
+
+
+    /**
+     * This is for the user POST route. 
+     * By using the complaint description, hostel name, user ID,
+     * a new instance of the table is created
+     * default status is referred from the ComplaintStatus model
+     * @param title
+     * @param  description
+     * @param  image_url
+     * @return 1 for sucessfully created and 0 if not
+    */
+    static public function createComplaints($title, $description,$image_url=null){
+        $userID = User::getUserID();
+         
+        $complaintModel = new Complaint;
+        $complaintModel->title = $title; 
+        $complaintModel->description = $description; 
+        $complaintModel->image_url = $image_url; 
+        $complaintModel->status_id = ComplaintStatus::initialStatus();
+
+        $user = User::find($userID);
+        $response = $user->complaints()->save($complaintModel);
+
+    }
+
+    /**
+    * This is the user PUT route
+    * By using the update id, description,title and image url
+    * we are update the instance of the complaint using the id given
+    * @param id
+    * @param title
+    * @param description
+    * @param image_url
+    * @return 1 for sucessfully created and 0 if not
+    */
+    
+    static public function editComplaints($complaint_id,$title,$description,$image_url){
+
+        $complaint = Complaint::find($complaint_id);
+        if(empty($complaint))
+            throw new AppCustomHttpException("Complaint not found",404);
+        
+
+        if($complaint->user_id != User::getUserID() && ! User::isUserAdmin())
+            throw new AppCustomHttpException("Action not allowed",403);
+        
+        if(!empty($title))
+            $complaint->title = $title; 
+        
+        if(!empty($description))
+            $complaint->description = $description;
+
+        if(!empty($image_url))
+            $complaint->image_url = $image_url;
+ 
+        $complaint->save();
+
+    }
+
+    static public function editComplaintStatus($complaintID, $status_id) {
+        if(! User::isUserAdmin())
+            throw new AppCustomHttpException("action not allowed", 403);
+
+        $complaint = Complaint::find($complaintID);
+        
+        if(empty($complaint))
+            throw new AppCustomHttpException("complaint not found", 404);
+         
+        $complaint->status_id = $statusID;
+        $complaint->save();    
+    }
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

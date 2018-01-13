@@ -33,7 +33,7 @@ class User extends Authenticatable
      * @return [collection] App::Complaint
      */
     public function complaints(){
-        return $this->hasMany('App\Complaints');
+        return $this->hasMany('App\Complaint');
     }
 
     /**
@@ -57,7 +57,7 @@ class User extends Authenticatable
      *  @return [int] user_id
      */
     static public function getUserID(){
-        return 3;
+        return 1;
     }
 
     static public function isUserAdmin(){

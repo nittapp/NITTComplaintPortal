@@ -10,8 +10,8 @@ use App\AuthorizationLevel;
 use App\ComplaintComment;
 use App\ComplaintReply;
 use App\ComplaintStatus;
-
 use Exception;
+use App\Exceptions\AppCustomHttpException;
 
 class ComplaintController extends Controller
 {
@@ -23,20 +23,92 @@ class ComplaintController extends Controller
      */
     public function getUserComplaints(Request $request) {
         try {
+
             $response = Complaint::getUserComplaints($request['start_date'], $request['end_date']);
+
             return response()->json([
                                     "message" => "complaints available",
                                     "data" => $response,
                                     ], 200);
         }
+
+
+        catch (AppCustomHttpException $e){
+
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ], $e->getCode());
+        }
+
         catch (Exception $e){
-            if($e->getCode() == 1)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 401);
+            return response()->json([
+                                    "message" => "Internal server error",
+                                    ], 500);
+
         }
     }
+    /**
+    * Using the User ID from the session, title, description and image url as input parameters
+    * this function creates a new complaint in the database
+    * @param Request $request - title, description
+    * @return json response 
+    */
+    public function createComplaints(Request $request){
+
+      try  {
+
+           $response = Complaint::validateRequest($request);
+           $response = Complaint::createComplaints($request['title'],$request['description'], 
+           $request['image_url']);
+           return response()->json([
+                                 "message" => "complaint sucessfully created"], 200);  
+            } 
+
+      catch (AppCustomHttpException $e) {
+
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ], $e->getCode());
+        }
+      catch (Exception $e) {
+            
+            return response()->json([
+                                    "message" => "Internal Server error",
+                                    ], 500);
+        }
+     
+      }
+    /**
+      * By using the data that is input for the edits to be made
+      * changes are made for those fields that are changed
+    */
+
+    public function editComplaints(Request $request){
+      try {
+          $response = Complaint::validateEditRequest($request);
+          $response = Complaint::editComplaints($request['complaint_id'],$request['title'],
+                                                $request['description'],$request['image_url']);
+          return response()->json([
+                     "message" => "complaint sucessfully edited"
+                     ], 200);  
+      }
+
+      catch (AppCustomHttpException $e){
+        return response()->json([
+                                "message" => $e->getMessage(),
+                                 ],$e->getCode());
+
+      }
+
+      catch (Exception $e){
+        return response()->json([
+                                "message" => "Internal Server error"
+                                 ],500);
+      }
+    }
     
+
+
     /**
     * By using the session data, the user is checked for logged in and admin.
     * If both are true, then all the complaints are retrieved for the admin for the 
@@ -44,6 +116,9 @@ class ComplaintController extends Controller
     * @param  Request $request 
     * @return [json]           
     */
+
+
+  
     public function getAllComplaints(Request $request) {
         try {
             $response = Complaint::getAllComplaints($request['start_date'], $request['end_date'], $request['hostel'], $request['status']);
@@ -51,17 +126,22 @@ class ComplaintController extends Controller
                                     "message" => "complaints available",
                                     "data" => $response,
                                     ], 200);
-        } catch (Exception $e) {
-            if ($e->getCode() == 1)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 401);
-            if ($e->getCode() == 2)
-                return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 403);
+        } 
+
+        catch (AppCustomHttpException $e){
+
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ], $e->getCode());
         }
-    }
+        catch (Exception $e){
+            
+            return response()->json([
+                                    "message" => "Internal server error",
+                                    ], 500);
+        }
+
+
 
         /**
      * By using the ID of complaint given by user, the function deletes the * complaint, complaintComment and complaintStatus from the Complaint, 
@@ -70,7 +150,7 @@ class ComplaintController extends Controller
      * @return previous state, updated after deletion
      */
 
-     public function deleteComplaint(Request $request){
+     public function deleteComplaints(Request $request){
  
        try{  
          $response = Complaint::deleteComplaint($request['id']);
@@ -78,21 +158,37 @@ class ComplaintController extends Controller
                                  "message" => "complaint deleted",
                                  "data" => $response,
                                  ], 200);
-       } catch (Exception $e) {
-            if ($e->getCode() == 1)
-               return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 401);
-           if ($e->getCode() == 2)
-               return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 403);   
-      
-           if ($e->getCode() == 3)
-               return response()->json([
-                                        "message" => $e->getMessage(),
-                                        ], 404); 
-           }
+       } 
+       catch (AppCustomHttpException $e){
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],$e->getCode());
+        }
+        catch (Exception $e) {
+            return response()->json([
+                                    "message" => "Internal Server error",
+                                    ],500);
+        }
+    }
+
+    public function editComplaintStatus(Request $request){
+        try{
+            $response = Complaint::editComplaintStatus($request['complaint_id'], $request['status']);
+            return response()->json([
+                                    "message" => "status updated successfully",
+                                    "data" => $response,
+                                    ], 200);            
+        }
+        catch (AppCustomHttpException $e){
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],$e->getCode());
+        }
+        catch (Exception $e) {
+            return response()->json([
+                                    "message" => "Internal Server error",
+                                    ],500);
+        }
     }
 
 }

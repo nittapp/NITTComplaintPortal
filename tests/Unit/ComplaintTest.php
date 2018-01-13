@@ -1,3 +1,4 @@
+
 <?php
 
 namespace Tests\Unit;
@@ -6,8 +7,11 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-
+use Faker\Generator as Faker;
 use App\Complaint;
+use App\ComplaintStatus;
+use App\Hostel;
+
 
 class ComplaintTest extends TestCase
 {   
@@ -90,6 +94,55 @@ class ComplaintTest extends TestCase
 
          $response = Complaint::deleteComplaint($complaintId);
          $this->assertEquals(200,$response->status());    
+    }
+
+    $faker = Faker\Factory::create()
+
+    public function testCreateNewComplaintWithoutUrl() {
+        
+
+        $complaints = Complaint::createComplaints(
+              "title" => $faker->sentence,
+              "description" => $faker->text
+            );
+
+
+    }
+
+    public function testCreateNewComplaintWithUrl(){
+
+          $complaints = Complaint::createComplaints(
+              "title" => $faker->sentence,
+              "description" => $faker->text,
+              "image_url" => $faker->imageUrl
+            );
+
+    }
+
+    public function testCreateNewComplaintWithoutTitle(){
+
+           $complaints = Complaint::createComplaints(
+              "description" => $faker->text
+            );
+
+    }
+
+    public function testCreateNewComplaintWithInvalidTitle(){
+              $complaints = Complaint::createComplaints(
+              "title" => $faker->regexify('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}'),
+              "description" => $faker->text
+            );
+
+
+    }
+
+    public function testCreateNewComplaintWithOutOfBoundsTitle(){
+       
+        $complaints = Complaint::createComplaints(
+              "title" => $faker->sentence,
+              "description" => $faker->text($maxNbChars = 2000)
+            );
+
     }
 
 }
