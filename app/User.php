@@ -80,13 +80,14 @@ class User extends Authenticatable
    /////////HOSTEL ID FORMAT
     static public function validateRequest(Request $request){
         $validator = Validator::make($request->all(), [
-                    'username' => 'required|alpha_num',
+                    'username' => 'required',
                     'name' => 'string|max:255',
+                    'room_no' => 'numeric',
                     'hostel_id' => 'required|string|max:6',
                     'phone_contact' => 'required|digits:10',
                     'whatsapp_contact' => 'required|digits:10',
                     'email' => 'required|email',
-                    'room_no' => 'numeric',
+                   
 
 
                     ]);
@@ -120,7 +121,7 @@ class User extends Authenticatable
         if(empty(User::find($userID)))
             throw new AppCustomHttpException("User does not exist",404);
 
-        if( $userID != User::getUserID() && !User::isUserAdmin() )
+        if( $userID!= User::getUserID() && !User::isUserAdmin() )
             throw new AppCustomHttpException("Action not allowed",403);
 
         $userDetails = User::where('id',$userID)->get(); 
