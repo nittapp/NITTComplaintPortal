@@ -43,31 +43,21 @@ class Complaint extends Model
 
 
     static public function validateRequest(Request $request){
-        $validator = Validator::make($request->all(), [
-                          'title' => 'required|string|max:255',
-                          'description' => 'required|string|max:1023',
-                          'image_url' => 'nullable|active_url'
-                    ]);
-
+        if($request->method() == 'POST')
+            $validator = Validator::make($request->all(), [
+                  'title' => 'required|string|max:255',
+                  'description' => 'required|string|max:1023',
+                  'image_url' => 'nullable|active_url'
+            ]);
+        else
+            $validator = Validator::make($request->all(), [
+                      'title' => 'string|nullable|max:255',
+                      'description' => 'nullable|string|max:1023',
+                      'image_url' => 'required_without_all:title,description|active_url'
+            ]);
         if ($validator->fails())
-            throw new AppCustomHttpException($validator->errors()->first(), 422);
-                 
+            throw new AppCustomHttpException($validator->errors()->first(), 422);        
     }
-
-
-    static public function validateEditRequest(Request $request){
-        $validator = Validator::make($request->all(), [
-                          'title' => 'string|nullable|max:255',
-                          'description' => 'nullable|string|max:1023',
-                          'image_url' => 'required_without_all:title,description|active_url'
-                    ]);
-
-        if ($validator->fails())
-            throw new AppCustomHttpException($validator->errors()->first(), 422);
-                 
-    }
-
-
 
 
     /**
