@@ -175,22 +175,8 @@ class User extends Authenticatable
 
         if( $userID != User::getUserID() && !User::isUserAdmin())
             throw new AppCustomHttpException("Action not allowed",403);
-        $user->delete();
-    
-        $complaintComments = ComplaintComment::find($userID); 
-        $complaintComments->onDelete('cascade');
-   
         
-
-        $complaintReplies = ComplaintReply::find($userID);
-        $complaintReplies->onDelete('cascade');
-
-        $complaints = Complaint::find($userID);
-        $complaints->onDelete('cascade');
-
-
-       
-
+        $user->delete();
 
     }
 

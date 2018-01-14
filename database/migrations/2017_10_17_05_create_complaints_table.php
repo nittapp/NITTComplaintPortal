@@ -22,7 +22,7 @@ class CreateComplaintsTable extends Migration
             $table->string('image_url');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('status_id')->references('id')->on('complaints_status');
         });
     }
