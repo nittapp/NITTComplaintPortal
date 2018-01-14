@@ -56,7 +56,7 @@ class Complaint extends Model
                       'image_url' => 'required_without_all:title,description|active_url'
             ]);
         if ($validator->fails())
-            throw new AppCustomHttpException($validator->errors()->first(), 422);        
+             throw new AppCustomHttpException($validator->errors()->first(), 422);        
     }
 
 
