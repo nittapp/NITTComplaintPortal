@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/v1/users','UserController@getUser');
 Route::post('/v1/users','UserController@createUser');
 Route::put('/v1/users','UserController@editUser');
-Route::delete('/v1/users','UserController@deleteUser');
+Route::delete('/v1/users/{user_id}','UserController@deleteUser');
 
 Route::get('/v1/complaints','ComplaintController@getUserComplaints');
 Route::post('/v1/complaints','ComplaintController@createComplaints');
