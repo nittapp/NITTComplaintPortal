@@ -5,6 +5,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Faker\Generator as Faker;
 use App\Complaint;
+use App\ComplaintComment;
+use App\ComplaintReply;
 use App\ComplaintStatus;
 use App\Hostel;
 class ComplaintTest extends TestCase
@@ -94,17 +96,17 @@ class ComplaintTest extends TestCase
          $complaintId = 22;
 
          $response = Complaint::deleteComplaint($complaintId);
-         $this->assertEquals("complaint doesn't exist",$response['message']);
+         $this->assertEquals(NULL,$response);
     }
     
     public function testDeleteComplaintWithValidId() {
          $complaintId = 2;
 
          $response = Complaint::deleteComplaint($complaintId);
-         $this->assertEquals(200,$response->status());    
+         $this->assertEquals(NULL,$response);
     }
 
-
+/*
     $faker = Faker\Factory::create()
     public function testCreateNewComplaintWithoutUrl() {
         
@@ -137,5 +139,107 @@ class ComplaintTest extends TestCase
               "title" => $faker->sentence,
               "description" => $faker->text($maxNbChars = 2000)
             );
+    }
+*/
+/**
+     * Unit test for getting complaint comments with id
+     * @return void
+     */
+    public function testGetComplaintCommentsWithoutId(){
+      $id = NULL;
+      $complaintComments = ComplaintComment::getComplaintComments($id);
+        foreach ($complaintComments as $complaintComment) {
+            $this->assertArrayNotHasKey('id', $complaintComment);
+            $this->assertArrayNotHasKey('comment', $complaintComment);
+            $this->assertArrayNotHasKey('created_at', $complaintComment);
+            $this->assertArrayNotHasKey('updated_at', $complaintComment);
+        }
+    }
+
+    public function testGetComplaintCommentsWithInvalidId(){
+      $id = 100;
+      $complaintComments = ComplaintComment::getComplaintComments($id);
+       foreach ($complaintComments as $complaintComment) {
+            $this->assertArrayNotHasKey('id', $complaintComment);
+            $this->assertArrayNotHasKey('comment', $complaintComment);
+            $this->assertArrayNotHasKey('created_at', $complaintComment);
+            $this->assertArrayNotHasKey('updated_at', $complaintComment);
+        }
+    }
+
+    public function testGetComplaintCommentsWithValidId(){
+      $id = 17;
+      $complaintComments = ComplaintComment::getComplaintComments($id);
+       foreach ($complaintComments as $complaintComment) {
+            $this->assertArrayHasKey('id', $complaintComment);
+            $this->assertArrayHasKey('comment', $complaintComment);
+            $this->assertArrayHasKey('created_at', $complaintComment);
+            $this->assertArrayHasKey('updated_at', $complaintComment);
+        }
+    }
+
+    /**
+     * Unit tests for creating new complaint comments with comments given
+     * @return void
+     */
+    
+    public function testCreateComplaintCommentsWithInvalidId(){
+          $comment = $faker->text;
+          $complaintId = 30;
+          $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
+    }
+    
+    public function testCreateComplaintCommentsWithOutOfBoundsComments(){
+          $comment = $faker->text($maxNbChars = 2000);
+          $complaintId = 8;
+          $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
+    }
+    
+    public function testCreateComplaintCommentsWithComments(){
+          $comment = $faker->text;
+          $complaintId = 8;
+          $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
+    }
+
+    /**
+     * Unit test for editing complaint comments with complaint id and new complaint comment given
+     * @return void
+     */
+    
+    public function testEditComplaintCommentsWithInvalidId(){
+          $comment = $faker->text;
+          $complaintCommentId = 28;
+          $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
+    }
+
+    public function testEditComplaintCommentsWithOutOfBoundsComments(){
+          $comment = $faker->text($maxNbChars = 2000);
+          $complaintCommentId = 6;
+          $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
+    }
+     
+    public function testEditComplaintCommentsWithValidComments(){
+          $comment = $faker->text($maxNbChars = 2000);
+          $complaintCommentId = 2;
+          $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
+    }
+
+    /**
+     * Unit test for deleting complaint comments with complaintComment Id given
+     * @return void
+     */
+    
+    public function testDeleteComplaintCommentsWithInvalidId(){
+         $complaintCommentId = 50;
+
+         $response = ComplaintComment::deleteComplaintComments($complaintCommentId);
+         $this->assertEquals(NULL,$response);
+    }
+
+    public function testDeleteComplaintCommentsWithValidId(){
+         $complaintCommentId = 10;
+
+         $response = ComplaintComment::deleteComplaintComments($complaintCommentId);
+         $this->assertEquals(NULL,$response);
     }
 }

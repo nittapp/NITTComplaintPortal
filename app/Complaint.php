@@ -162,12 +162,13 @@ class Complaint extends Model
               throw new AppCustomHttpException("user not logged in", 401);
 
          if(! $isUserAdmin)
-               throw new AppCustomHttpException("user not admin", 403);
+              throw new AppCustomHttpException("user not admin", 403);
  
-        if(!Complaint::where('id',$id)->exists())        
-                 throw new AppCustomHttpException("complaint not found", 404);
+         if(!Complaint::where('id',$id)->exists())        
+              throw new AppCustomHttpException("complaint not found", 404);
  
          Complaint::where('id',$id)->delete();
+               
      } 
 
 

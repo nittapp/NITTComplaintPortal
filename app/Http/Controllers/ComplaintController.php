@@ -140,7 +140,7 @@ class ComplaintController extends Controller
                                     "message" => "Internal server error",
                                     ], 500);
         }
-
+    }
 
 
         /**
