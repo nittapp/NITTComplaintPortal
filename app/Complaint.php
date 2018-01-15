@@ -232,7 +232,7 @@ class Complaint extends Model
             throw new AppCustomHttpException("complaint not found", 404);
          
         $complaint->status_id = $statusID;
-        $complaint->save();    
+        $complaint->save();
     }
 
 
