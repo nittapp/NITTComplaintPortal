@@ -9,9 +9,10 @@ use App\ComplaintComment;
 use App\ComplaintReply;
 use App\ComplaintStatus;
 use App\Hostel;
+
 class ComplaintTest extends TestCase
-{
-    /**
+{  
+ /**
      * Unit test for getting complaints with no date filters
      * @return void
      */
@@ -106,9 +107,10 @@ class ComplaintTest extends TestCase
          $this->assertEquals(NULL,$response);
     }
 
-/*
-    $faker = Faker\Factory::create()
-    public function testCreateNewComplaintWithoutUrl() {
+
+   $faker = Faker\Factory::create()
+
+   public function testCreateNewComplaintWithoutUrl() {
         
         $complaints = Complaint::createComplaints(
               "title" => $faker->sentence,
@@ -140,7 +142,7 @@ class ComplaintTest extends TestCase
               "description" => $faker->text($maxNbChars = 2000)
             );
     }
-*/
+
 /**
      * Unit test for getting complaint comments with id
      * @return void
@@ -189,12 +191,6 @@ class ComplaintTest extends TestCase
           $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
     }
     
-    public function testCreateComplaintCommentsWithOutOfBoundsComments(){
-          $comment = $faker->text($maxNbChars = 2000);
-          $complaintId = 8;
-          $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
-    }
-    
     public function testCreateComplaintCommentsWithComments(){
           $comment = $faker->text;
           $complaintId = 8;
@@ -212,12 +208,6 @@ class ComplaintTest extends TestCase
           $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
     }
 
-    public function testEditComplaintCommentsWithOutOfBoundsComments(){
-          $comment = $faker->text($maxNbChars = 2000);
-          $complaintCommentId = 6;
-          $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
-    }
-     
     public function testEditComplaintCommentsWithValidComments(){
           $comment = $faker->text($maxNbChars = 2000);
           $complaintCommentId = 2;
@@ -237,9 +227,104 @@ class ComplaintTest extends TestCase
     }
 
     public function testDeleteComplaintCommentsWithValidId(){
-         $complaintCommentId = 10;
+         $complaintCommentId = 9;
 
          $response = ComplaintComment::deleteComplaintComments($complaintCommentId);
+         $this->assertEquals(NULL,$response);
+    }
+
+    /**
+     * Unit test for getting complaint replies with id
+     * @return void
+     */
+    public function testGetComplaintRepliesWithoutId(){
+      $complaintCommentId = NULL;
+      $complaintReplies = ComplaintReply::getComplaintReplies($complaintCommentId);
+        foreach ($complaintReplies as $complaintReply) {
+            $this->assertArrayHasKey('id', $complaintReply);
+            $this->assertArrayHasKey('parent_id', $complaintReply);
+            $this->assertArrayHasKey('user_id', $complaintReply);
+            $this->assertArrayHasKey('comment', $complaintReply);
+            $this->assertArrayHasKey('created_at', $complaintReply);
+            $this->assertArrayHasKey('updated_at', $complaintReply);
+        }
+    } 
+
+    public function testGetComplaintRepliesWithInvalidId(){
+      $complaintCommentId = 40;
+      $complaintReplies = ComplaintReply::getComplaintReplies($complaintCommentId);
+        foreach ($complaintReplies as $complaintReply) {
+            $this->assertArrayNotHasKey('id', $complaintReply);
+            $this->assertArrayNotHasKey('parent_id', $complaintReply);
+            $this->assertArrayNotHasKey('user_id', $complaintReply);
+            $this->assertArrayNotHasKey('comment', $complaintReply);
+            $this->assertArrayNotHasKey('created_at', $complaintReply);
+            $this->assertArrayNotHasKey('updated_at', $complaintReply);
+        }
+    } 
+    
+    public function testGetComplaintRepliesWithId(){
+      $complaintCommentId = 14;
+      $complaintReplies = ComplaintReply::getComplaintReplies($complaintCommentId);
+        foreach ($complaintReplies as $complaintReply) {
+            $this->assertArrayHasKey('id', $complaintReply);
+            $this->assertArrayHasKey('parent_id', $complaintReply);
+            $this->assertArrayHasKey('user_id', $complaintReply);
+            $this->assertArrayHasKey('comment', $complaintReply);
+            $this->assertArrayHasKey('created_at', $complaintReply);
+            $this->assertArrayHasKey('updated_at', $complaintReply);
+      }
+    } 
+
+    /**
+     * Unit tests for creating new complaint replies with replies given
+     * @return void
+     */
+    public function testCreateComplaintRepliesWithInvalidId(){
+          $reply = $faker->text;
+          $complaintCommentId = 40;
+          $complaintReply = ComplaintReply::createComplaintReplies($complaintCommentId,$reply);
+    }
+    
+    public function testCreateComplaintRepliesWithValidId(){
+          $reply = $faker->text;
+          $complaintCommentId = 8;
+          $complaintReply = ComplaintReply::createComplaintReplies($complaintCommentId,$reply);
+    }
+
+     /**
+     * Unit test for editing complaint replies with complaint comment id and new complaint reply given
+     * @return void
+     */
+    
+    public function testEditComplaintRepliesWithInvalidId(){
+          $reply = $faker->text;
+          $complaintReplyId = 15;
+          $complaintReply = ComplaintReply::editComplaintReplies($complaintReplyId,$reply);
+    }
+
+    public function testEditComplaintRepliesWithValidReply(){
+          $reply = $faker->text;
+          $complaintReplyId = 4;
+          $complaintReply = ComplaintReply::editComplaintReplies($complaintReplyId,$reply);
+     }
+
+    /**
+     * Unit test for deleting complaint replies with complaintReply Id given
+     * @return void
+     */
+    
+    public function testDeleteComplaintRepliesWithInvalidId(){
+         $complaintReplyId = 30;
+
+         $response = ComplaintReply::deleteComplaintReplies($complaintReplyId);
+         $this->assertEquals(NULL,$response);
+    }
+
+    public function testDeleteComplaintRepliesWithValidId(){
+         $complaintReplyId = 2;
+
+         $response = ComplaintReply::deleteComplaintReplies($complaintReplyId);
          $this->assertEquals(NULL,$response);
     }
 }
