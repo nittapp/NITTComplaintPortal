@@ -25,20 +25,19 @@ Route::delete('/v1/users','UserController@deleteUser');
 Route::get('/v1/complaints','ComplaintController@getUserComplaints');
 Route::post('/v1/complaints','ComplaintController@createComplaints');
 Route::put('/v1/complaints','ComplaintController@editComplaints');
-Route::delete('/v1/complaints','ComplaintController@deleteComplaints');
+Route::delete('/v1/complaints/{complaint_id}','ComplaintController@deleteComplaints');
 
 Route::get('/v1/comments/{complaint_id}','ComplaintCommentController@getComments');
 Route::post('/v1/comments','ComplaintCommentController@createComments');
 Route::put('/v1/comments','ComplaintCommentController@editComments');
 Route::delete('/v1/comments/{complaint_comment_id}','ComplaintCommentController@deleteComments');
 
-Route::get('/v1/replies/complaint_comment_id','ComplaintReplyController@getReplies');
+Route::get('/v1/replies/{complaint_comment_id}','ComplaintReplyController@getReplies');
 Route::post('/v1/replies','ComplaintReplyController@createReplies');
 Route::put('/v1/replies','ComplaintReplyController@editReplies');
-Route::delete('/v1/replies/complaint_reply_id','ComplaintReplyController@deleteReplies');
+Route::delete('/v1/replies/{complaint_reply_id}','ComplaintReplyController@deleteReplies');
 
 Route::get('/v1/admin/complaints','ComplaintController@getAllComplaints');
 Route::get('/v1/admin/statuses','ComplaintStatusController@getComplaintStatuses');
-
 Route::put('/v1/admin/complaints/status','ComplaintController@editComplaintStatus');
 Route::put('/v1/admin/users','UserController@editUserAuthId');

@@ -26,11 +26,16 @@ class ComplaintReply extends Model
     }
 
     public function valdiateRequest(Request $request){
-        $validator = Validator::make($request->all(), [
-                    'complaint_comment_id' => 'integer|required',
-                    'comment' => 'required',
-                    ]);
-
+        if($request->method() == 'POST')
+            $validator = Validator::make($request->all(), [
+                        'complaint_comment_id' => 'integer|required',
+                        'comment' => 'required',
+                        ]);
+        else
+            $validator = Validator::make($request->all(), [
+                        'complaint_reply_id' => 'integer|required',
+                        'comment' => 'required',
+                        ]);
         if ($validator->fails())
             throw new AppCustomHttpException($validator->errors()->first(), 500);
 
