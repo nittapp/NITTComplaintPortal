@@ -17,6 +17,10 @@ class CreateComplaintsStatusTable extends Migration
             $table->increments('id');
             $table->string('name',100);
             $table->text('message');
+            $table->boolean('is_viewable')->default(false);
+            $table->boolean('is_creatable')->default(false);
+            $table->boolean('is_editable')->default(false);
+            $table->boolean('is_deletable')->default(false);
             $table->timestamps();
         });
     }

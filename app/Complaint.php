@@ -184,7 +184,9 @@ class Complaint extends Model
             throw new AppCustomHttpException("Complaint not found",404);
         
 
-        if($complaint->user_id != User::getUserID() && ! User::isUserAdmin())
+        if($complaint->user_id != User::getUserID() &&
+           ! User::isUserAdmin() &&
+           ! Status::is_editable($complaint->status_id))
             throw new AppCustomHttpException("Action not allowed",403);
         
         if(!empty($title))

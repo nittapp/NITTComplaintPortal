@@ -8,6 +8,7 @@ use App\User;
 use App\Hostel;
 use App\AuthorizationLevel;
 use Exception;
+use App\Status;
 use App\Exceptions\AppCustomHttpException;
 
 class ComplaintController extends Controller
