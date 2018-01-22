@@ -74,9 +74,15 @@ class Complaint extends Model
         if(! $userID)
              throw new AppCustomHttpException("user not logged in", 401);
 
-        $complaints = Complaint::select('id','title','description','image_url','created_at')
+        $complaints = Complaint::select('id','title','description',
+                                        'image_url','status_id','created_at')
                                ->where('user_id',$userID)
                                ->get();
+        
+        foreach ($complaints as $complaint) {
+            $complaint->status = $complaint->complaintStatus()->select('name','message')->first();
+        }
+
         if(isset($startDate))
             $complaints = $complaints->where('created_at','>=',$startDate);
         if(isset($endDate))
@@ -107,7 +113,7 @@ class Complaint extends Model
  
          $complaints = Complaint::select('id','user_id','title','description',
                                         'status_id','image_url','created_at')
-                               ->get();
+                               ->paginate(10);
 
         foreach ($complaints as $complaint) {
             $complaint->status = $complaint->complaintStatus()->select('name','message')->first();
@@ -222,6 +228,12 @@ class Complaint extends Model
 
     }
 
+    /**
+     * The admin can change the status of a complaint and set to any of the available statuses
+     * @param  [INT] $complaintID [description]
+     * @param  [INT] $status_id   [description]
+     * @return [STATUS] return if the status was successfully updated
+     */
     static public function editComplaintStatus($complaintID, $status_id) {
         if(! User::isUserAdmin())
             throw new AppCustomHttpException("action not allowed", 403);
