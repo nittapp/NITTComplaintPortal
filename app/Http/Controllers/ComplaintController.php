@@ -145,11 +145,59 @@ class ComplaintController extends Controller
 
     }
 
+    public function getPublicComplaints(Request $request) {
+
+        try {
+            $response = Complaint::getPublicComplaints($request['start_date'], $request['end_date'],$request['status']);
+            return response()->json([
+                                    "message" => "complaints available",
+                                    "data" => $response,
+                                    ], 200);
+        } 
+
+        catch (AppCustomHttpException $e){
+
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ], $e->getCode());
+        }
+        catch (Exception $e){
+            
+            return response()->json([
+                                    "message" => "Internal server error",
+                                    ], 500);
+        }
+
+
+
+    }
+
     public function editComplaintStatus(Request $request){
         try{
             $response = Complaint::editComplaintStatus($request['complaint_id'], $request['status']);
             return response()->json([
                                     "message" => "status updated successfully",
+                                    "data" => $response,
+                                    ], 200);            
+        }
+        catch (AppCustomHttpException $e){
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],$e->getCode());
+        }
+        catch (Exception $e) {
+            return response()->json([
+                                    "message" => "Internal Server error",
+                                    ],500);
+        }
+    }
+
+
+      public function editIsPublicStatus(Request $request){
+        try{
+            $response = Complaint::editIsPublicStatus($request['complaint_id']);
+            return response()->json([
+                                    "message" => "complaint view status is changed successfully",
                                     "data" => $response,
                                     ], 200);            
         }

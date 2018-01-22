@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\AppCustomHttpException;
 
 use Validator;
+
 use Illuminate\Http\Request;
 
 class ComplaintComment extends Model

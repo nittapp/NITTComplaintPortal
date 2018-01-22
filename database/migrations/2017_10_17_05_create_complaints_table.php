@@ -20,6 +20,7 @@ class CreateComplaintsTable extends Migration
             $table->text('description');
             $table->integer('status_id')->unsigned();
             $table->string('image_url');
+            $table->boolean('is_public')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

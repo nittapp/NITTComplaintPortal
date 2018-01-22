@@ -23,6 +23,7 @@ Route::put('/v1/users','UserController@editUser');
 Route::delete('/v1/users/{user_id}','UserController@deleteUser');
 
 Route::get('/v1/complaints','ComplaintController@getUserComplaints');
+Route::get('/v1/complaints/public','ComplaintController@getPublicComplaints');
 Route::post('/v1/complaints','ComplaintController@createComplaints');
 Route::put('/v1/complaints','ComplaintController@editComplaints');
 Route::delete('/v1/complaints','ComplaintController@deleteComplaints');
@@ -42,3 +43,4 @@ Route::get('/v1/admin/statuses','ComplaintStatusController@getComplaintStatuses'
 
 Route::put('/v1/admin/complaints/status','ComplaintController@editComplaintStatus');
 Route::put('/v1/admin/users','UserController@editUserAuthId');
+Route::put('/v1/admin/users','ComplaintController@editIsPublicStatus');

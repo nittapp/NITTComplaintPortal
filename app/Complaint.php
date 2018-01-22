@@ -134,6 +134,51 @@ class Complaint extends Model
         return $complaints->values()->all();
     }
 
+    /**
+     * This is for the user GET route for all public complaints 
+     * This will for any given user return all the public complaints
+     * @param startDate
+     * @param endDate
+     * @return [array] complaints
+     */
+
+
+        static public function getPublicComplaints($startDate, $endDate, $status){
+         
+        $userID = User::getUserID();
+        if(! $userID)
+            throw new AppCustomHttpException("user not logged in", 401);
+
+         $complaints = Complaint::select('id','user_id','title','description',
+                                        'status_id','image_url','created_at')
+                               ->where('is_public',true)->get();
+
+        foreach ($complaints as $complaint) {
+            $complaint->status = $complaint->complaintStatus()->select('name','message')->first();
+            $complaint->user = $complaint->user()->select('username','name','room_no','hostel_id',
+                                                          'phone_contact','whatsapp_contact','email')
+                                                 ->first();
+
+            $complaint->user->hostel = $complaint->user->hostel()->value('name');
+        }
+
+        if(isset($startDate))
+            $complaints = $complaints->where('created_at','>=',$startDate);
+        if(isset($endDate))
+            $complaints = $complaints->where('created_at','<=',$endDate);
+        if(isset($status))
+            $complaints = $complaints->filter(function($complaint) use($status){
+                return $complaint->status->name == $status;
+            });
+        if(isset($hostel))
+            $complaints = $complaints->filter(function($complaint) use($hostel){
+                return $complaint->user->hostel == $hostel;
+            });
+
+        return $complaints->values()->all();
+    }
+
+
 
 
     /**
@@ -205,6 +250,19 @@ class Complaint extends Model
          
         $complaint->status_id = $statusID;
         $complaint->save();    
+    }
+
+    static public function editIsPublicStatus($complaintID){
+        if(! User::isUserAdmin())
+            throw new AppCustomHttpException("action not allowed",403);
+
+        $complaint = Complaint::find($complaintID);
+
+        if(empty($complaint))
+             throw new AppCustomHttpException("complaint not found", 404);
+
+        $complaint->is_public = !$complaint->is_public; 
+        $complaint->save();
     }
 
 

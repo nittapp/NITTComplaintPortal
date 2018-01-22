@@ -1,4 +1,5 @@
 
+
 <?php
 
 namespace Tests\Unit;
@@ -100,7 +101,7 @@ class ComplaintTest extends TestCase
         }
     }
 
-    $faker = Faker\Factory::create()
+    $faker = Faker\Factory::create();
 
     public function testCreateNewComplaintWithoutUrl() {
         
@@ -126,15 +127,15 @@ class ComplaintTest extends TestCase
     public function testCreateNewComplaintWithoutTitle(){
 
            $complaints = Complaint::createComplaints(
-              "description" => $faker->text
+                "description" => $faker->text
             );
 
     }
 
     public function testCreateNewComplaintWithInvalidTitle(){
               $complaints = Complaint::createComplaints(
-              "title" => $faker->regexify('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}'),
-              "description" => $faker->text
+                "title" => $faker->regexify('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}'),
+                "description" => $faker->text
             );
 
 
@@ -142,10 +143,53 @@ class ComplaintTest extends TestCase
 
     public function testCreateNewComplaintWithOutOfBoundsTitle(){
        
-        $complaints = Complaint::createComplaints(
-              "title" => $faker->sentence,
-              "description" => $faker->text($maxNbChars = 2000)
+              $complaints = Complaint::createComplaints(
+                "title" => $faker->sentence,
+                "description" => $faker->text($maxNbChars = 2000)
             );
+
+    }
+
+    public function testEditComplaintWithCorrectParameters(){
+
+              $complaints = Complaint::editComplaints(
+                  "title" => $faker->sentence,
+                  "description" => $faker->text($maxNbChars = 900),
+                  "image_url" => $faker->imageUrl
+                );
+
+    }
+
+
+    public function testEditComplaintWithoutAnyParameters(){
+
+              $complaints = Complaint::editComplaints();
+
+    }
+
+    public function testEditComplaintWithOutOfBoundsTitle(){
+
+              $complaints = Complaint::editComplaints(
+                  "title" => $faker->sentence($maxNbChars=2000),
+                  "description" => $faker->text($maxNbChars = 900),
+                );
+
+    }
+
+    public function testEditComplaintWithNoImageUrl(){
+
+              $complaints = Complaint::editComplaints(
+                  "title" => $faker->sentence,
+                  "description" => $faker->text($maxNbChars = 900),
+                );
+
+    }
+
+    public function testEditComplaintWithNoTitle(){
+
+              $complaints = Complaint::editComplaints(
+                  "description" => $faker->text($maxNbChars = 900)
+                );
 
     }
 
