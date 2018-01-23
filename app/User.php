@@ -64,7 +64,7 @@ class User extends Authenticatable
      *  @return [int] user_id
      */
     static public function getUserID(){
-        return 1;
+        return 4;
     }
 
     static public function isUserAdmin(){
@@ -89,9 +89,6 @@ class User extends Authenticatable
                     'phone_contact' => 'required|digits:10',
                     'whatsapp_contact' => 'required|digits:10',
                     'email' => 'required|email',
-                   
-
-
                     ]);
 
         if ($validator->fails())

@@ -36,11 +36,16 @@ class ComplaintComment extends Model
 
 
     static public function validateRequest(Request $request){
-        $validator = Validator::make($request->all(), [
-                    'complaint_id' => 'integer|required',
-                    'comment' => 'required|string',
-                    ]);
-
+        if($request->method() == 'POST')
+            $validator = Validator::make($request->all(), [
+                        'complaint_id' => 'integer|required',
+                        'comment' => 'required|string',
+                        ]);
+        else
+            $validator = Validator::make($request->all(), [
+                        'complaint_comment_id' => 'integer|required',
+                        'comment' => 'required|string',
+                        ]);
         if ($validator->fails())
             throw new AppCustomHttpException($validator->errors()->first(), 422);
     }
@@ -104,7 +109,7 @@ class ComplaintComment extends Model
         if(empty($complaintComment))
             throw new AppCustomHttpException("Comment not found", 404);
 
-        if($complaintComment->user_id != User::getUserID())
+        if($complaintComment->user_id != User::getUserID() && ! User::isUserAdmin())
             throw new AppCustomHttpException("Action not allowed", 403);
         $complaintComment->delete();
     }

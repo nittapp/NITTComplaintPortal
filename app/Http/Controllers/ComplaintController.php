@@ -45,6 +45,9 @@ class ComplaintController extends Controller
 
         }
     }
+
+
+
     /**
     * Using the User ID from the session, title, description and image url as input parameters
     * this function creates a new complaint in the database
@@ -75,11 +78,12 @@ class ComplaintController extends Controller
         }
      
       }
+
+
     /**
       * By using the data that is input for the edits to be made
       * changes are made for those fields that are changed
     */
-
     public function editComplaints(Request $request){
       try {
           $response = Complaint::validateRequest($request);
@@ -114,9 +118,6 @@ class ComplaintController extends Controller
     * @param  Request $request 
     * @return [json]           
     */
-
-
-  
     public function getAllComplaints(Request $request) {
 
         try {
@@ -145,6 +146,7 @@ class ComplaintController extends Controller
 
     }
 
+
     public function getPublicComplaints(Request $request) {
 
         try {
@@ -172,9 +174,16 @@ class ComplaintController extends Controller
 
     }
 
+    /**
+     * The admin can edit the complaint status of any complaint by using the 
+     * complaint id and status
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+
     public function editComplaintStatus(Request $request){
         try{
-            $response = Complaint::editComplaintStatus($request['complaint_id'], $request['status']);
+            $response = Complaint::editComplaintStatus($request['complaint_id'], $request['status_id']);
             return response()->json([
                                     "message" => "status updated successfully",
                                     "data" => $response,
