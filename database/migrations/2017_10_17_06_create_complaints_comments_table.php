@@ -20,7 +20,7 @@ class CreateComplaintsCommentsTable extends Migration
             $table->text('comment');
             $table->timestamps();
 
-            $table->foreign('complaint_id')->references('id')->on('complaints');
+            $table->foreign('complaint_id')->references('id')->on('complaints')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

@@ -4,9 +4,8 @@ use Faker\Generator as Faker;
 use App\Complaint;
 use App\User;
 use App\ComplaintStatus;
-
-
-$factory->define(Complaint::class, function (Faker $faker) {
+     
+    $factory->define(Complaint::class, function (Faker $faker) {
 
 	$userIDs = User::pluck('id');
     $complaintStatusIDs = ComplaintStatus::pluck('id');

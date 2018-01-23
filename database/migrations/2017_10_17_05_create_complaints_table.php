@@ -16,10 +16,10 @@ class CreateComplaintsTable extends Migration
         Schema::create('complaints', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('title',100);
+            $table->string('title',300);
             $table->text('description');
             $table->integer('status_id')->unsigned();
-            $table->string('image_url');
+            $table->string('image_url')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
