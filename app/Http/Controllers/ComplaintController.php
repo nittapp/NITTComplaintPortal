@@ -154,7 +154,7 @@ class ComplaintController extends Controller
      public function deleteComplaints(Request $request){
  
        try{  
-         $response = Complaint::deleteComplaint($request['id']);
+         $response = Complaint::deleteComplaints($request['complaint_id']);
          return response()->json([
                                  "message" => "complaint deleted",
                                  "data" => $response,

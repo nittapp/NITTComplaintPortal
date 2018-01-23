@@ -95,13 +95,15 @@ class ComplaintTest extends TestCase
      */
     public function testDeleteComplaintWithInvalidId() {
          $complaintId = 25;
-         $response = Complaint::deleteComplaint($complaintId);
+         $response = Complaint::deleteComplaints($complaintId);
+         //$this->assertEquals("complaints available",response()->json("message");
          $this->assertEquals(NULL,$response);
     }
     
     public function testDeleteComplaintWithValidId() {
-         $complaintId = 2;
-         $response = Complaint::deleteComplaint($complaintId);
+         $complaintId = 11;
+         $response = Complaint::deleteComplaints($complaintId);
+         //$this->assertEquals("complaint deleted",response()->json(["message"]);
          $this->assertEquals(NULL,$response);
     }
    
@@ -111,6 +113,7 @@ class ComplaintTest extends TestCase
          $description = $faker->text;
          $imageURL = NULL;
          $complaints = Complaint::createComplaints($title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);
     }
 
     public function testCreateNewComplaintWithUrl(){
@@ -119,6 +122,7 @@ class ComplaintTest extends TestCase
          $description = $faker->text;
          $imageURL = $faker->imageUrl;
          $complaints = Complaint::createComplaints($title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);  
     }
 
     public function testCreateNewComplaintWithoutTitle(){
@@ -127,7 +131,7 @@ class ComplaintTest extends TestCase
          $description = $faker->text;
          $imageURL = NULL;
          $complaints = Complaint::createComplaints($title,$description,$imageURL);
-    
+         $this->assertEquals(NULL,$complaints);
     }
 
     public function testCreateNewComplaintWithInvalidTitle(){
@@ -136,7 +140,7 @@ class ComplaintTest extends TestCase
          $description = $faker->text;
          $imageURL = $faker->imageUrl;
          $complaints = Complaint::createComplaints($title,$description,$imageURL);
-    
+         $this->assertEquals(NULL,$complaints);
     }
 
     public function testCreateNewComplaintWithOutOfBoundsTitle(){
@@ -145,7 +149,7 @@ class ComplaintTest extends TestCase
          $description = $faker->text($maxNbChars = 2000);
          $imageURL = $faker->imageUrl;
          $complaints = Complaint::createComplaints($title,$description,$imageURL);
-
+         $this->assertEquals(NULL,$complaints); 
     }
 /**
      * Unit test for getting complaint comments with id
@@ -189,8 +193,9 @@ class ComplaintTest extends TestCase
     public function testCreateComplaintCommentsWithInvalidId(){
           $faker = Faker::create();
           $comment = $faker->text;
-          $complaintId = 30;
+          $complaintId = 36;
           $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
+          $this->assertEquals(NULL,$complaintComment); 
     }
     
     public function testCreateComplaintCommentsWithComments(){
@@ -198,6 +203,7 @@ class ComplaintTest extends TestCase
           $comment = $faker->text;
           $complaintId = 8;
           $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
+          $this->assertEquals(NULL,$complaintComment);
     }
     /**
      * Unit test for editing complaint comments with complaint id and new complaint comment given
@@ -207,14 +213,17 @@ class ComplaintTest extends TestCase
     public function testEditComplaintCommentsWithInvalidId(){
          $faker = Faker::create();
          $comment = $faker->text;
-         $complaintCommentId = 28;
+         $complaintCommentId = 44;
          $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
+         $this->assertEquals(NULL,$complaintComment);
     }
+
     public function testEditComplaintCommentsWithValidComments(){
          $faker = Faker::create();
          $comment = $faker->text;
          $complaintCommentId = 9;
          $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
+         $this->assertEquals(NULL,$complaintComment);
     }
     /**
      * Unit test for deleting complaint comments with complaintComment Id given
@@ -226,6 +235,7 @@ class ComplaintTest extends TestCase
          $response = ComplaintComment::deleteComplaintComments($complaintCommentId);
          $this->assertEquals(NULL,$response);
     }
+  
     public function testDeleteComplaintCommentsWithValidId(){
          $complaintCommentId = 9;
          $response = ComplaintComment::deleteComplaintComments($complaintCommentId);
@@ -281,13 +291,15 @@ class ComplaintTest extends TestCase
          $reply = $faker->text;
          $complaintCommentId = 40;
          $complaintReply = ComplaintReply::createComplaintReplies($complaintCommentId,$reply);
+         $this->assertEquals(NULL,$complaintReply);
     }
     
     public function testCreateComplaintRepliesWithValidId(){
          $faker = Faker::create();
          $reply = $faker->text;
          $complaintCommentId = 4;
-                  $complaintReply = ComplaintReply::createComplaintReplies($complaintCommentId,$reply);
+         $complaintReply = ComplaintReply::createComplaintReplies($complaintCommentId,$reply);
+         $this->assertEquals(NULL,$complaintReply);
     }
      /**
      * Unit test for editing complaint replies with complaint comment id and new complaint reply given
@@ -299,12 +311,15 @@ class ComplaintTest extends TestCase
          $reply = $faker->text;
          $complaintReplyId = 15;
          $complaintReply = ComplaintReply::editComplaintReplies($complaintReplyId,$reply);
+         $this->assertEquals(NULL,$complaintReply); 
     }
+
     public function testEditComplaintRepliesWithValidReply(){
          $faker = Faker::create();
          $reply = $faker->text;
          $complaintReplyId = 4;
          $complaintReply = ComplaintReply::editComplaintReplies($complaintReplyId,$reply);
+         $this->assertEquals(NULL,$complaintReply);
      }
     /**
      * Unit test for deleting complaint replies with complaintReply Id given

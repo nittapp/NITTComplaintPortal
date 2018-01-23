@@ -149,7 +149,7 @@ class Complaint extends Model
      * @return 1 for sucessfully created and 0 if not
     */
    
-     static public function deleteComplaint($id){
+     static public function deleteComplaints($id){
         
          $userID = User::getUserID();
          $isUserAdmin = User::isUserAdmin();
