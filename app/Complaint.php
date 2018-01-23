@@ -184,11 +184,15 @@ class Complaint extends Model
         $userID = User::getUserID();
          
         $complaintModel = new Complaint;
+        if(!$title)
+           throw new AppCustomHttpException("title is required", 400);
         $complaintModel->title = $title; 
         $complaintModel->description = $description; 
+        
+        if(!$image_url)
+           throw new AppCustomHttpException("image URL is required", 400);
         $complaintModel->image_url = $image_url; 
         $complaintModel->status_id = ComplaintStatus::initialStatus();
-
         $user = User::find($userID);
         $response = $user->complaints()->save($complaintModel);
 
