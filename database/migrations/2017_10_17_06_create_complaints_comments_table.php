@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Support\Facades\Schema;
@@ -19,9 +20,9 @@ class CreateComplaintsCommentsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->text('comment');
             $table->timestamps();
-
             $table->foreign('complaint_id')->references('id')->on('complaints')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            
         });
     }
 

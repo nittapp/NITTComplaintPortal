@@ -19,10 +19,11 @@ class CreateComplaintsTable extends Migration
             $table->string('title',300);
             $table->text('description');
             $table->integer('status_id')->unsigned();
+            $table->boolean('is_public')->default(false);
             $table->string('image_url')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('status_id')->references('id')->on('complaints_status');
         });
     }

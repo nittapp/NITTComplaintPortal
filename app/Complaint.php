@@ -33,7 +33,7 @@ class Complaint extends Model
         return $this->belongsTo('App\User');
     }
 
-        /**
+    /**
      * Each Complaints are made by a User
      * @return App::User
      */
@@ -41,7 +41,10 @@ class Complaint extends Model
         return $this->hasMany('App\ComplaintComment');
     }
 
-
+    /**
+    * validateRequest is the function that is used to validate 
+    * the inputs of the get and create routes for complaint 
+    **/
     static public function validateRequest(Request $request){
         if($request->method() == 'POST')
             $validator = Validator::make($request->all(), [
@@ -61,6 +64,7 @@ class Complaint extends Model
 
 
     /**
+     * This is a GET route that is for the given user to view his/her complaint
      * By using the params - userID, startDate and endDate, the complaints are retieved by the
      * available combinations of parameters of startDate & endDate.
      * @param  userID    
@@ -141,6 +145,50 @@ class Complaint extends Model
     }
 
     /**
+     * This is for the user GET route for all public complaints 
+     * This will for any given user return all the public complaints
+     * This will be done by verifying the isPublic column in the complaint
+     * @param startDate
+     * @param endDate
+     * @return [array] complaints
+     */
+
+
+        static public function getPublicComplaints($startDate, $endDate, $status){
+         
+        $userID = User::getUserID();
+        if(! $userID)
+            throw new AppCustomHttpException("user not logged in", 401);
+
+         $complaints = Complaint::select('id','user_id','title','description',
+                                        'status_id','image_url','created_at')
+                               ->where('is_public',true)->get();
+
+        foreach ($complaints as $complaint) {
+            $complaint->status = $complaint->complaintStatus()->select('name','message')->first();
+            $complaint->user = $complaint->user()->select('username','name','room_no','hostel_id',
+                                                          'phone_contact','whatsapp_contact','email')
+                                                 ->first();
+
+            $complaint->user->hostel = $complaint->user->hostel()->value('name');
+        }
+
+        if(isset($startDate))
+            $complaints = $complaints->where('created_at','>=',$startDate);
+        if(isset($endDate))
+            $complaints = $complaints->where('created_at','<=',$endDate);
+        if(isset($status))
+            $complaints = $complaints->filter(function($complaint) use($status){
+                return $complaint->status->name == $status;
+            });
+        if(isset($hostel))
+            $complaints = $complaints->filter(function($complaint) use($hostel){
+                return $complaint->user->hostel == $hostel;
+            });
+
+        return $complaints->values()->all();
+    }
+    /*
      * This is for the user DELETE route. 
      * By using the complaint id,  
      * the instance of the table with given id is deleted
@@ -159,6 +207,7 @@ class Complaint extends Model
 
          if(! $isUserAdmin)
               throw new AppCustomHttpException("user not admin", 403);
+
  
          if(!Complaint::where('id',$id)->exists())        
               throw new AppCustomHttpException("complaint not found", 404);
@@ -166,6 +215,7 @@ class Complaint extends Model
          Complaint::where('id',$id)->delete();
                
      } 
+
 
 
 
@@ -235,6 +285,7 @@ class Complaint extends Model
     }
 
     /**
+     * This is for the PUT route for changing the complaint status 
      * The admin can change the status of a complaint and set to any of the available statuses
      * @param  [INT] $complaintID [description]
      * @param  [INT] $status_id   [description]
@@ -250,6 +301,24 @@ class Complaint extends Model
             throw new AppCustomHttpException("complaint not found", 404);
          
         $complaint->status_id = $statusID;
+        $complaint->save();
+    }
+     /**
+     * THis is for the PUT route for changing the isPublic property of a complaint
+     * The admin can change the status of a complaint and set to any of the available statuses
+     * @param  [INT] $complaintID [description]
+     * @return [STATUS] return if isPublic was successfully toggled
+     */
+    static public function editIsPublicStatus($complaintID){
+        if(! User::isUserAdmin())
+            throw new AppCustomHttpException("action not allowed",403);
+
+        $complaint = Complaint::find($complaintID);
+
+        if(empty($complaint))
+             throw new AppCustomHttpException("complaint not found", 404);
+
+        $complaint->is_public = !$complaint->is_public; 
         $complaint->save();
     }
 

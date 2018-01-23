@@ -1,13 +1,15 @@
 <?php
 
 namespace App;
-
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Exceptions\AppCustomHttpException;
 use Validator;
 use Exception;
 use Illuminate\Http\Request;
+use App\Complaint;
+use App\ComplaintComment;
+use App\ComplaintReply;
 
 class User extends Authenticatable
 
@@ -169,8 +171,8 @@ class User extends Authenticatable
 
         if( $userID != User::getUserID() && !User::isUserAdmin())
             throw new AppCustomHttpException("Action not allowed",403);
+        
         $user->delete();
-
 
     }
 
