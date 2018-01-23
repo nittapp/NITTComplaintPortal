@@ -7,7 +7,11 @@ use App\Complaint;
 use App\User;
 use App\Hostel;
 use App\AuthorizationLevel;
+use App\ComplaintComment;
+use App\ComplaintReply;
+use App\ComplaintStatus;
 use Exception;
+use App\Status;
 use App\Exceptions\AppCustomHttpException;
 
 class ComplaintController extends Controller
@@ -19,7 +23,6 @@ class ComplaintController extends Controller
      * @return [collection of complaints]
      */
     public function getUserComplaints(Request $request) {
-
         try {
 
             $response = Complaint::getUserComplaints($request['start_date'], $request['end_date']);
@@ -110,7 +113,6 @@ class ComplaintController extends Controller
     
 
 
-
     /**
     * By using the session data, the user is checked for logged in and admin.
     * If both are true, then all the complaints are retrieved for the admin for the 
@@ -119,10 +121,8 @@ class ComplaintController extends Controller
     * @return [json]           
     */
     public function getAllComplaints(Request $request) {
-
         try {
-            $response = Complaint::getAllComplaints($request['start_date'], $request['end_date'],
-                                                    $request['hostel'], $request['status']);
+            $response = Complaint::getAllComplaints($request['start_date'], $request['end_date'], $request['hostel'], $request['status']);
             return response()->json([
                                     "message" => "complaints available",
                                     "data" => $response,
@@ -141,9 +141,35 @@ class ComplaintController extends Controller
                                     "message" => "Internal server error",
                                     ], 500);
         }
+    }
 
 
+        /**
+     * By using the ID of complaint given by user, the function deletes the * complaint, complaintComment and complaintStatus from the Complaint, 
+     * ComplaintComment and ComplaintStatus tables respectively
+     * @param $id
+     * @return previous state, updated after deletion
+     */
 
+     public function deleteComplaints(Request $request){
+ 
+       try{  
+         $response = Complaint::deleteComplaint($request['id']);
+         return response()->json([
+                                 "message" => "complaint deleted",
+                                 "data" => $response,
+                                 ], 200);
+       } 
+       catch (AppCustomHttpException $e){
+            return response()->json([
+                                    "message" => $e->getMessage(),
+                                    ],$e->getCode());
+        }
+        catch (Exception $e) {
+            return response()->json([
+                                    "message" => "Internal Server error",
+                                    ],500);
+        }
     }
 
 

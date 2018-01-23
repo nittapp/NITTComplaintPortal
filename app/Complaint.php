@@ -88,7 +88,7 @@ class Complaint extends Model
         if(isset($endDate))
             $complaints = $complaints->where('created_at','<=',$endDate);
 
-        return $complaints->values()->all();
+        return $complaints->values()->all(); 
     }
 
 
@@ -183,6 +183,33 @@ class Complaint extends Model
 
         return $complaints->values()->all();
     }
+    /*
+     * This is for the user DELETE route. 
+     * By using the complaint id,  
+     * the instance of the table with given id is deleted
+     * @param id
+     * @param userID
+     * @return 1 for sucessfully created and 0 if not
+    */
+   
+     static public function deleteComplaint($id){
+        
+         $userID = User::getUserID();
+         $isUserAdmin = User::isUserAdmin();
+     
+         if(! $userID)
+              throw new AppCustomHttpException("user not logged in", 401);
+
+         if(! $isUserAdmin)
+              throw new AppCustomHttpException("user not admin", 403);
+ 
+         if(!Complaint::where('id',$id)->exists())        
+              throw new AppCustomHttpException("complaint not found", 404);
+ 
+         Complaint::where('id',$id)->delete();
+               
+     } 
+
 
 
 
@@ -201,11 +228,15 @@ class Complaint extends Model
         $userID = User::getUserID();
          
         $complaintModel = new Complaint;
+        if(!$title)
+           throw new AppCustomHttpException("title is required", 400);
         $complaintModel->title = $title; 
         $complaintModel->description = $description; 
+        
+        if(!$image_url)
+           throw new AppCustomHttpException("image URL is required", 400);
         $complaintModel->image_url = $image_url; 
         $complaintModel->status_id = ComplaintStatus::initialStatus();
-
         $user = User::find($userID);
         $response = $user->complaints()->save($complaintModel);
 
@@ -229,7 +260,9 @@ class Complaint extends Model
             throw new AppCustomHttpException("Complaint not found",404);
         
 
-        if($complaint->user_id != User::getUserID() && ! User::isUserAdmin())
+        if($complaint->user_id != User::getUserID() &&
+           ! User::isUserAdmin() &&
+           ! Status::is_editable($complaint->status_id))
             throw new AppCustomHttpException("Action not allowed",403);
         
         if(!empty($title))
@@ -261,7 +294,7 @@ class Complaint extends Model
             throw new AppCustomHttpException("complaint not found", 404);
          
         $complaint->status_id = $statusID;
-        $complaint->save();    
+        $complaint->save();
     }
 
     static public function editIsPublicStatus($complaintID){
