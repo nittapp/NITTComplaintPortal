@@ -63,8 +63,8 @@ class ComplaintComment extends Model
         if(empty(ComplaintComment::where('complaint_id',$complaintID)->first()))
             throw new AppCustomHttpException("comments not found", 404);
 
-        if(Complaint::find($complaintID)->user()->value('id') != User::getUserID() &&
-           ! User::isUserAdmin())
+        if((Complaint::find($complaintID)->user()->value('id') != User::getUserID() &&
+           ! User::isUserAdmin()) || (!Complaint::find($complaintID)->value('is_public') ))
             throw new AppCustomHttpException("action not allowed", 403);
 
         $comments = ComplaintComment::where('complaint_id',$complaintID)

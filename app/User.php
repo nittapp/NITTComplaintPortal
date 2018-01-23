@@ -68,7 +68,7 @@ class User extends Authenticatable
     }
 
     static public function isUserAdmin(){
-        return true;
+        return false;
     }
 
     static public function primaryAuthId(){
