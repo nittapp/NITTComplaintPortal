@@ -11,6 +11,7 @@ use App\ComplaintComment;
 use App\ComplaintReply;
 use App\ComplaintStatus;
 use Exception;
+use App\Status;
 use App\Exceptions\AppCustomHttpException;
 
 class ComplaintController extends Controller
