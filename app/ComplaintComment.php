@@ -33,8 +33,11 @@ class ComplaintComment extends Model
     public function complaintReplies(){
         return $this->hasMany('App\ComplaintReply','parent_id');
     }
-
-
+     
+    /**
+    * For the edit and create Complaint Comment routes we will validate the inputs provided using 
+    * the validate package in laravel
+    **/
     static public function validateRequest(Request $request){
         if($request->method() == 'POST')
             $validator = Validator::make($request->all(), [
@@ -51,6 +54,7 @@ class ComplaintComment extends Model
     }
 
     /**
+     * This is a GET route for complaint commnets
      * Each complaint has comments which are fetched only with complaintID
      * @param  [int] $complaintID 
      * @return  [collection] App::ComplaintComment
@@ -75,6 +79,14 @@ class ComplaintComment extends Model
 
     }
 
+     /**
+     * This is a POST route for creating complaint comments
+     * Each complaint has comments which are fetched only with complaintID
+     * createComplaintComments will take two parameters
+     * @param  [int] $complaintID 
+     * @param  [string] $comment
+     */
+
     static public function createComplaintComments($complaintID, $comment){
         if(empty(Complaint::find($complaintID)))
             throw new AppCustomHttpException("Complaint not found", 404);
@@ -90,6 +102,12 @@ class ComplaintComment extends Model
         $complaint = Complaint::find($complaintID);
         $response = $complaint->complaintComments()->save($complaintCommentModel);
     }
+    /**
+    * This is a PUT route for editing complaint comments
+    * Each comment that has to be edited requires two parameters
+    * @param  [int] $complaintID 
+    * @param  [string] $comment
+    **/
 
     static public function editComplaintComments($complaintCommentID, $comment){
 
@@ -103,6 +121,12 @@ class ComplaintComment extends Model
         $complaintComment->comment = $comment;
         $complaintComment->save();
     }
+
+    /**
+    * This is a DELETE route for deleting complaint comments
+    * In order to delete comments we will be taking in one parameter
+    *@param [int] $complaintID
+    **/
 
     static public function deleteComplaintComments($complaintCommentID){
         $complaintComment = ComplaintComment::find($complaintCommentID);
