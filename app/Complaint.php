@@ -236,7 +236,12 @@ class Complaint extends Model
         $complaintModel = new Complaint;
         if(!$title)
            throw new AppCustomHttpException("title is required", 400);
+        if(strlen($title) >250)
+           throw new AppCustomHttpException("character limit exceeded", 400);
         $complaintModel->title = $title; 
+        
+        if(strlen($description) > 1020)
+           throw new AppCustomHttpException("character limit exceeded", 400);
         $complaintModel->description = $description; 
         
         if(!$image_url)
@@ -271,6 +276,11 @@ class Complaint extends Model
            ! Status::is_editable($complaint->status_id))
             throw new AppCustomHttpException("Action not allowed",403);
         
+        if(strlen($title) >250)
+           throw new AppCustomHttpException("character limit exceeded", 400);
+        if(strlen($description) > 1020)
+           throw new AppCustomHttpException("character limit exceeded", 400);
+      
         if(!empty($title))
             $complaint->title = $title; 
         
