@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\ComplaintValidator;
 use App\ComplaintStatus;
+use App\ComplaintReply;
 use App\Exceptions\AppCustomHttpException;
 use Exception;
 use Validator;
@@ -30,7 +31,7 @@ class ComplaintReply extends Model
         return $this->belongsTo('App\User');
     }
 
-    static public function valdiateRequest(Request $request){
+    static public function validateRequest(Request $request){
         if($request->method() == 'POST')
             $validator = Validator::make($request->all(), [
                         'complaint_comment_id' => 'integer|required',
@@ -42,7 +43,7 @@ class ComplaintReply extends Model
                         'comment' => 'required',
                         ]);
         if ($validator->fails())
-            throw new AppCustomHttpException($validator->errors()->first(), 500);
+            throw new AppCustomHttpException($validator->errors()->first(), 422);
 
     }
 
