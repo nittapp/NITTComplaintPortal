@@ -22,39 +22,24 @@ class ComplaintCommentTest extends TestCase
         $this->assertTrue(true);
     }
 
-     /**
-     * Unit test for getting complaint comments with id
-     * @return void
-     */
-    public function testGetComplaintCommentsWithoutId(){
-      $id = NULL;
-      $complaintComments = ComplaintComment::getComplaintComments($id);
-        foreach ($complaintComments as $complaintComment) {
-            $this->assertArrayNotHasKey('id', $complaintComment);
-            $this->assertArrayNotHasKey('comment', $complaintComment);
-            $this->assertArrayNotHasKey('created_at', $complaintComment);
-            $this->assertArrayNotHasKey('updated_at', $complaintComment);
-        }
-    }
+
     public function testGetComplaintCommentsWithInvalidId(){
-      $id = 100;
-      $complaintComments = ComplaintComment::getComplaintComments($id);
-       foreach ($complaintComments as $complaintComment) {
-            $this->assertArrayNotHasKey('id', $complaintComment);
-            $this->assertArrayNotHasKey('comment', $complaintComment);
-            $this->assertArrayNotHasKey('created_at', $complaintComment);
-            $this->assertArrayNotHasKey('updated_at', $complaintComment);
-        }
+      $response = $this->json('GET','/api/v1/comments/100');
+      $response
+        ->assertStatus(404)
+        ->assertJson([
+                'message' => 'Complaint not found',
+                ]);
     }
+
     public function testGetComplaintCommentsWithValidId(){
-      $id = 17;
-      $complaintComments = ComplaintComment::getComplaintComments($id);
-       foreach ($complaintComments as $complaintComment) {
-            $this->assertArrayHasKey('id', $complaintComment);
-            $this->assertArrayHasKey('comment', $complaintComment);
-            $this->assertArrayHasKey('created_at', $complaintComment);
-            $this->assertArrayHasKey('updated_at', $complaintComment);
-        }
+      $response = $this->json('GET','/api/v1/comments/4');
+      $response
+        ->assertStatus(404)
+        ->assertJson([
+                'message' => 'comments available',
+            
+                ]);
     }
     
 
