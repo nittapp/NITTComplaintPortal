@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Support\Facades\Schema;
@@ -19,12 +20,9 @@ class CreateComplaintsTable extends Migration
             $table->string('title',300);
             $table->text('description');
             $table->integer('status_id')->unsigned();
-<<<<<<< HEAD
-            $table->string('image_url');
             $table->boolean('is_public')->default(false);
-=======
             $table->string('image_url')->nullable();
->>>>>>> 46cbd99e11f43d2b9b3cee78a9bc6b3671a14030
+
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
