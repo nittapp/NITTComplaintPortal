@@ -87,23 +87,26 @@ class ComplaintTest extends TestCase
                                );
         }
     }
-
-
-  //  $faker = Faker\Factory::create();
-  
     /**
      * Unit test for deleting complaints with id given
      * @return void
      */
-    public function testDeleteComplaintWithInvalidId() {
-         $complaintId = 25;
-         $response = Complaint::deleteComplaint($complaintId);
-         $this->assertEquals(NULL,$response);
+   
+    public function testDeleteComplaintWithInvalidId(){
+        
+        $response = $this->json('DELETE', '/api/v1/complaints/2000');
+
+        $response
+            ->assertStatus(404)
+            ->assertExactJson([
+                'message' => 'complaint not found',
+            ]);
     }
     
     public function testDeleteComplaintWithValidId() {
-         $complaintId = 2;
-         $response = Complaint::deleteComplaint($complaintId);
+         $complaintId = 11;
+         $response = Complaint::deleteComplaints($complaintId);
+         //$this->assertEquals("complaint deleted",response()->json(["message"]);
          $this->assertEquals(NULL,$response);
     }
    
@@ -113,6 +116,7 @@ class ComplaintTest extends TestCase
          $description = $faker->text;
          $imageURL = NULL;
          $complaints = Complaint::createComplaints($title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);
     }
 
     public function testCreateNewComplaintWithUrl(){
@@ -121,91 +125,88 @@ class ComplaintTest extends TestCase
          $description = $faker->text;
          $imageURL = $faker->imageUrl;
          $complaints = Complaint::createComplaints($title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);  
     }
 
-   
+    public function testCreateNewComplaintWithoutTitle(){
+         $faker = Faker::create();
+         $title = NULL;
+         $description = $faker->text;
+         $imageURL = $faker->imageUrl;
+         $complaints = Complaint::createComplaints($title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);
+    }
 
     public function testCreateNewComplaintWithInvalidTitle(){
-              $complaints = Complaint::createComplaints(
-                "title" => $faker->regexify('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}'),
-                "description" => $faker->text
-            );
-
-
+         $faker = Faker::create();
+         $title =  $faker->regexify('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}');
+         $description = $faker->text;
+         $imageURL = $faker->imageUrl;
+         $complaints = Complaint::createComplaints($title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);
     }
 
     public function testCreateNewComplaintWithOutOfBoundsTitle(){
-       
-              $complaints = Complaint::createComplaints(
-                "title" => $faker->sentence,
-                "description" => $faker->text($maxNbChars = 2000)
-            );
-
+         $faker = Faker::create();
+         $title =  $faker->regexify('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}');
+         $description = $faker->text($maxNbChars = 2000);
+         $imageURL = $faker->imageUrl;
+         $complaints = Complaint::createComplaints($title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);
     }
 
     public function testEditComplaintWithCorrectParameters(){
-
-              $complaints = Complaint::editComplaints(
-                  "title" => $faker->sentence,
-                  "description" => $faker->text($maxNbChars = 900),
-                  "image_url" => $faker->imageUrl
-                );
-
+         $faker = Faker::create();
+         $title =  $faker->sentence;
+         $description = $faker->text($maxNbChars = 900);
+         $imageURL = $faker->imageUrl;
+         $complaint_id = 7;
+         $complaints = Complaint::editComplaints($complaint_id,$title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);
     }
 
-
     public function testEditComplaintWithoutAnyParameters(){
-
-              $complaints = Complaint::editComplaints();
-
+         $faker = Faker::create();
+         $title =  NULL;
+         $description = NULL;
+         $imageURL = NULL;
+         $complaint_id = 7;
+         $complaints = Complaint::editComplaints($complaint_id,$title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);
     }
 
     public function testEditComplaintWithOutOfBoundsTitle(){
-
-              $complaints = Complaint::editComplaints(
-                  "title" => $faker->sentence($maxNbChars=2000),
-                  "description" => $faker->text($maxNbChars = 900),
-                );
-
+         $faker = Faker::create();
+         $title = $faker->sentence($maxNbChars=2000);
+         $description = $faker->text($maxNbChars = 900);
+         $imageURL = $faker->imageUrl;
+         $complaint_id = 7;
+         $complaints = Complaint::editComplaints($complaint_id,$title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);
     }
 
     public function testEditComplaintWithNoImageUrl(){
 
-              $complaints = Complaint::editComplaints(
-                  "title" => $faker->sentence,
-                  "description" => $faker->text($maxNbChars = 900),
-                );
-
+         $faker = Faker::create();
+         $title = $faker->sentence;
+         $description = $faker->text($maxNbChars = 900);
+         $imageURL = NULL;
+         $complaint_id = 7;
+         $complaints = Complaint::editComplaints($complaint_id,$title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);
     }
 
     public function testEditComplaintWithNoTitle(){
-
          $faker = Faker::create();
          $title = NULL;
-         $description = $faker->text;
-         $imageURL = NULL;
-         $complaints = Complaint::createComplaints($title,$description,$imageURL);
-    
-    }
-
-    public function testCreateNewComplaintWithInvalidTitle(){
-         $faker = Faker::create();
-         $title = $faker->regexify('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}');
-         $description = $faker->text;
+         $description = $faker->text($maxNbChars = 900);
          $imageURL = $faker->imageUrl;
-         $complaints = Complaint::createComplaints($title,$description,$imageURL);
-    
-    }
+         $complaint_id = 7;
+         $complaints = Complaint::editComplaints($complaint_id,$title,$description,$imageURL);
+         $this->assertEquals(NULL,$complaints);
+   }
 
-    public function testCreateNewComplaintWithOutOfBoundsTitle(){
-         $faker = Faker::create();
-         $title = $faker->regexify('[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}');
-         $description = $faker->text($maxNbChars = 2000);
-         $imageURL = $faker->imageUrl;
-         $complaints = Complaint::createComplaints($title,$description,$imageURL);
-
-    }
-/**
+    /**
      * Unit test for getting complaint comments with id
      * @return void
      */
@@ -240,7 +241,43 @@ class ComplaintTest extends TestCase
         }
     }
     
+
+
+    public function testCreateComplaintCommentsWithInvalidId(){
+          $faker = Faker::create();
+          $comment = $faker->text;
+          $complaintId = 36;
+          $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
+          $this->assertEquals(NULL,$complaintComment); 
+    }
     
+    public function testCreateComplaintCommentsWithComments(){
+          $faker = Faker::create();
+          $comment = $faker->text;
+          $complaintId = 8;
+          $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
+          $this->assertEquals(NULL,$complaintComment);
+    }
+    /**
+     * Unit test for editing complaint comments with complaint id and new complaint comment given
+     * @return void
+     */
+    
+    public function testEditComplaintCommentsWithInvalidId(){
+         $faker = Faker::create();
+         $comment = $faker->text;
+         $complaintCommentId = 44;
+         $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
+         $this->assertEquals(NULL,$complaintComment);
+    }
+
+    public function testEditComplaintCommentsWithValidComments(){
+         $faker = Faker::create();
+         $comment = $faker->text;
+         $complaintCommentId = 9;
+         $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
+         $this->assertEquals(NULL,$complaintComment);
+    }
     /**
      * Unit test for deleting complaint comments with complaintComment Id given
      * @return void
@@ -250,7 +287,16 @@ class ComplaintTest extends TestCase
          $complaintCommentId = 50;
          $response = ComplaintComment::deleteComplaintComments($complaintCommentId);
          $this->assertEquals(NULL,$response);
+
+        $response = $this->json('DELETE', '/v1/comments/20');
+
+        $response
+            ->assertStatus(404)
+            ->assertExactJson([
+                'message' => 'Comment not found',
+            ]);
     }
+  
     public function testDeleteComplaintCommentsWithValidId(){
          $complaintCommentId = 9;
          $response = ComplaintComment::deleteComplaintComments($complaintCommentId);
@@ -306,13 +352,15 @@ class ComplaintTest extends TestCase
          $reply = $faker->text;
          $complaintCommentId = 40;
          $complaintReply = ComplaintReply::createComplaintReplies($complaintCommentId,$reply);
+         $this->assertEquals(NULL,$complaintReply);
     }
     
     public function testCreateComplaintRepliesWithValidId(){
          $faker = Faker::create();
          $reply = $faker->text;
          $complaintCommentId = 4;
-                  $complaintReply = ComplaintReply::createComplaintReplies($complaintCommentId,$reply);
+         $complaintReply = ComplaintReply::createComplaintReplies($complaintCommentId,$reply);
+         $this->assertEquals(NULL,$complaintReply);
     }
      /**
      * Unit test for editing complaint replies with complaint comment id and new complaint reply given
@@ -324,12 +372,15 @@ class ComplaintTest extends TestCase
          $reply = $faker->text;
          $complaintReplyId = 15;
          $complaintReply = ComplaintReply::editComplaintReplies($complaintReplyId,$reply);
+         $this->assertEquals(NULL,$complaintReply); 
     }
+
     public function testEditComplaintRepliesWithValidReply(){
          $faker = Faker::create();
          $reply = $faker->text;
          $complaintReplyId = 4;
          $complaintReply = ComplaintReply::editComplaintReplies($complaintReplyId,$reply);
+         $this->assertEquals(NULL,$complaintReply);
      }
     /**
      * Unit test for deleting complaint replies with complaintReply Id given
@@ -347,4 +398,3 @@ class ComplaintTest extends TestCase
          $this->assertEquals(NULL,$response);
     }
 }
-
