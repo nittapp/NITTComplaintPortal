@@ -69,54 +69,90 @@ class ComplaintRepliesTest extends TestCase
      * Unit tests for creating new complaint replies with replies given
      * @return void
      */
+ 
     public function testCreateComplaintRepliesWithInvalidId(){
-         $faker = Faker::create();
-         $reply = $faker->text;
-         $complaintCommentId = 40;
-         $complaintReply = ComplaintReply::createComplaintReplies($complaintCommentId,$reply);
-         $this->assertEquals(NULL,$complaintReply);
+        $id = 500; 
+        $comment = "THis is a reply";
+        $response = $this->json('POST', '/api/v1/replies',['parent_id' =>$id, 'comment' => $comment]);
+
+        $response
+            ->assertStatus(200)
+            ->assertExactJson([
+                'message' => 'reply created successfully',
+            ]);
     }
-    
+  
+
+
     public function testCreateComplaintRepliesWithValidId(){
-         $faker = Faker::create();
-         $reply = $faker->text;
-         $complaintCommentId = 4;
-         $complaintReply = ComplaintReply::createComplaintReplies($complaintCommentId,$reply);
-         $this->assertEquals(NULL,$complaintReply);
+        $id = 5; 
+        $comment = "THis is a reply";
+        $response = $this->json('POST', '/api/v1/replies',['parent_id' =>$id, 'comment' => $comment]);
+
+        $response
+            ->assertStatus(200)
+            ->assertExactJson([
+                'message' => 'reply created successfully',
+            ]);
     }
      /**
      * Unit test for editing complaint replies with complaint comment id and new complaint reply given
      * @return void
      */
     
-    public function testEditComplaintRepliesWithInvalidId(){
-         $faker = Faker::create();
-         $reply = $faker->text;
-         $complaintReplyId = 15;
-         $complaintReply = ComplaintReply::editComplaintReplies($complaintReplyId,$reply);
-         $this->assertEquals(NULL,$complaintReply); 
+
+
+
+
+    public function testEditComplaintRepliesWithInvalidReply(){
+
+        $complaintReplyID = 4; 
+        $response = $this->json('PUT', '/api/v1/replies',['complaint_comment_id' => $complaintReplyID, 'comment' =>'']);
+        $response
+            ->assertStatus(200)
+            ->assertExactJson([
+                'message' => 'reply updated successfully',
+            ]);
     }
+  
 
     public function testEditComplaintRepliesWithValidReply(){
-         $faker = Faker::create();
-         $reply = $faker->text;
-         $complaintReplyId = 4;
-         $complaintReply = ComplaintReply::editComplaintReplies($complaintReplyId,$reply);
-         $this->assertEquals(NULL,$complaintReply);
-     }
+
+        $complaintReplyID = 4; 
+        $comment = "This is a reply";
+        $response = $this->json('PUT', '/api/v1/replies',['complaint_comment_id' => $complaintReplyID,'comment' => $comment]);
+        $response
+            ->assertStatus(200)
+            ->assertExactJson([
+                'message' => 'reply updated successfully',
+            ]);
+    }
     /**
      * Unit test for deleting complaint replies with complaintReply Id given
      * @return void
      */
     
+
     public function testDeleteComplaintRepliesWithInvalidId(){
-         $complaintReplyId = 30;
-         $response = ComplaintReply::deleteComplaintReplies($complaintReplyId);
-         $this->assertEquals(NULL,$response);
+        
+        $response = $this->json('DELETE', '/api/v1/replies/2000');
+
+        $response
+            ->assertStatus(404)
+            ->assertExactJson([
+                'message' => 'reply not found',
+            ]);
     }
+
     public function testDeleteComplaintRepliesWithValidId(){
-         $complaintReplyId = 2;
-         $response = ComplaintReply::deleteComplaintReplies($complaintReplyId);
-         $this->assertEquals(NULL,$response);
+        
+        $response = $this->json('DELETE', '/api/v1/replies/2');
+
+        $response
+            ->assertStatus(200)
+            ->assertExactJson([
+                'message' => 'reply deleted successfully',
+            ]);
     }
+    
 }
