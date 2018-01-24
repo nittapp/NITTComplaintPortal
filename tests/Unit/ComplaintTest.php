@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 46cbd99e11f43d2b9b3cee78a9bc6b3671a14030
 <?php
 namespace Tests\Unit;
 use Tests\TestCase;
@@ -92,12 +87,9 @@ class ComplaintTest extends TestCase
                                );
         }
     }
-<<<<<<< HEAD
 
-    $faker = Faker\Factory::create();
 
-=======
-  
+  //  $faker = Faker\Factory::create();
   
     /**
      * Unit test for deleting complaints with id given
@@ -115,7 +107,6 @@ class ComplaintTest extends TestCase
          $this->assertEquals(NULL,$response);
     }
    
->>>>>>> 46cbd99e11f43d2b9b3cee78a9bc6b3671a14030
     public function testCreateNewComplaintWithoutUrl() {
          $faker = Faker::create();
          $title = $faker->sentence;
@@ -132,14 +123,7 @@ class ComplaintTest extends TestCase
          $complaints = Complaint::createComplaints($title,$description,$imageURL);
     }
 
-    public function testCreateNewComplaintWithoutTitle(){
-<<<<<<< HEAD
-
-           $complaints = Complaint::createComplaints(
-                "description" => $faker->text
-            );
-
-    }
+   
 
     public function testCreateNewComplaintWithInvalidTitle(){
               $complaints = Complaint::createComplaints(
@@ -196,14 +180,6 @@ class ComplaintTest extends TestCase
 
     public function testEditComplaintWithNoTitle(){
 
-              $complaints = Complaint::editComplaints(
-                  "description" => $faker->text($maxNbChars = 900)
-                );
-
-    }
-
-}
-=======
          $faker = Faker::create();
          $title = NULL;
          $description = $faker->text;
@@ -263,41 +239,8 @@ class ComplaintTest extends TestCase
             $this->assertArrayHasKey('updated_at', $complaintComment);
         }
     }
-    /**
-     * Unit tests for creating new complaint comments with comments given
-     * @return void
-     */
     
-    public function testCreateComplaintCommentsWithInvalidId(){
-          $faker = Faker::create();
-          $comment = $faker->text;
-          $complaintId = 30;
-          $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
-    }
     
-    public function testCreateComplaintCommentsWithComments(){
-          $faker = Faker::create();
-          $comment = $faker->text;
-          $complaintId = 8;
-          $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
-    }
-    /**
-     * Unit test for editing complaint comments with complaint id and new complaint comment given
-     * @return void
-     */
-    
-    public function testEditComplaintCommentsWithInvalidId(){
-         $faker = Faker::create();
-         $comment = $faker->text;
-         $complaintCommentId = 28;
-         $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
-    }
-    public function testEditComplaintCommentsWithValidComments(){
-         $faker = Faker::create();
-         $comment = $faker->text;
-         $complaintCommentId = 9;
-         $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
-    }
     /**
      * Unit test for deleting complaint comments with complaintComment Id given
      * @return void
@@ -404,4 +347,4 @@ class ComplaintTest extends TestCase
          $this->assertEquals(NULL,$response);
     }
 }
->>>>>>> 46cbd99e11f43d2b9b3cee78a9bc6b3671a14030
+
