@@ -35,22 +35,24 @@ class ComplaintCommentTest extends TestCase
     public function testGetComplaintCommentsWithValidId(){
       $response = $this->json('GET','/api/v1/comments/4');
       $response
-        ->assertStatus(404)
+        ->assertStatus(200)
         ->assertJson([
                 'message' => 'comments available',
-            
                 ]);
     }
     
 
-
     public function testCreateComplaintCommentsWithInvalidId(){
-          $faker = Faker::create();
-          $comment = $faker->text;
-          $complaintId = 36;
-          $complaintComment = ComplaintComment::createComplaintComments($complaintId,$comment);
-          $this->assertEquals(NULL,$complaintComment); 
+      $faker = Faker::create();
+      $response = $this->json('POST','/api/v1/comments',['complaint_id' => 36,
+                                                         'comment' => $faker->text]);
+      $response
+        ->assertStatus(404)
+        ->assertJson([
+                'message' => 'Complaint not found',
+                ]); 
     }
+
     
     public function testCreateComplaintCommentsWithComments(){
           $faker = Faker::create();
@@ -66,18 +68,25 @@ class ComplaintCommentTest extends TestCase
     
     public function testEditComplaintCommentsWithInvalidId(){
          $faker = Faker::create();
-         $comment = $faker->text;
-         $complaintCommentId = 44;
-         $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
-         $this->assertEquals(NULL,$complaintComment);
+         $response = $this->json('PUT','/api/v1/comments',['complaint_comment_id' => 129,
+                                                           'comment' => $faker->text]);
+         $response
+            ->assertStatus(404)
+            ->assertJson([
+                    'message' => 'Comment not found',
+                    ]); 
     }
 
     public function testEditComplaintCommentsWithValidComments(){
          $faker = Faker::create();
-         $comment = $faker->text;
-         $complaintCommentId = 9;
-         $complaintComment = ComplaintComment::editComplaintComments($complaintCommentId,$comment);
-         $this->assertEquals(NULL,$complaintComment);
+         $response = $this->json('PUT','/api/v1/comments',['complaint_comment_id' => 9,
+                                                           'comment' => $faker->text]);
+         $response
+            ->assertStatus(200)
+            ->assertJson([
+                    'message' => 'comment updated successfully',
+                    ]); 
+        
     }
     /**
      * Unit test for deleting complaint comments with complaintComment Id given
@@ -85,12 +94,7 @@ class ComplaintCommentTest extends TestCase
      */
     
     public function testDeleteComplaintCommentsWithInvalidId(){
-         $complaintCommentId = 50;
-         $response = ComplaintComment::deleteComplaintComments($complaintCommentId);
-         $this->assertEquals(NULL,$response);
-
-        $response = $this->json('DELETE', '/v1/comments/20');
-
+        $response = $this->json('DELETE','/api/v1/comments/200');
         $response
             ->assertStatus(404)
             ->assertExactJson([
@@ -99,8 +103,11 @@ class ComplaintCommentTest extends TestCase
     }
   
     public function testDeleteComplaintCommentsWithValidId(){
-         $complaintCommentId = 9;
-         $response = ComplaintComment::deleteComplaintComments($complaintCommentId);
-         $this->assertEquals(NULL,$response);
+        $response = $this->json('DELETE','/api/v1/comments/9');
+        $response
+            ->assertStatus(200)
+            ->assertExactJson([
+                'message' => 'comment deleted successfully',
+            ]);
     }
 }
