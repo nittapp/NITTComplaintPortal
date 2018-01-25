@@ -1,9 +1,14 @@
 <?php
 
 namespace App;
-
 use Illuminate\Database\Eloquent\Model;
+use App\User;
+use App\ComplaintValidator;
+use App\ComplaintStatus;
 use App\Exceptions\AppCustomHttpException;
+use Exception;
+use Validator;
+use Illuminate\Http\Request;
 
 class ComplaintReply extends Model
 {
@@ -25,7 +30,7 @@ class ComplaintReply extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function valdiateRequest(Request $request){
+    static public function valdiateRequest(Request $request){
         if($request->method() == 'POST')
             $validator = Validator::make($request->all(), [
                         'complaint_comment_id' => 'integer|required',
@@ -41,7 +46,7 @@ class ComplaintReply extends Model
 
     }
 
-    static public function getComplaintReplies($complaintCommentID){
+    static public function getComplaintReply($complaintCommentID){
 
        $complaintComment = ComplaintComment::find($complaintCommentID); 
        if(empty($complaintComment))
@@ -57,7 +62,7 @@ class ComplaintReply extends Model
     }
 
 
-    static public function createComplaintReplies($complaintCommentID, $comment){
+    static public function createComplaintReply($complaintCommentID, $comment){
 
         $complaintComment = ComplaintComment::find($complaintCommentID);
         if(empty($complaintComment))
@@ -73,7 +78,7 @@ class ComplaintReply extends Model
         $response = $complaintComment->complaintReplies()->save($complaintReplyModel);        
     }
 
-    static public function editComplaintReplies($complaintReplyID, $comment){
+    static public function editComplaintReply($complaintReplyID, $comment){
         $complaintReply = ComplaintReply::find($complaintReplyID);
         if(empty($complaintReply))
             throw new AppCustomHttpException("reply not found", 404);
@@ -85,7 +90,7 @@ class ComplaintReply extends Model
         $response = $complaintReply->save();
     }
 
-    static public function deleteComplaintReplies($complaintReplyID){
+    static public function deleteComplaintReply($complaintReplyID){
         $complaintReply = ComplaintReply::find($complaintReplyID);
         if(empty($complaintReply))
             throw new AppCustomHttpException("reply not found", 404);

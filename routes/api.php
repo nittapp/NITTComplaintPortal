@@ -33,10 +33,10 @@ Route::post('/v1/comments','ComplaintCommentController@createComments');
 Route::put('/v1/comments','ComplaintCommentController@editComments');
 Route::delete('/v1/comments/{complaint_comment_id}','ComplaintCommentController@deleteComments');
 
-Route::get('/v1/replies/{complaint_comment_id}','ComplaintReplyController@getReplies');
-Route::post('/v1/replies','ComplaintReplyController@createReplies');
-Route::put('/v1/replies','ComplaintReplyController@editReplies');
-Route::delete('/v1/replies/{complaint_reply_id}','ComplaintReplyController@deleteReplies');
+Route::get('/v1/replies/{complaint_comment_id}','ComplaintReplyController@getComplaintReply');
+Route::post('/v1/replies','ComplaintReplyController@createComplaintReply');
+Route::put('/v1/replies','ComplaintReplyController@editComplaintReply');
+Route::delete('/v1/replies/{complaint_reply_id}','ComplaintReplyController@deleteComplaintReply');
 
 Route::get('/v1/admin/complaints','ComplaintController@getAllComplaints');
 Route::get('/v1/admin/statuses','ComplaintStatusController@getComplaintStatuses');

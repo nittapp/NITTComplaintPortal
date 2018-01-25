@@ -23,14 +23,14 @@ class ComplaintRepliesTest extends TestCase
         $this->assertTrue(true);
     }
 
-
     /**
      * Unit test for getting complaint replies with id
      * @return void
      */
+
     public function testGetComplaintRepliesWithoutId(){
       $complaintCommentId = NULL;
-      $complaintReplies = ComplaintReply::getComplaintReplies($complaintCommentId);
+      $complaintReplies = ComplaintReply::getComplaintReply($complaintCommentId);
         foreach ($complaintReplies as $complaintReply) {
             $this->assertArrayHasKey('id', $complaintReply);
             $this->assertArrayHasKey('parent_id', $complaintReply);
@@ -42,7 +42,7 @@ class ComplaintRepliesTest extends TestCase
     } 
     public function testGetComplaintRepliesWithInvalidId(){
       $complaintCommentId = 40;
-      $complaintReplies = ComplaintReply::getComplaintReplies($complaintCommentId);
+      $complaintReplies = ComplaintReply::getComplaintReply($complaintCommentId);
         foreach ($complaintReplies as $complaintReply) {
             $this->assertArrayNotHasKey('id', $complaintReply);
             $this->assertArrayNotHasKey('parent_id', $complaintReply);
@@ -55,7 +55,7 @@ class ComplaintRepliesTest extends TestCase
     
     public function testGetComplaintRepliesWithId(){
       $complaintCommentId = 8;
-      $complaintReplies = ComplaintReply::getComplaintReplies($complaintCommentId);
+      $complaintReplies = ComplaintReply::getComplaintReply($complaintCommentId);
         foreach ($complaintReplies as $complaintReply) {
             $this->assertArrayHasKey('id', $complaintReply);
             $this->assertArrayHasKey('parent_id', $complaintReply);
@@ -70,7 +70,7 @@ class ComplaintRepliesTest extends TestCase
      * @return void
      */
  
-    public function testCreateComplaintRepliesWithInvalidId(){
+    public function testCreateComplaintRepliesWithValidId(){
         $id = 500; 
         $comment = "THis is a reply";
         $response = $this->json('POST', '/api/v1/replies',['parent_id' =>$id, 'comment' => $comment]);
@@ -84,15 +84,15 @@ class ComplaintRepliesTest extends TestCase
   
 
 
-    public function testCreateComplaintRepliesWithValidId(){
-        $id = 5; 
+    public function testCreateComplaintRepliesWithInvalidId(){
+        $id = 500; 
         $comment = "THis is a reply";
         $response = $this->json('POST', '/api/v1/replies',['parent_id' =>$id, 'comment' => $comment]);
 
         $response
-            ->assertStatus(200)
+            ->assertStatus(404)
             ->assertExactJson([
-                'message' => 'reply created successfully',
+                'message' => 'comment not found',
             ]);
     }
      /**
