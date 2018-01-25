@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\AppCustomHttpException;
 
+use App\ComplaintComment;
 use Validator;
 
 use Illuminate\Http\Request;
