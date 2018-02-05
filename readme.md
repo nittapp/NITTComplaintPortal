@@ -628,7 +628,7 @@ status_id | status id
 Remember — the user should be logged in to access this route
 </aside>
 
-## Edit Complaint Status
+## Edit IsPublic Status for Complaint
 
 ```javascript
 $.ajax({
