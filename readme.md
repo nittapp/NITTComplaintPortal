@@ -628,3 +628,35 @@ status_id | status id
 Remember — the user should be logged in to access this route
 </aside>
 
+## Edit Complaint Status
+
+```javascript
+$.ajax({
+    url: 'https://spider.nitt.edu/nittcomplaints/api/v1/admin/complaints'
+    type: 'PUT'
+});
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "message": "complaint status sucessfully changed"
+}
+```
+
+This endpoint updates a specific complaint.
+
+### HTTP Request
+
+`PUT https://spider.nitt.edu/nittcomplaints/api/v1/admin/complaints`
+
+### Request Parameters
+
+Parameter | Description
+--------- | -----------
+complaint_id | The ID of the complaint to update
+
+<aside class="success">
+Remember — the admin should be logged in to access this route
+</aside>
