@@ -17,7 +17,11 @@ Welcome to the NITTComplaints API! You can use our API to access NITTComplaints 
 We have language binding in JS. You can view code examples in the dark area to the right.
 
 This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
+ 
 
+# Setup 
+  To get it running, install docker and docker-compose on your host machine
+  and run `LE_DIR=./certs docker-compose -f docker-compose.yml up` from inside the project directory. The app will now be available from https://0.0.0.0:80
 
 # Complaints
 
