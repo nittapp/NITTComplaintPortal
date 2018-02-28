@@ -1,24 +1,13 @@
----
-title: API Reference
-
-language_tabs: # must be one of https://git.io/vQNgJ
-  - javascript
-
-includes:
-  - errors
-
-search: true
----
-
 # Introduction
+Code for the complait portal service in the NITT app.
 
-Welcome to the NITTComplaints API! You can use our API to access NITTComplaints API endpoints, which can get information on various complaints, comments, replies and users in our database.
-
-We have language binding in JS. You can view code examples in the dark area to the right.
-
-This example API documentation page was created with [Slate](https://github.com/lord/slate). Feel free to edit it and use it as a base for your own API's documentation.
-
-
+# Setup 
+ 1. To get it running, install docker and docker-compose on your host machine.
+ 2. Copy .env.example to .env.prod
+ 3. Run `sh keygen.sh` and paste the base_64 key in APP_KEY in .env.prod
+ 4. Run `LE_DIR=./certs docker-compose up` from inside the project directory. The app will now be available from https://0.0.0.0:8080
+ 5. To add datatables, run  `docker exec complaints_application php artisan migrate`
+ 6. Run this command for testing only, `docker exec complaints_application php artisan db:seed`
 # Complaints
 
 ## Get User Complaints
