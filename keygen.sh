@@ -1,4 +1,4 @@
 #!/bin/bash
 # bash generate random alphanumeric string
 #
-cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w ${1:-64} | head -n 1
+cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w ${1:-32} | head -n 1
