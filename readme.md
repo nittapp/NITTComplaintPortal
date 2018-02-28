@@ -1,5 +1,5 @@
 # Introduction
-Code for the complait portal service in the NITT app.
+Code for the complaint portal service in the NITT app.
 
 # Setup 
  1. To get it running, install docker and docker-compose on your host machine.
