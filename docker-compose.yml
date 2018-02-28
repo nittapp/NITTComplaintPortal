@@ -1,25 +1,12 @@
 version: '2'
 services:
 
-  # The Application
-  app:
-    build:
-      context: ./
-      dockerfile: app.dockerfile
-    volumes:
-      - /var/www/storage
-    env_file: '.env.prod'
-    environment:
-      - "DB_HOST=database"
-      - "REDIS_HOST=cache"
-      - "DB_PORT=3306"
-    container_name: complaints_application
 
 # The Web Server
   web:
     build:
       context: ./
-      dockerfile: web.dockerfile
+      dockerfile: dockerfiles/web.dockerfile
     volumes:
         - "${LE_DIR}:/etc/letsencrypt"
     ports:
@@ -41,6 +28,20 @@ services:
   # redis
   cache:
     image: redis:3.0-alpine
+
+  # The Application
+  app:
+    build:
+      context: ./
+      dockerfile: dockerfiles/app.dockerfile
+    volumes:
+      - /var/www/storage
+    env_file: '.env.prod'
+    environment:
+      - "DB_HOST=database"
+      - "REDIS_HOST=cache"
+      - "DB_PORT=3306"
+    container_name: complaints_application
 
 volumes:
   dbdata:

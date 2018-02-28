@@ -1,10 +1,6 @@
 FROM shakyshane/laravel-php:latest
 
 COPY . /var/www
-COPY composer.lock composer.json /var/www/
-
-COPY database /var/www/database
-
 WORKDIR /var/www
 
 RUN chown -R www-data:www-data \
@@ -17,8 +13,5 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php -r "unlink('composer-setup.php');" \
     && php composer.phar install --no-scripts \
     && rm composer.phar
-
-#uncomment this command for testing with fake data
-RUN php artisan db:seed
 
 RUN php artisan optimize
