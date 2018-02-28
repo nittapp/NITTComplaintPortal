@@ -12,5 +12,5 @@
 */
 
 Route::get('/', function () {
-    return response()->json(['message' => 'complaints available']);
+    return view('app');
 });

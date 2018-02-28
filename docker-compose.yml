@@ -1,47 +1,57 @@
 version: '2'
 services:
 
-
-# The Web Server
-  web:
-    build:
-      context: ./
-      dockerfile: dockerfiles/web.dockerfile
-    volumes:
-        - "${LE_DIR}:/etc/letsencrypt"
-    ports:
-        - 8080:80
-        - 443:443
-    container_name: nginx_server
-
-# The Database
-  database:
-    image: mysql:5.6
-    volumes:
-      - dbdata:/var/lib/mysql
-    environment:
-      - "MYSQL_DATABASE=homestead"
-      - "MYSQL_USER=homestead"
-      - "MYSQL_PASSWORD=secret"
-      - "MYSQL_ROOT_PASSWORD=secret"
-  
-  # redis
-  cache:
-    image: redis:3.0-alpine
-
-  # The Application
   app:
     build:
       context: ./
       dockerfile: dockerfiles/app.dockerfile
     volumes:
-      - /var/www/storage
+        - ./app:/var/www/app
+        - ./resources:/var/www/resources
+        - ./database:/var/www/database
+        - ./public:/var/www/public
+        - ./routes:/var/www/routes
+        - ./tests:/var/www/tests
     env_file: '.env.prod'
     environment:
-      - "DB_HOST=database"
+      - "DB_HOST=db"
       - "REDIS_HOST=cache"
       - "DB_PORT=3306"
-    container_name: complaints_application
+    container_name: complaints-application
 
+  web:
+    build:
+      context: ./
+      dockerfile: dockerfiles/web.dockerfile
+    volumes:
+        - ./logs/nginx-error.log:/var/log/nginx/error.log
+        - ./logs/nginx-access.log:/var/log/nginx/access.log
+        - ./public:/var/www/public       
+        - ./default.conf:/etc/nginx/sites-available/default
+        - ./default.conf:/etc/nginx/sites-enabled/default
+    ports:
+        - 8080:80
+    container_name: nginx-server
+
+  db:
+    image: mysql:5.6
+    volumes:
+      - ./dbdata:/var/lib/mysql
+    environment:
+      - "MYSQL_DATABASE=homestead"
+      - "MYSQL_USER=homestead"
+      - "MYSQL_PASSWORD=secret"
+      - "MYSQL_ROOT_PASSWORD=secret"
+    container_name: complaints-db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    links:
+        - db
+    ports:
+        - "3000:80"
+    container_name: complaints-pma
+    
 volumes:
   dbdata:

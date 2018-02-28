@@ -43,7 +43,7 @@ class ComplaintController extends Controller
 
         catch (Exception $e){
             return response()->json([
-                                    "message" => "Internal server error",
+                                    "message" => $e->getMessage(),
                                     ], 500);
 
         }
@@ -61,10 +61,8 @@ class ComplaintController extends Controller
 
       try  {
            $response = Complaint::validateRequest($request);
-           $response = Complaint::createComplaints($request['title'],$request['description'], 
-           $request['image_url']);
-           return response()->json([
-                                 "message" => "complaint sucessfully created"], 200);  
+           $response = Complaint::createComplaints($request);
+           return response()->json(["message" => "complaint sucessfully created"], 200);  
             } 
 
       catch (AppCustomHttpException $e) {
@@ -76,7 +74,7 @@ class ComplaintController extends Controller
       catch (Exception $e) {
             
             return response()->json([
-                                    "message" => "Internal Server error",
+                                    "message" => $e->getMessage(),
                                     ], 500);
         }
      

@@ -10,12 +10,35 @@
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "axios": "^0.16.2",
+        "laravel-mix": "^1.0",
+        "babel-preset-react": "^6.23.0",
         "bootstrap-sass": "^3.3.7",
         "cross-env": "^5.0.1",
         "jquery": "^3.1.1",
-        "laravel-mix": "^1.0",
         "lodash": "^4.17.4",
-        "vue": "^2.1.10"
+        "axios": "^0.17.1",
+        "bootstrap": "^4.0.0",
+        "husky": "^0.14.3",
+        "json-server": "^0.12.1",
+        "lint-staged": "^4.2.3",
+        "material-ui": "^0.20.0",
+        "mdbootstrap": "^4.5.0",
+        "prettier": "^1.7.4",
+        "react": "^16.0.0",
+        "react-bootstrap": "^0.32.0",
+        "react-dom": "^16.0.0",
+        "react-redux": "^5.0.6",
+        "react-redux-form": "^1.16.2",
+        "react-router": "^4.2.0",
+        "react-router-dom": "^4.2.2",
+        "react-scripts": "1.0.14",
+        "react-select": "^1.2.1",
+        "react-styleguidist": "^6.0.31",
+        "react-swipeable-views": "^0.12.12",
+        "redux": "^3.7.2",
+        "redux-form": "^7.2.0",
+        "redux-logger": "^3.0.6",
+        "redux-promise-middleware": "^4.4.1",
+        "redux-thunk": "^2.2.0"
     }
 }

@@ -3,6 +3,7 @@
 .env
 node_modules
 vendor
+dbdata
 storage/framework/cache/**
 storage/framework/sessions/**
 storage/framework/views/**

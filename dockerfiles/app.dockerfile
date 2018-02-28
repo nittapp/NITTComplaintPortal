@@ -15,3 +15,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && rm composer.phar
 
 RUN php artisan optimize
+
+RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
+RUN apt-get install -y nodejs
+RUN npm install

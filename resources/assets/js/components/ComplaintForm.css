@@ -1,0 +1,26 @@
+.title {
+  text-align: center;
+  font-size: 140%;
+  transform: translateX(30px);
+}
+
+.description {
+  text-align: center;
+  font-size: 110%;
+}
+
+.userid {
+  text-align: center;
+  font-size: 140%;
+  transform: translate(15px, 10px);
+}
+
+textarea {
+  border-color: red;
+}
+button {
+  box-shadow: 1px 2.5px 2.5px 1px;
+  border-color: grey;
+  border-radius: 10px;
+  transform: scale(1.3);
+}
