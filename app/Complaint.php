@@ -50,13 +50,13 @@ class Complaint extends Model
             $validator = Validator::make($request->all(), [
                   'title' => 'required|string|max:255',
                   'description' => 'required|string|max:1023',
-                  'image_url' => 'nullable|active_url'
+                  'image_url' => 'nullable'
             ]);
         else
             $validator = Validator::make($request->all(), [
                       'title' => 'string|nullable|max:255',
                       'description' => 'nullable|string|max:1023',
-                      'image_url' => 'required_without_all:title,description|active_url'
+                      'image_url' => 'nullable'
             ]);
         if ($validator->fails())
              throw new AppCustomHttpException($validator->errors()->first(), 422);        
