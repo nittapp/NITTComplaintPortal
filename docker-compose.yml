@@ -32,7 +32,7 @@ services:
       context: ./
       dockerfile: dockerfiles/app.dockerfile
     volumes:
-      - .:/var/www/
+      - /var/www/storage
     env_file: '.env.prod'
     environment:
       - "DB_HOST=database"
