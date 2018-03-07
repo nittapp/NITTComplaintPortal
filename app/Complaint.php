@@ -8,6 +8,7 @@ use App\ComplaintValidator;
 use App\ComplaintStatus;
 use App\Exceptions\AppCustomHttpException;
 use Exception;
+use Storage;
 use Validator;
 use Illuminate\Http\Request;
 
@@ -50,15 +51,13 @@ class Complaint extends Model
             $validator = Validator::make($request->all(), [
                   'title' => 'required|string|max:255',
                   'description' => 'required|string|max:1023',
-                  'image_url' => 'nullable'
             ]);
         else
             $validator = Validator::make($request->all(), [
                       'title' => 'string|nullable|max:255',
                       'description' => 'nullable|string|max:1023',
-                      'image_url' => 'nullable'
             ]);
-        if ($validator->fails())
+       if ($validator->fails())
              throw new AppCustomHttpException($validator->errors()->first(), 422);        
     }
 
@@ -230,26 +229,16 @@ class Complaint extends Model
      * @param  image_url
      * @return 1 for sucessfully created and 0 if not
     */
-    static public function createComplaints($title, $description,$image_url=null){
+    static public function createComplaints(Request $request){
         $userID = User::getUserID();
-         
+        Storage::disk('local')->putFileAs((string)$userID,$request->file('image'),'sss');
         $complaintModel = new Complaint;
-        if(!$title)
-           throw new AppCustomHttpException("title is required", 400);
-        if(strlen($title) >250)
-           throw new AppCustomHttpException("character limit exceeded", 400);
-        $complaintModel->title = $title; 
-        
-        if(strlen($description) > 1020)
-           throw new AppCustomHttpException("character limit exceeded", 400);
-        $complaintModel->description = $description; 
-        
-        if(!$image_url)
-           throw new AppCustomHttpException("image URL is required", 400);
-        $complaintModel->image_url = $image_url; 
+        $complaintModel->title = $request['title']; 
+        $complaintModel->description = $request['description']; 
         $complaintModel->status_id = ComplaintStatus::initialStatus();
         $user = User::find($userID);
         $response = $user->complaints()->save($complaintModel);
+
 
     }
 
