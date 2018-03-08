@@ -43,3 +43,7 @@ Route::get('/v1/admin/statuses','ComplaintStatusController@getComplaintStatuses'
 Route::put('/v1/admin/complaints/status','ComplaintController@editComplaintStatus');
 Route::put('/v1/admin/users','UserController@editUserAuthId');
 Route::put('/v1/admin/users','ComplaintController@editIsPublicStatus');
+
+
+// This route is to check the working of auth.admin middleware. Remove this route once settled
+Route::get('/v1/admin/complaintsTest', 'ComplaintController@getAllComplaints')->middleware('auth.admin');
