@@ -5,9 +5,10 @@ Code for the complaint portal service in the NITT app.
  1. To get it running, install docker and docker-compose on your host machine.
  2. Copy `.env.example` to `.env.prod`
  3. Run `sh keygen.sh` and paste the base_64 key in APP_KEY in .env.prod
- 4. Run `LE_DIR=./certs docker-compose up` from inside the project directory. The app will now be available from https://0.0.0.0:8080
- 5. To add datatables, run  `docker exec complaints_application php artisan migrate`
- 6. Run this command for testing only, `docker exec complaints_application php artisan db:seed`
+ 4. Run `docker-compose up` from inside the project directory. The app will now be available from http://0.0.0.0:8080
+ 5. To add datatables, run  `docker exec complaints-application php artisan migrate`
+ 6. Run this command for testing only, `docker exec complaints-application php artisan db:seed`
+ 
 # Complaints
 
 ## Get User Complaints
