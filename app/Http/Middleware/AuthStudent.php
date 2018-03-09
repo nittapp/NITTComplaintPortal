@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class AuthAdmin
+class AuthStudent
 {
     // list of expected headers
     private $expectedHeaders = [
@@ -28,15 +28,6 @@ class AuthAdmin
     }
 
     /**
-     * check if the value set in admin header is of expected type
-     * @param  string $adminHeader
-     * @return bool                 true if the value is one of "true" or "false". false otherwise
-     */
-    private function validateAdminHeader($adminHeader) {
-        return in_array($adminHeader, ["true", "false"]);
-    }
-
-    /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -50,20 +41,6 @@ class AuthAdmin
             return response()->json([
                 "message"   => "Expected headers not set",
             ], 403);
-        }
-
-        // return if type of X_NITT_APP_IS_ADMIN is not bool
-        if (! $this->validateAdminHeader($request->header('X_NITT_APP_IS_ADMIN'))) {
-            return response()->json([
-                "message"   => "Invalid header type",
-            ], 403);
-        }
-
-        // return if user is not admin
-        if ($request->header('X_NITT_APP_IS_ADMIN') != 'true') {
-            return response()->json([
-                "message"   => "User not admin",
-            ], 401);
         }
 
         return $next($request);
