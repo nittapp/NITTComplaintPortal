@@ -82,7 +82,11 @@ class Complaint extends Model
         
         foreach ($complaints as $complaint) {
             $complaint->status = $complaint->complaintStatus()->select('name','message')->first();
+            $file_url =  (string)$userID.'/'.(string)$complaint->id.'.jpeg';
+            if(Storage::disk('local')->exists($file_url))
+               $complaint->image_path = $file_url;
         }
+        
         if(isset($startDate))
             $complaints = $complaints->where('created_at','>=',$startDate);
         if(isset($endDate))
@@ -112,10 +116,14 @@ class Complaint extends Model
                                ->paginate(10);
         foreach ($complaints as $complaint) {
             $complaint->status = $complaint->complaintStatus()->select('name','message')->first();
+            $file_url =  (string)$complaint->user_id.'/'.(string)$complaint->id.'.jpeg';
             $complaint->user = $complaint->user()->select('username','name','room_no','hostel_id',
                                                           'phone_contact','whatsapp_contact','email')
                                                  ->first();
+
+            $complaint->image_path = $file_url;
             $complaint->user->hostel = $complaint->user->hostel()->value('name');
+            //$compla
         }
         if(isset($startDate))
             $complaints = $complaints->where('created_at','>=',$startDate);
@@ -149,9 +157,11 @@ class Complaint extends Model
                                ->where('is_public',true)->get();
         foreach ($complaints as $complaint) {
             $complaint->status = $complaint->complaintStatus()->select('name','message')->first();
+            $file_url =  (string)$complaint->user_id.'/'.(string)$complaint->id.'.jpeg';
             $complaint->user = $complaint->user()->select('username','name','room_no','hostel_id',
                                                           'phone_contact','whatsapp_contact','email')
                                                  ->first();
+            $complaint->image_path = $file_url;                            
             $complaint->user->hostel = $complaint->user->hostel()->value('name');
         }
         if(isset($startDate))
@@ -209,11 +219,12 @@ class Complaint extends Model
       //  var_dump("The description"); 
         //var_dump("description");  
         $userID = User::getUserID();
+            
+        if($request->image->extension()!='jpeg')
+            throw new AppCustomHttpException("Only jpeg images allowed",422);
     
         $complaintModel = new Complaint;
         $complaintModel->title = $request['title']; 
-
-            
         $complaintModel->description = $request['description']; 
         $complaintModel->status_id = ComplaintStatus::initialStatus();
         $user = User::find($userID);
@@ -221,11 +232,8 @@ class Complaint extends Model
         $complaint_id = $response->id; 
 
         if( $request->hasFile('image') )
-        {
-            $extension = $request->image->extension();
-            $path = $request->image->storeAs((string)$userID, (string)$complaint_id.'.'.$extension, 'local');    
-            var_dump($path);
-        }
+            $path = $request->image->storeAs((string)$userID, (string)$complaint_id.'.jpeg', 'local');    
+        
         //Storage::putFileAs((string)$userID,$request->file('image'),(string)$complaint_id+'.jpg');
         
         //var_dump($path);
@@ -242,10 +250,12 @@ class Complaint extends Model
     * @param image_url
     * @return 1 for sucessfully created and 0 if not
     */
-    
-    static public function editComplaints(Request $request){
 
+     static public function editComplaints(Request $request){
+
+        $userID = User::getUserID();
         $complaint = Complaint::find($request["complaint_id"]);
+
         if(empty($complaint))
             throw new AppCustomHttpException("Complaint not found",404);
         
@@ -253,25 +263,28 @@ class Complaint extends Model
            ! User::isUserAdmin() &&
            ! Status::is_editable($complaint->status_id))
             throw new AppCustomHttpException("Action not allowed",403);
+
+        if($request->image->extension()!='jpeg')
+            throw new AppCustomHttpException("Only jpeg images allowed",422);
         
-        if(strlen($title) >250)
-           throw new AppCustomHttpException("character limit exceeded", 400);
-        if(strlen($description) > 1020)
-           throw new AppCustomHttpException("character limit exceeded", 400);
-      
-        if(!empty($title))
-            $complaint->title = $request["title"]; 
-        
-        if(!empty($description))
-            $complaint->description = $request["description"];
+        if(!empty($request['title']))
+            $complaint->title = $request['title']; 
+
+        if(!empty($request['description']))
+            $complaint->description = $request['description']; 
         $complaint->save();
-        $path = '4/58';
-        $file_url = (string)$complaint->user_id+'/'+(string)$request['complaint_id'];
-        $size_file = Storage::disk('local')->size($file_url);
-        if($size_file>0)
-            Storage::disk('local')->delete($file_url); 
-        //Storage::disk('local')->putFileAs($file_url); 
-         $path = $request->image->storeAs((string)$userID, (string)$complaint_id+'.'+$extension, 'local');   
+        
+        if( $request->hasFile('image') )
+         {
+            $file_url =  (string)$userID.'/'.(string)$request['complaint_id'].'.jpeg';
+            Storage::disk('local')->delete($file_url);         
+            $path = $request->image->storeAs((string)$userID, (string)$request['complaint_id'].'.jpeg', 'local');    
+        }
+        //Storage::putFileAs((string)$userID,$request->file('image'),(string)$complaint_id+'.jpg');
+        
+        //var_dump($path);
+       // Storage::disk('local')->putFileAs((string)$userID,$request->file('image'),'sss.jpg');
+
     }
     /**
      * This is for the PUT route for changing the complaint status 
