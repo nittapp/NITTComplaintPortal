@@ -43,7 +43,9 @@ class AuthStudent
             ], 403);
         }
 
-        return $next($request);
+        $response = $next($request);
+
+        return $response->cookie('isLoggedIn', 1, 60, null, null, false, false)
+                        ->cookie('username', $request->header('X_NITT_APP_USERNAME'), 60, null, null, false, false);
     }
 }
-a
