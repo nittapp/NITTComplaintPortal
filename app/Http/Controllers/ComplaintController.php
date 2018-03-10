@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Complaint;
 use App\User;
@@ -13,6 +11,7 @@ use App\ComplaintStatus;
 use Exception;
 use App\Status;
 use App\Exceptions\AppCustomHttpException;
+// use Illuminate\Support\Facades\Storage;
 
 class ComplaintController extends Controller
 {
@@ -24,33 +23,23 @@ class ComplaintController extends Controller
      */
     public function getUserComplaints(Request $request) {
         try {
-
             $response = Complaint::getUserComplaints($request['start_date'], $request['end_date']);
-
             return response()->json([
                                     "message" => "complaints available",
                                     "data" => $response,
                                     ], 200);
         }
-
-
         catch (AppCustomHttpException $e){
-
             return response()->json([
                                     "message" => $e->getMessage(),
                                     ], $e->getCode());
         }
-
         catch (Exception $e){
             return response()->json([
                                     "message" => $e->getMessage(),
                                     ], 500);
-
         }
     }
-
-
-
     /**
     * Using the User ID from the session, title, description and image url as input parameters
     * this function creates a new complaint in the database
@@ -58,15 +47,14 @@ class ComplaintController extends Controller
     * @return json response 
     */
     public function createComplaints(Request $request){
-
       try  {
+           //var_dump($request["title"]);
+            
            $response = Complaint::validateRequest($request);
            $response = Complaint::createComplaints($request);
            return response()->json(["message" => "complaint sucessfully created"], 200);  
             } 
-
       catch (AppCustomHttpException $e) {
-
             return response()->json([
                                     "message" => $e->getMessage(),
                                     ], $e->getCode());
@@ -79,29 +67,26 @@ class ComplaintController extends Controller
         }
      
       }
-
-
     /**
       * By using the data that is input for the edits to be made
       * changes are made for those fields that are changed
     */
     public function editComplaints(Request $request){
+      //var_dump($request['complaint_id']);
+     // var_dump($request['title']);
       try {
+        //  var_dump($request['title']);
           $response = Complaint::validateRequest($request);
-          $response = Complaint::editComplaints($request['complaint_id'],$request['title'],
-                                                $request['description'],$request['image_url']);
+          $response = Complaint::editComplaints($request);
           return response()->json([
                      "message" => "complaint sucessfully edited"
                      ], 200);  
       }
-
       catch (AppCustomHttpException $e){
         return response()->json([
                                 "message" => $e->getMessage(),
                                  ],$e->getCode());
-
       }
-
       catch (Exception $e){
         return response()->json([
                                 "message" => "Internal Server error"
@@ -109,8 +94,6 @@ class ComplaintController extends Controller
       }
     }
     
-
-
     /**
     * By using the session data, the user is checked for logged in and admin.
     * If both are true, then all the complaints are retrieved for the admin for the 
@@ -126,9 +109,7 @@ class ComplaintController extends Controller
                                     "data" => $response,
                                     ], 200);
         } 
-
         catch (AppCustomHttpException $e){
-
             return response()->json([
                                     "message" => $e->getMessage(),
                                     ], $e->getCode());
@@ -140,23 +121,19 @@ class ComplaintController extends Controller
                                     ], 500);
         }
     }
-
-
         /**
      * By using the ID of complaint given by user, the function deletes the * complaint, complaintComment and complaintStatus from the Complaint, 
      * ComplaintComment and ComplaintStatus tables respectively
      * @param $id
      * @return previous state, updated after deletion
      */
-
      public function deleteComplaints(Request $request){
  
        try{  
          $response = Complaint::deleteComplaints($request['complaint_id']);
          return response()->json([
                                  "message" => "complaint deleted",
-                                 "data" => $response,
-                                 ], 200);
+                                  ], 200);
        } 
        catch (AppCustomHttpException $e){
             return response()->json([
@@ -169,10 +146,7 @@ class ComplaintController extends Controller
                                     ],500);
         }
     }
-
-
     public function getPublicComplaints(Request $request) {
-
         try {
             $response = Complaint::getPublicComplaints($request['start_date'], $request['end_date'],$request['status']);
             return response()->json([
@@ -180,9 +154,7 @@ class ComplaintController extends Controller
                                     "data" => $response,
                                     ], 200);
         } 
-
         catch (AppCustomHttpException $e){
-
             return response()->json([
                                     "message" => $e->getMessage(),
                                     ], $e->getCode());
@@ -193,18 +165,13 @@ class ComplaintController extends Controller
                                     "message" => "Internal server error",
                                     ], 500);
         }
-
-
-
     }
-
     /**
      * The admin can edit the complaint status of any complaint by using the 
      * complaint id and status
      * @param  Request $request [description]
      * @return [type]           [description]
      */
-
     public function editComplaintStatus(Request $request){
         try{
             $response = Complaint::editComplaintStatus($request['complaint_id'], $request['status_id']);
@@ -224,8 +191,6 @@ class ComplaintController extends Controller
                                     ],500);
         }
     }
-
-
       public function editIsPublicStatus(Request $request){
         try{
             $response = Complaint::editIsPublicStatus($request['complaint_id']);
