@@ -23,7 +23,7 @@ class ComplaintController extends Controller
      */
     public function getUserComplaints(Request $request) {
         try {
-            $response = Complaint::getUserComplaints($request['start_date'], $request['end_date']);
+            $response = Complaint::getUserComplaints($request, $request['start_date'], $request['end_date']);
             return response()->json([
                                     "message" => "complaints available",
                                     "data" => $response,
@@ -72,10 +72,8 @@ class ComplaintController extends Controller
       * changes are made for those fields that are changed
     */
     public function editComplaints(Request $request){
-      //var_dump($request['complaint_id']);
-     // var_dump($request['title']);
+
       try {
-        //  var_dump($request['title']);
           $response = Complaint::validateRequest($request);
           $response = Complaint::editComplaints($request);
           return response()->json([
@@ -103,7 +101,7 @@ class ComplaintController extends Controller
     */
     public function getAllComplaints(Request $request) {
         try {
-            $response = Complaint::getAllComplaints($request['start_date'], $request['end_date'], $request['hostel'], $request['status']);
+            $response = Complaint::getAllComplaints($request, $request['start_date'], $request['end_date'], $request['hostel'], $request['status']);
             return response()->json([
                                     "message" => "complaints available",
                                     "data" => $response,
@@ -117,7 +115,7 @@ class ComplaintController extends Controller
         catch (Exception $e){
             
             return response()->json([
-                                    "message" => "Internal server error",
+                                    "message" => $e->getMessage(),
                                     ], 500);
         }
     }
@@ -127,10 +125,10 @@ class ComplaintController extends Controller
      * @param $id
      * @return previous state, updated after deletion
      */
-     public function deleteComplaints(Request $request){
+     public function deleteComplaints(Request $request, $complaintID){
  
        try{  
-         $response = Complaint::deleteComplaints($request['complaint_id']);
+         $response = Complaint::deleteComplaints($request, $complaintID);
          return response()->json([
                                  "message" => "complaint deleted",
                                   ], 200);
@@ -146,9 +144,10 @@ class ComplaintController extends Controller
                                     ],500);
         }
     }
+
     public function getPublicComplaints(Request $request) {
         try {
-            $response = Complaint::getPublicComplaints($request['start_date'], $request['end_date'],$request['status']);
+            $response = Complaint::getPublicComplaints($request, $request['start_date'], $request['end_date'],$request['status']);
             return response()->json([
                                     "message" => "complaints available",
                                     "data" => $response,
@@ -162,19 +161,20 @@ class ComplaintController extends Controller
         catch (Exception $e){
             
             return response()->json([
-                                    "message" => "Internal server error",
+                                    "message" => $e->getMessage(),
                                     ], 500);
         }
     }
+    
     /**
      * The admin can edit the complaint status of any complaint by using the 
      * complaint id and status
      * @param  Request $request [description]
      * @return [type]           [description]
      */
-    public function editComplaintStatus(Request $request){
+    public function editComplaintStatus(Request $request, $complaintID, $statusID){
         try{
-            $response = Complaint::editComplaintStatus($request['complaint_id'], $request['status_id']);
+            $response = Complaint::editComplaintStatus($request, $complaintID, $statusID);
             return response()->json([
                                     "message" => "status updated successfully",
                                     "data" => $response,
@@ -191,9 +191,10 @@ class ComplaintController extends Controller
                                     ],500);
         }
     }
-      public function editIsPublicStatus(Request $request){
+
+    public function editIsPublicStatus(Request $request, $complaintID){
         try{
-            $response = Complaint::editIsPublicStatus($request['complaint_id']);
+            $response = Complaint::editIsPublicStatus($request, $complaintID);
             return response()->json([
                                     "message" => "complaint view status is changed successfully",
                                     "data" => $response,

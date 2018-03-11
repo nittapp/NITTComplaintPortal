@@ -18,5 +18,12 @@
     </noscript>
     <div id="root"></div>
     <script src="{{asset('js/app.js')}}" ></script>
+    <script type="text/javascript">
+        function getCookie(name) {
+          var value = "; " + document.cookie;
+          var parts = value.split("; " + name + "=");
+          if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+    </script>
   </body>
 </html>

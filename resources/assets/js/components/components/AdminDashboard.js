@@ -2,23 +2,34 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import ComplaintList from './AdminComplaintList';
-import { fetchPublicComplaints } from '../actions/commonActions';
+import { fetchAllComplaints } from '../actions/adminActions';
 
 import { fetchAllComplaintStatus } from '../actions/adminActions';
+import { PageHeader } from 'react-bootstrap';
 
 class AdminDashboard extends React.Component {
   componentWillMount() {
-    this.props.dispatch(fetchPublicComplaints());
+    this.props.dispatch(fetchAllComplaints());
+    //REMOVE BELOW COMMENT WHEN ADMIN ACTIONS ARE CHANGED TO 8080
     this.props.dispatch(fetchAllComplaintStatus());
   }
 
   render() {
     const complaints = this.props.complaints;
-    const statuses = this.props.statuses;
+    console.log(complaints);
+    //REMOVE BELOW COMMENT WHEN ADMIN ACTIONS ARE CHANGED TO 8080
+    //const statuses = this.props.statuses;
+    const statuses = [{ id: 1, name: 'private' }, { id: 2, name: 'public' }];
+
     console.log(statuses);
     return (
-      <div >
-        <ComplaintList data={complaints} statuses={statuses} />
+      <div>
+        <PageHeader style={{ textAlign: 'center' }}>
+          Complaints Portal <small>Admin Console</small>
+        </PageHeader>
+        <div>
+          <ComplaintList data={complaints} statuses={statuses} />
+        </div>
       </div>
     );
   }
@@ -26,7 +37,7 @@ class AdminDashboard extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    complaints: state.complaints.complaints,
+    complaints: state.complaints.all_complaints,
     statuses: state.complaints.statuses
   };
 }

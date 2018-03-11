@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\User;
 
 class AuthAdmin
 {
@@ -46,6 +47,8 @@ class AuthAdmin
     public function handle($request, Closure $next)
     {
         // return error if all expected header not set
+
+
         if (!$this->expectedHeadersSet($request)) {
             return response()->json([
                 "message"   => "Expected headers not set",

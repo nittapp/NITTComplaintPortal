@@ -1,153 +1,109 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Card, CardHeader, CardText, CardTitle } from 'material-ui/Card';
-import { DropdownButton, MenuItem } from 'react-bootstrap' ;
 
-import { List } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
-import FontIcon from 'material-ui/FontIcon';
-import TextField from 'material-ui/TextField';
-import { fetchComments } from '../actions/commonActions';
-import { changeComplaintStatus } from '../actions/adminActions';
-import Comment from './Comment';
-import {axios} from 'axios' ;
+import {
+  Button,
+  Card,
+  CardBody,
+  CardImage,
+  CardTitle,
+  CardText
+} from 'mdbreact';
+import { fetchComments } from '../actions/adminActions';
+//import { postComment } from '../actions/userActions' ;
+import '../index.css';
+import Modal from './AdminModal.js';
+import Editmodal from './AdminEditModal.js';
 
-const styleForDiv = {
-  display: 'inline-block',
-  padding: '20px'
-};
-
-
-
-class AdminComplaint extends React.Component {
-  
-
+class UserComplaint extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
-    
-    
-    this.handleSelectStatus = this.handleSelectStatus.bind(this);
-    
-    this.setup();
-    this.state = { open: false , btnTitle: "Change Status" };
-  }
-
-  handleClick(isExpanded) {
-    if (isExpanded) this.props.dispatch(fetchComments(this.complaint.id));
-  }
-  handleSelectStatus(status){
-    this.setState({btnTitle: status.name});
-    console.log(this.complaint.id,status.id);
-    this.props.dispatch(changeComplaintStatus(this.complaint.id,status.id));
-    
-  }
-  handleSubmitComment() {
-    console.log(this.refs.newComment.getValue());
-    console.log(this.complaint.id);
-    axios
-        .post('/api/v1/comments/',{
-          complaint_id : this.complaint.id,
-          comment : this.refs.newComment.getValue()
-        })
-        .then(response => {
-          console.log(response.data);
-          this.props.dispatch(fetchComments(this.complaint.id)); 
-        })
-        .catch(err => {
-          console.log(err.data);
-        });
-
-
-    var addCommentdata = this.refs.newComment.getValue();
-    var addCommentId = 'someOne';
-    var addComment = {
-      id: 12,
-      complaint_id: this.complaint.id,
-      user_id: addCommentId,
-      comment: addCommentdata
-    };
-    if (addComment.comment !== '') this.complaint.comments.push(addComment);
-    this.setState({ open: !this.state.open });
-  }
-
-  setup(){
+    this.closeModal = this.closeModal.bind(this);
+    this.closeModalForEdit = this.closeModalForEdit.bind(this);
+    this.handleClickForEdit = this.handleClickForEdit.bind(this);
+    this.handledeletecomplaint = this.handledeletecomplaint.bind(this);
     this.complaint = this.props.data;
-    this.statuses=this.props.statuses;
+    this.state = { open: false, openModal: false, openModalForEdit: false };
   }
 
+  handleClick() {
+    this.props.dispatch(fetchComments(this.complaint.id));
+    this.setState({ openModal: true });
+  }
+  handledeletecomplaint() {
+    //TODO to give request to backend to delete the existing complaint;
+  }
+  closeModal() {
+    this.setState({ openModal: false });
+  }
+  handleClickForEdit() {
+    this.setState({ openModalForEdit: true });
+  }
+  closeModalForEdit() {
+    this.setState({ openModalForEdit: false });
+  }
   componentWillReceiveProps() {
-    this.setup();
+    this.complaint = this.props.data;
   }
-  componentWillMount(){
-    this.setup();
-  }
-
   render() {
+    this.complaint = this.props.data;
     const complaint = this.complaint;
-    const statuses = this.statuses;
-    if(!complaint || statuses.length ===0){
-      return null;
+    if (!complaint) {
+      return <div>Loading..</div>;
     }
-    
-    
-    const mappedComments = complaint.comments.map((comment, i, arr) => (
-      <Comment key={comment.id} data={comment} />
-    ));
-    
-   
+
     return (
-      <Card onExpandChange={isExpanded => this.handleClick(isExpanded)}>
-        <CardHeader
-          
-          
-          actAsExpander={true}
-          showExpandableButton={true}
-        />
-        <CardTitle title={<p>{complaint.title}</p>}
-          subtitle={
-            <div>
-              <p>{complaint.created_at}</p>
-              <p>
-                {complaint.status.name} || {complaint.status.message}
-              </p>
-            </div>
-          }
+      <div className="complaintCard">
+        <Card>
+          <CardImage
+            className="img-fluid image"
+             src={"/images/"+complaint.image_path}
           />
+          <CardBody>
+            <CardTitle>{complaint.title}</CardTitle>
+            <CardText>
+              {complaint.status.name} || {complaint.status.message}
+            </CardText>
+            <Button
+              onClick={this.handleClick}
+              color="info"
+              style={{ margin: '1%' }}
+            >
+              Show Details
+            </Button>
+            <Button
+              onClick={this.handleClickForEdit}
+              color="warning"
+              style={{ margin: '1%' }}
+            >
+              Edit Complaint
+            </Button>
+            <Button
+              onClick={this.handledeletecomplaint}
+              color="danger"
+              style={{ margin: '1%' }}
+            >
+              Delete Complaint
+            </Button>
+            <Modal
+              showmodal={this.state.openModal}
+              closemodal={this.closeModal}
+              complaint={this.complaint}
+            />
+            <Editmodal
+              showmodal={this.state.openModalForEdit}
+              closemodal={this.closeModalForEdit}
+              complaint={this.complaint}     
+            />
+          </CardBody>
+        </Card>
+        <br />
         <Divider />
-
-        <CardText  expandable={true}>
-          <div>
-            <div>
-              <p>{complaint.description}</p>
-            </div>
-            <br />
-            <DropdownButton
-                bsStyle={'primary'}
-                title={this.state.btnTitle}
-                id={'dropdown-basic-1'}
-                >
-                {statuses.map(status=> <MenuItem key={status.id} onSelect={()=> this.handleSelectStatus(status)}>{status.name}</MenuItem>)}
-            </DropdownButton>
-            <br /> 
-            <List ref="commentAdd">{mappedComments}</List>
-            <div>
-              <TextField hintText="Add Comment" ref="newComment" />
-              <div
-                onClick={this.handleSubmitComment.bind(this)}
-                style={styleForDiv}
-              >
-                <FontIcon className="material-icons">send</FontIcon>
-              </div>
-            </div>
-          </div>
-        </CardText>
-      </Card> 
-    
-
+      </div>
     );
   }
 }
 
-export default connect()(AdminComplaint);
-
+export default connect()(UserComplaint);

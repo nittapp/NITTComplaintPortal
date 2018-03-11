@@ -60,7 +60,12 @@ class ComplaintComment extends Model
      * @param  [int] $complaintID 
      * @return  [collection] App::ComplaintComment
      */
-    static public function getComplaintComments($complaintID){
+    static public function getComplaintComments(Request $request, $complaintID){
+
+        $userID = User::getUserID($request);
+        if(! $userID)
+             throw new AppCustomHttpException("user not logged in", 401);
+        
         $complaint = Complaint::find($complaintID);
         if(empty($complaint))
             throw new AppCustomHttpException("Complaint not found", 404);
@@ -68,8 +73,8 @@ class ComplaintComment extends Model
         if(empty(ComplaintComment::where('complaint_id',$complaintID)->first()))
             throw new AppCustomHttpException("comments not found", 404);
 
-        if(($complaint->user()->value('id') != User::getUserID() ||
-           ! $complaint->is_public) && ! User::isUserAdmin())
+        if(($complaint->user()->value('id') != User::getUserID($request) ||
+           ! $complaint->is_public) && ! User::isUserAdmin($request))
 
             throw new AppCustomHttpException("action not allowed", 403);
 
@@ -89,16 +94,20 @@ class ComplaintComment extends Model
      * @param  [string] $comment
      */
 
-    static public function createComplaintComments($complaintID, $comment){
+    static public function createComplaintComments(Request $request, $complaintID, $comment){
+        $userID = User::getUserID($request);
+        if(! $userID)
+             throw new AppCustomHttpException("user not logged in", 401);
+
         if(empty(Complaint::find($complaintID)))
             throw new AppCustomHttpException("Complaint not found", 404);
 
-        if(Complaint::find($complaintID)->user()->value('id') != User::getUserID() &&
-           ! User::isUserAdmin())
+        if(Complaint::find($complaintID)->user()->value('id') != User::getUserID($request) &&
+           ! User::isUserAdmin($request))
             throw new AppCustomHttpException("action not allowed", 403);
 
         $complaintCommentModel = new ComplaintComment;
-        $complaintCommentModel->user_id = User::getUserID();
+        $complaintCommentModel->user_id = User::getUserID($request);
         $complaintCommentModel->comment = $comment;
 
         $complaint = Complaint::find($complaintID);
@@ -111,13 +120,17 @@ class ComplaintComment extends Model
     * @param  [string] $comment
     **/
 
-    static public function editComplaintComments($complaintCommentID, $comment){
+    static public function editComplaintComments(Request $request, $complaintCommentID, $comment){
+
+        $userID = User::getUserID($request);
+        if(! $userID)
+             throw new AppCustomHttpException("user not logged in", 401);
 
         $complaintComment = ComplaintComment::find($complaintCommentID);
         if(empty($complaintComment))
             throw new AppCustomHttpException("Comment not found", 404);
 
-        if($complaintComment->user_id != User::getUserID() && ! User::isUserAdmin())
+        if($complaintComment->user_id != User::getUserID($request) && ! User::isUserAdmin($request))
             throw new AppCustomHttpException("action not allowed", 403);
          
         $complaintComment->comment = $comment;
@@ -130,12 +143,16 @@ class ComplaintComment extends Model
     *@param [int] $complaintID
     **/
 
-    static public function deleteComplaintComments($complaintCommentID){
+    static public function deleteComplaintComments(Request $request, $complaintCommentID){
+        $userID = User::getUserID($request);
+        if(! $userID)
+             throw new AppCustomHttpException("user not logged in", 401);
+         
         $complaintComment = ComplaintComment::find($complaintCommentID);
         if(empty($complaintComment))
             throw new AppCustomHttpException("Comment not found", 404);
 
-        if($complaintComment->user_id != User::getUserID() && ! User::isUserAdmin())
+        if($complaintComment->user_id != User::getUserID($request) && ! User::isUserAdmin($request))
             throw new AppCustomHttpException("Action not allowed", 403);
         $complaintComment->delete();
     }

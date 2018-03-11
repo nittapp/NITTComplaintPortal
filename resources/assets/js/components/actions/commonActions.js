@@ -5,7 +5,7 @@ export function fetchPublicComplaints() {
     dispatch({ type: 'FETCH_PUBLIC_COMPLAINTS' });
 
     axios
-      .get('/api/v1/complaints')
+      .get('/api/v1/complaints/public')
       .then(response => {
         dispatch({
           type: 'FETCH_PUBLIC_COMPLAINTS_FULFILLED',
@@ -17,6 +17,7 @@ export function fetchPublicComplaints() {
       });
   };
 }
+
 
 export function fetchComments(id) {
   return dispatch => {

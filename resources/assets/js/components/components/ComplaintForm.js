@@ -1,8 +1,15 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
-import { Form, FormGroup,ControlLabel,FormControl } from 'react-bootstrap';
-import axios from 'axios';
-export default class ComplaintForm extends React.Component {
+import {
+  Button,
+  Col,
+  Form,
+  FormGroup,
+  ControlLabel,
+  FormControl
+} from 'react-bootstrap';
+import { postComplaint } from '../actions/userActions';
+import { connect } from 'react-redux';
+class ComplaintForm extends React.Component {
   constructor(props, context) {
     super(props, context);
 
@@ -10,29 +17,20 @@ export default class ComplaintForm extends React.Component {
     this.handleChangeDescription = this.handleChangeDescription.bind(this);
     this.state = {
       description: '',
-      title: ''
+      title: '',
+      image: ''
     };
-    this.onSubmit=this.onSubmit.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  onSubmit(e){
+
+  onSubmit(e) {
     e.preventDefault();
-    
-    axios.post('/api/v1/complaints', {
-        title: this.state.title,
-        description: this.state.description,
-        image_url:'nil'
-      })
-      .then(function (response) {
-        console.log(response);
-        alert("Form submitted");
-      })
-      .catch(function (error) {
-        console.log(error);
-        alert("Check your internet connection");
-      });
+    //TODO : Check image upload
+    this.props.dispatch(
+      postComplaint(this.state.title, this.state.description, this.state.image)
+    );
   }
-
 
   handleChangeTitle(e) {
     this.setState({ title: e.target.value });
@@ -40,31 +38,55 @@ export default class ComplaintForm extends React.Component {
   handleChangeDescription(e) {
     this.setState({ description: e.target.value });
   }
-
+  handleChangeImage(e) {
+    this.setState({ image: e.target.files[0] });
+  }
   render() {
+    if(this.props.complaintSuccess===1){
+      alert("Complaint submitted successfully");
+    }
+    else if(this.props.complaintSuccess===0){
+      alert("Check your internet connection");
+    }
     return (
-      <Form onSubmit={this.onSubmit}>
-        <FormGroup
-          controlId="formBasicText"
-        >
-          <ControlLabel>Title</ControlLabel>
-          <FormControl
-            type="text"
-            value={this.state.title}
-            placeholder="Enter title"
-            onChange={this.handleChangeTitle}
-          />
+      <Col xs={8} xsOffset={2} style={{ paddingTop: '3%' }}>
+        <Form onSubmit={this.onSubmit} >
+          <FormGroup controlId="formBasicText">
+            <ControlLabel>Title</ControlLabel>
+            <FormControl
+              type="text"
+              value={this.state.title}
+              placeholder="Enter title"
+              onChange={this.handleChangeTitle}
+            />
           </FormGroup>
-        <FormGroup controlId="formControlsTextarea">
-          <ControlLabel>Complaint Description</ControlLabel>
-          <FormControl componentClass="textarea" 
-          value={this.state.description}
-           placeholder="Enter the complaint description"
-           onChange={this.handleChangeDescription} />
-        </FormGroup>
-        <Button type="submit" bsStyle="primary">Submit</Button>
-      </Form>
+          <FormGroup controlId="formControlsTextarea">
+            <ControlLabel>Complaint Description</ControlLabel>
+            <FormControl
+              componentClass="textarea"
+              value={this.state.description}
+              placeholder="Enter the complaint description"
+              onChange={this.handleChangeDescription}
+            />
+          </FormGroup>
+          <ControlLabel>Choose image</ControlLabel>
+          <FormControl
+            type="file"
+            placeholder="Choose image"
+            onChange={(e)=>this.handleChangeImage(e)}
+            style={{ paddingBottom: '5%' }}
+          />
+          <Button type="submit" bsStyle="primary">
+            Submit
+          </Button>
+        </Form>
+      </Col>
     );
   }
 }
-
+function mapStateToProps(state) {
+  return {
+    complaintSuccess: state.complaints.complaintSuccess
+  };
+}
+export default connect(mapStateToProps)(ComplaintForm);

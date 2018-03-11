@@ -3,3 +3,25 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+.image {
+  width: 40%;
+}
+.complaintCard {
+  text-align: center;
+}
+.Modalbutton {
+  display: inline-block;
+  padding: 20px;
+}
+@media screen and (max-width: 388px) {
+  .Modalbutton {
+    position: relative;
+    left: 80% !important;
+  }
+}
+@media screen and (max-width: 767px) {
+  .Modalimage {
+    width: 95%;
+    height: 95%;
+  }
+}

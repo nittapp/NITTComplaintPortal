@@ -10,7 +10,7 @@ class ComplaintCommentController extends Controller
 {
     public function getComments(Request $request){
         try{
-            $response = ComplaintComment::getComplaintComments($request['complaint_id']);
+            $response = ComplaintComment::getComplaintComments($request, $request['complaint_id']);
             return response()->json([
                                     "message" => "comments available",
                                     "data" => $response
@@ -23,7 +23,7 @@ class ComplaintCommentController extends Controller
         }
         catch (Exception $e) {
             return response()->json([
-                                    "message" => "internal server error",
+                                    "message" => $e->getMessage(),
                                     ],500);
         }
     }
@@ -31,7 +31,7 @@ class ComplaintCommentController extends Controller
     public function createComments(Request $request){
         try {
             $response = ComplaintComment::validateRequest($request);
-            $response = ComplaintComment::createComplaintComments($request['complaint_id'],
+            $response = ComplaintComment::createComplaintComments($request, $request['complaint_id'],
                                                                   $request['comment']);
 
             return response()->json([
@@ -53,7 +53,7 @@ class ComplaintCommentController extends Controller
     public function editComments(Request $request){
         try{
             $response = ComplaintComment::validateRequest($request);
-            $response = ComplaintComment::editComplaintComments($request['complaint_comment_id'],
+            $response = ComplaintComment::editComplaintComments($request, $request['complaint_comment_id'],
                                                                 $request['comment']
                                                                 );
             return response()->json([
@@ -79,7 +79,7 @@ class ComplaintCommentController extends Controller
      */
     public function deleteComments(Request $request){
         try {
-            $response = ComplaintComment::deleteComplaintComments($request['complaint_comment_id']);
+            $response = ComplaintComment::deleteComplaintComments($request, $request['complaint_comment_id']);
             return response()->json([
                                     "message" => "comment deleted successfully"
                                     ],200);         

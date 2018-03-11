@@ -3,6 +3,11 @@ import { Switch, Route } from 'react-router-dom';
 import { ListItem } from 'material-ui';
 import AdminDashboard from './AdminDashboard';
 import UserDashboard from './UserDashboard';
+import axios from 'axios';
+
+axios.defaults.headers.common['X_NITT_APP_USERNAME'] = '5';
+axios.defaults.headers.common['X_NITT_APP_NAME'] = 'mess';
+axios.defaults.headers.common['X_NITT_APP_IS_ADMIN'] = 'true';
 
 class App extends Component {
   componentDidMount() {
