@@ -54,4 +54,4 @@ services:
     container_name: complaints-pma
     
 volumes:
-  dbdata:
+    dbdata:
