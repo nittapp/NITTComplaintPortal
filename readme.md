@@ -8,7 +8,7 @@ Code for the complaint portal service in the NITT app.
  4. Create a folder called `logs`, and create the files : nginx-error.log and nginx-access.log
  5. Run `docker-compose up` from inside the project directory. The app will now be available from http://0.0.0.0:8080
  6. To add datatables, run  `docker exec complaints-application php artisan migrate`
- 7. Run this command for testing only, `docker exec complaints-application php artisan db:seed`
+ 7. Run this command for setting up defaults, `docker exec complaints-application php artisan db:seed`
  
 # Complaints
 

@@ -5,7 +5,7 @@ use App\ComplaintStatus;
 
 $factory->define(ComplaintStatus::class, function (Faker $faker) {
     return [
-        "name" => $faker->word,
-        "message" => $faker->text(20),
+        "name" => "complaint submitted",
+        "message" => "complaint in progress",
     ];
 });

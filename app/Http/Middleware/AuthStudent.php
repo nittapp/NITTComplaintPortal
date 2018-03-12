@@ -9,9 +9,9 @@ class AuthStudent
 {
     // list of expected headers
     private $expectedHeaders = [
-        "X_NITT_APP_USERNAME",
-        "X_NITT_APP_NAME",
-        "X_NITT_APP_IS_ADMIN",
+        "X-NITT-APP-USERNAME",
+        "X-NITT-APP-NAME",
+        "X-NITT-APP-IS-ADMIN",
     ];
 
     /**
@@ -20,7 +20,6 @@ class AuthStudent
      * @return bool                 true, if all the expected header are set. false, otherwise
      */
     private function expectedHeadersSet($request) {
-        return true;
         foreach ($this->expectedHeaders as $header) {
             if (!$request->hasHeader($header)) {
                 return false;
@@ -45,9 +44,19 @@ class AuthStudent
             ], 403);
         }
 
-        $response = $next($request);
-        
-        return $response->cookie('isLoggedIn', 1, 60, null, null, false, false)
-                        ->cookie('username',  $request->header('X_NITT_APP_USERNAME'), 60, null, null, false, false);
+        try {
+            if(!User::where('username',$request->header('X-NITT-APP-USERNAME'))->exists())
+                User::create($request->header('X-NITT-APP-USERNAME'));
+            $response = $next($request);
+            
+            return $response->cookie('isLoggedIn', 1, 60, null, null, false, false)
+                            ->cookie('username',  $request->header('X-NITT-APP-USERNAME'), 60, null, null, false, false);
+
+        } catch (Exception $e) {
+            return response()->json([
+                "message"   => $e->getMessage(),
+            ], 500);
+        }
+
     }
 }

@@ -220,7 +220,6 @@ class Complaint extends Model
       //  var_dump("The description"); 
         //var_dump("description");  
         $userID = User::getUserID($request);
-        
         if( $request->hasFile('image') )   
             if(!in_array($request->image->extension(), array('jpg','jpeg','png')))
                 throw new AppCustomHttpException("Only jpeg images allowed",422);

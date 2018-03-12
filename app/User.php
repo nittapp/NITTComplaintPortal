@@ -7,6 +7,8 @@ use App\Exceptions\AppCustomHttpException;
 use Validator;
 use Exception;
 use Illuminate\Http\Request;
+use App\Hostel;
+use App\AuthorizationLevel;
 use App\Complaint;
 use App\ComplaintComment;
 use App\ComplaintReply;
@@ -64,11 +66,12 @@ class User extends Authenticatable
      *  @return [int] user_id
      */
     static public function getUserID($request){
-       return $request->header('X_NITT_APP_USERNAME');
+       $user = User::where('username',$request->header('X-NITT-APP-USERNAME'))->first();
+       return $user->id;
     }
 
     static public function isUserAdmin($request){
-        return $request->header('X_NITT_APP_IS_ADMIN') == 'true';
+        return $request->header('X-NITT-APP-IS-ADMIN') == 'true';
     }
 
     static public function primaryAuthId(){
@@ -77,6 +80,12 @@ class User extends Authenticatable
 
     static public function adminAuthId(){
         return 2;
+    }
+
+    static public function create($rollno){
+        $user = new User();
+        $user->username = $rollno;
+        $user->save();
     }
 }
 

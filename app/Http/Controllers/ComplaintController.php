@@ -48,11 +48,9 @@ class ComplaintController extends Controller
     */
     public function createComplaints(Request $request){
       try  {
-           //var_dump($request["title"]);
-            
-           $response = Complaint::validateRequest($request);
-           $response = Complaint::createComplaints($request);
-           return response()->json(["message" => "complaint sucessfully created"], 200);  
+            $response = Complaint::validateRequest($request);
+            $response = Complaint::createComplaints($request);
+            return response()->json(["message" => "complaint sucessfully created"], 200);  
             } 
       catch (AppCustomHttpException $e) {
             return response()->json([
