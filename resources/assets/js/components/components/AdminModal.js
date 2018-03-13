@@ -53,6 +53,14 @@ class AdminModal extends React.Component {
       this.props.complaint.comments.push(addComment);
     this.setState({ newcomment: '' });
   }
+
+complaintImage(image_path){
+    if(image_path.len)
+        return (<CardImage
+            className="img-fluid Modalimage"
+            src={"/images/"+image_path}
+          />)
+  }
   render() {
     console.log(this.props.complaint.comments);
     const mappedComments = this.props.complaint.comments.map(
@@ -65,13 +73,7 @@ class AdminModal extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <br />
-          {/* TODO - change the src of the picture for each complaint based on complaint */}
-          object.
-          <CardImage
-            className="img-fluid Modalimage"
-             src={"/images/"+this.props.complaint.image_path}
-          />
-          <br />
+          {this.complaintImage(this.props.complaint.image_path)}
           <p>{this.props.complaint.description}</p>
           <br />
           <List>{mappedComments}</List>

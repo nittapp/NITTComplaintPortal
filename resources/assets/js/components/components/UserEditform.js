@@ -50,7 +50,6 @@ class UserEditForm extends React.Component {
           <Modal.Title>Edit Complaint </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Col xs={12} style={{ paddingTop: '3%' }}>
             <Form onSubmit={this.onSubmit}>
               <FormGroup controlId="formBasicText">
                 <ControlLabel>Title</ControlLabel>
@@ -82,7 +81,6 @@ class UserEditForm extends React.Component {
                 Submit
               </Button>
             </Form>
-          </Col>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.props.closemodal}>Close</Button>

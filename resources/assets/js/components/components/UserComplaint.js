@@ -42,9 +42,19 @@ class UserComplaint extends React.Component {
   componentWillReceiveProps() {
     this.complaint = this.props.data;
   }
+
+  complaintImage(image_path){
+    if(image_path)
+        return (<CardImage
+            className="img-fluid image"
+            src={"/images/"+image_path}
+          />)
+  }
+  
   render() {
     this.complaint = this.props.data;
     const complaint = this.complaint;
+
     if (!complaint) {
       return <div>Loading..</div>;
     }
@@ -52,10 +62,7 @@ class UserComplaint extends React.Component {
     return (
       <div className="complaintCard">
         <Card>
-          <CardImage
-            className="img-fluid image"
-            src={"/images/"+complaint.image_path}
-          />
+            {this.complaintImage(complaint.image_path)}
           <CardBody>
             <CardTitle>{complaint.title}</CardTitle>
             <CardText>

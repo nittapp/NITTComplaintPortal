@@ -1,10 +1,13 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
-import { Button, Col } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import { Form, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import {updateComplaint } from '../actions/userActions';
-import {toggleComplaintView} from  '../actions/adminActions';
+import Toggle from 'material-ui/Toggle';
+import { updateComplaint } from '../actions/userActions';
+import { toggleComplaintView, changeComplaintStatus } from '../actions/adminActions';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 class AdminEditModal extends React.Component {
   constructor(props, context) {
     super(props);
@@ -12,13 +15,16 @@ class AdminEditModal extends React.Component {
     this.handledescription = this.handledescription.bind(this);
 
     this.handleChangeImage = this.handleChangeImage.bind(this);
-    this.makeComplaintPublic=this.makeComplaintPublic.bind(this);
+    this.makeComplaintPublic = this.makeComplaintPublic.bind(this);
+    this.handleDropDown = this.handleDropDown.bind(this);
     this.state = {
       title: this.props.complaint.title,
       description: this.props.complaint.description,
       // TODO - the state for image will be whatever the complaint object has based on backend
       image: '',
-      publicToggleStatus: (this.props.complaint.is_public)? "Hide":"Make public"
+      //publicToggleStatus: (this.props.complaint.is_public)? "Hide":"Make public"
+      publicToggleStatus: this.props.complaint.is_public,
+      status_id: this.props.complaint.status_id
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -32,17 +38,34 @@ class AdminEditModal extends React.Component {
   handleChangeImage(e) {
     this.setState({ image: e.target.files[0] });
   }
-  makeComplaintPublic(){
+  makeComplaintPublic() {
     this.props.dispatch(toggleComplaintView(this.props.complaint.id));
-    if(this.props.publicToggle)
-        this.setState({publicToggleStatus: (this.props.complaint.is_public)? "Hide":"Make public"});
+    if (this.props.publicToggle)
+      this.setState({ publicToggleStatus: !this.props.publicToggle });
   }
   onSubmit() {
     //TODO add backend to edit complaint by admin.
     this.props.dispatch(
-      updateComplaint(this.props.complaint.id,this.state.title, this.state.description, this.state.image)
+      updateComplaint(
+        this.props.complaint.id,
+        this.state.title,
+        this.state.description,
+        this.state.image
+      )
     );
   }
+  
+  handleDropDown(e, index, value) {
+    //some one fix this 
+    this.setState({status_id: value+1});
+    this.props.dispatch(
+          changeComplaintStatus(
+        this.props.complaint.id,
+        this.state.status_id-1
+      )
+    );    
+  }
+
   render() {
     // if(this.props.complaintSuccessEdit===1){
     //     alert("Complaint edited successfully");
@@ -56,8 +79,10 @@ class AdminEditModal extends React.Component {
     // }
     // else{
     //     alert("Check your internet connection");
-    // }    
-
+    // }
+    const mappedStatuses = this.props.statuses.map((status, i, arr) => (
+      <MenuItem value={i} key={i} primaryText={status.name} />
+    ));
     return (
       <Modal
         show={this.props.showmodal}
@@ -69,7 +94,16 @@ class AdminEditModal extends React.Component {
           <Modal.Title>Edit Complaint </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Col xs={12} style={{ paddingTop: '3%' }}>
+            <Toggle
+              label="Make Complaint Public"
+              labelPosition="right"
+              defaultToggled={this.state.publicToggleStatus}
+              onClick={this.makeComplaintPublic}
+            />
+            <br/><b>Change Status</b><br/>
+          <DropDownMenu value={this.state.status_id-1} onChange={this.handleDropDown}>
+            {mappedStatuses}
+          </DropDownMenu>
             <Form onSubmit={this.onSubmit}>
               <FormGroup controlId="formBasicText">
                 <ControlLabel>Title</ControlLabel>
@@ -94,18 +128,14 @@ class AdminEditModal extends React.Component {
                 type="file"
                 value={this.state.image}
                 placeholder="Choose image"
-                onChange={(e)=>this.handleChangeImage(e)}
-                style={{ paddingBottom: '5%' }}
+                onChange={e => this.handleChangeImage(e)}
               />
+              <br />
               <Button type="submit" bsStyle="primary">
                 Submit
               </Button>
             </Form>
-            <Button bsStyle="info" onClick={this.makeComplaintPublic}>
-                {this.state.publicToggleStatus}
-            </Button>
-
-          </Col>
+            <br />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.props.closemodal}>Close</Button>

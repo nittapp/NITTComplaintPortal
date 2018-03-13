@@ -20,9 +20,9 @@ class CreateUsersTable extends Migration
             $table->integer('room_no')->default(0);
             $table->integer('auth_user_id')->unsigned()->default(1);
             $table->integer('hostel_id')->unsigned()->default(1);
-            $table->string('phone_contact',10)->unique()->default('NA');
-            $table->string('whatsapp_contact',10)->unique()->default('NA');
-            $table->string('email')->unique()->default('NA');
+            $table->string('phone_contact',10)->default('NA');
+            $table->string('whatsapp_contact',10)->default('NA');
+            $table->string('email')->default('NA');
             $table->string('fcm_id')->default('NA');
             $table->timestamps();
 

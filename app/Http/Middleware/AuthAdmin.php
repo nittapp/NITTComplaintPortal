@@ -9,9 +9,9 @@ class AuthAdmin
 {
     // list of expected headers
     private $expectedHeaders = [
-        "X_NITT_APP_USERNAME",
-        "X_NITT_APP_NAME",
-        "X_NITT_APP_IS_ADMIN",
+        "X-NITT-APP-USERNAME",
+        "X-NITT-APP-NAME",
+        "X-NITT-APP-IS-ADMIN",
     ];
 
     /**
@@ -56,14 +56,14 @@ class AuthAdmin
         }
 
         // return if type of X_NITT_APP_IS_ADMIN is not bool
-        if (! $this->validateAdminHeader($request->header('X_NITT_APP_IS_ADMIN'))) {
+        if (! $this->validateAdminHeader($request->header('X-NITT-APP-IS-ADMIN'))) {
             return response()->json([
                 "message"   => "Invalid header type",
             ], 403);
         }
 
         // return if user is not admin
-        if ($request->header('X_NITT_APP_IS_ADMIN') != 'true') {
+        if ($request->header('X-NITT-APP-IS-ADMIN') != 'true') {
             return response()->json([
                 "message"   => "User not admin",
             ], 401);
@@ -72,6 +72,6 @@ class AuthAdmin
         $response = $next($request);
 
         return $response->cookie('isLoggedIn', 1, 60, null, null, false, false)
-                        ->cookie('username', $request->header('X_NITT_APP_USERNAME'), 60, null, null, false, false);
+                        ->cookie('username', $request->header('X-NITT-APP-USERNAME'), 60, null, null, false, false);
     }
 }

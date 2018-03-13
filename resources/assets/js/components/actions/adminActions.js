@@ -24,10 +24,7 @@ export function changeComplaintStatus(complaint_id, status_id) {
     dispatch({ type: 'CHANGE_COMPLAINT_STATUS' });
 
     axios
-      .put('/api/v1/admin/complaints/status', {
-        complaint_id: complaint_id,
-        status_id: status_id
-      })
+      .put('/api/v1/admin/complaints/'+complaint_id+'/status/'+status_id)
       .then(response => {
         console.log(response.data);
         dispatch({

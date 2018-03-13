@@ -116,6 +116,7 @@ Parameter | Default | Description
 --------- | ------- | -----------
 start_date | none | complaints with created date with this date as max cap.
 end_date | none | complaints with created date with this date as min cap.
+page | none | 1 - fetches first 15 complaints, 2 - next 15, 3 ...
 
 <aside class="success">
 Remember — the user should be logged in to access this route

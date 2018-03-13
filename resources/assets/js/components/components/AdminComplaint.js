@@ -23,7 +23,7 @@ class UserComplaint extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.closeModalForEdit = this.closeModalForEdit.bind(this);
     this.handleClickForEdit = this.handleClickForEdit.bind(this);
-    this.handledeletecomplaint = this.handledeletecomplaint.bind(this);
+    this.handleDeleteComplaint = this.handleDeleteComplaint.bind(this);
     this.complaint = this.props.data;
     this.state = { open: false, openModal: false, openModalForEdit: false };
   }
@@ -32,8 +32,8 @@ class UserComplaint extends React.Component {
     this.props.dispatch(fetchComments(this.complaint.id));
     this.setState({ openModal: true });
   }
-  handledeletecomplaint() {
-    //TODO to give request to backend to delete the existing complaint;
+  handleDeleteComplaint() {
+    
   }
   closeModal() {
     this.setState({ openModal: false });
@@ -47,6 +47,13 @@ class UserComplaint extends React.Component {
   componentWillReceiveProps() {
     this.complaint = this.props.data;
   }
+  complaintImage(image_path){
+    if(image_path.len)
+        return (<CardImage
+            className="img-fluid image"
+            src={"/images/"+image_path}
+          />)
+  }
   render() {
     this.complaint = this.props.data;
     const complaint = this.complaint;
@@ -57,10 +64,7 @@ class UserComplaint extends React.Component {
     return (
       <div className="complaintCard">
         <Card>
-          <CardImage
-            className="img-fluid image"
-             src={"/images/"+complaint.image_path}
-          />
+            {this.complaintImage(complaint.image_path)}
           <CardBody>
             <CardTitle>{complaint.title}</CardTitle>
             <CardText>
@@ -81,7 +85,7 @@ class UserComplaint extends React.Component {
               Edit Complaint
             </Button>
             <Button
-              onClick={this.handledeletecomplaint}
+              onClick={this.handleDeleteComplaint}
               color="danger"
               style={{ margin: '1%' }}
             >
@@ -95,7 +99,8 @@ class UserComplaint extends React.Component {
             <Editmodal
               showmodal={this.state.openModalForEdit}
               closemodal={this.closeModalForEdit}
-              complaint={this.complaint}     
+              complaint={this.complaint}
+              statuses={this.props.statuses}
             />
           </CardBody>
         </Card>

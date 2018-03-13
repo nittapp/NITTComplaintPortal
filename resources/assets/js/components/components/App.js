@@ -5,9 +5,9 @@ import AdminDashboard from './AdminDashboard';
 import UserDashboard from './UserDashboard';
 import axios from 'axios';
 
-axios.defaults.headers.common['X_NITT_APP_USERNAME'] = '5';
-axios.defaults.headers.common['X_NITT_APP_NAME'] = 'mess';
-axios.defaults.headers.common['X_NITT_APP_IS_ADMIN'] = 'true';
+axios.defaults.headers.common['X-NITT-APP-USERNAME'] = '107114029';
+axios.defaults.headers.common['X-NITT-APP-NAME'] = 'complaints';
+axios.defaults.headers.common['X-NITT-APP-IS-ADMIN'] = 'true';
 
 class App extends Component {
   componentDidMount() {

@@ -145,15 +145,19 @@ class ComplaintComment extends Model
 
     static public function deleteComplaintComments(Request $request, $complaintCommentID){
         $userID = User::getUserID($request);
-        if(! $userID)
-             throw new AppCustomHttpException("user not logged in", 401);
+        $isUserAdmin = User::isUserAdmin($request);
+     
+        if(! $userID )
+             throw new AppCustomHttpException("user not logged in ", 401);
          
         $complaintComment = ComplaintComment::find($complaintCommentID);
         if(empty($complaintComment))
             throw new AppCustomHttpException("Comment not found", 404);
 
-        if($complaintComment->user_id != User::getUserID($request) && ! User::isUserAdmin($request))
+        if($complaintComment->user_id != $userID && ! $isUserAdmin)
             throw new AppCustomHttpException("Action not allowed", 403);
+
         $complaintComment->delete();
     }
+
 }

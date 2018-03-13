@@ -35,7 +35,9 @@ class UserModal extends React.Component {
   }
   handleSubmitComment() {
     console.log(this.props.complaint);
-    this.props.dispatch(postComment(this.props.complaint.id, this.state.newcomment));
+    this.props.dispatch(
+      postComment(this.props.complaint.id, this.state.newcomment)
+    );
     //TODO:Change user_id to something received from server
     var addCommentdata = this.state.newcomment;
     var addCommentId = getCookie('username');
@@ -46,8 +48,17 @@ class UserModal extends React.Component {
     };
     if (addComment.comment !== '')
       this.props.complaint.comments.push(addComment);
-    this.setState({newcomment:''});
+    this.setState({ newcomment: '' });
   }
+
+  complaintImage(image_path){
+    if(image_path)
+        return (<CardImage
+            className="img-fluid Modalimage"
+            src={"/images/"+image_path}
+          />)
+  }
+
   render() {
     console.log(this.props.complaint.comments);
     const mappedComments = this.props.complaint.comments.map(
@@ -60,12 +71,7 @@ class UserModal extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <br />
-          {/*TODO - change the src of the picture for each complaint based on complaint*/}
-          object.
-          <CardImage
-            className="img-fluid Modalimage"
-             src={"/images/"+this.props.complaint.image_path}
-          />
+              {this.complaintImage(this.props.complaint.image_path)}
           <br />
           <p>{this.props.complaint.description}</p>
           <br />
@@ -91,11 +97,9 @@ class UserModal extends React.Component {
   }
 }
 
-
 function mapStateToProps(state) {
   return {
     commentSuccess: state.complaints.commentSuccess
   };
 }
 export default connect(mapStateToProps)(UserModal);
-

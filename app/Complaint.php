@@ -178,7 +178,7 @@ class Complaint extends Model
             });
         return $complaints->values()->all();
     }
-
+    
     /*
      * This is for the user DELETE route. 
      * By using the complaint id,  
@@ -189,22 +189,30 @@ class Complaint extends Model
     */
    
      static public function deleteComplaints(Request $request, $id){
-        
+               
          $userID = User::getUserID($request);
          $isUserAdmin = User::isUserAdmin($request);
      
-         if(! $userID)
+         if(! $userID )
               throw new AppCustomHttpException("user not logged in", 401);
-         if(! $isUserAdmin)
-              throw new AppCustomHttpException("user not admin", 403);
- 
-         if(!Complaint::where('id',$id)->exists())        
-            //  throw new AppCustomHttpException("complaint not found", 404);
          
-         Complaint::where('id',$id)->delete();
+        $complaint = Complaint::find($id);
+        if(empty($complaint))
+            throw new AppCustomHttpException("Complaint not found", 404);
+
+         $complaintUserID = $complaint->user_id;
+         if(! $isUserAdmin || ($complaintUserID != $userID) )
+              throw new AppCustomHttpException("Access denied", 403);
+         
+         $complaintStatus = $complaint->complaintStatus()->first(); 
+         if(! $complaintStatus->is_deletable && !$isUserAdmin ) 
+              throw new AppCustomHttpException("complaint is in progress", 400);
+                  
+         $complaint->delete();
          $file_url =  (string)$userID.'/'.(string)$id.'.jpeg';
-         Storage::disk('local')->delete($file_url);         
+         Storage::disk('local')->delete($file_url);        
      } 
+    
     /**
      * This is for the user POST route. 
      * By using the complaint description, hostel name, user ID,
@@ -216,14 +224,14 @@ class Complaint extends Model
      * @return 1 for sucessfully created and 0 if not
     */
     static public function createComplaints(Request $request){
-     //   var_dump($request["title"]);
-      //  var_dump("The description"); 
-        //var_dump("description");  
+  
         $userID = User::getUserID($request);
-        if( $request->hasFile('image') )   
+        if( $request->hasFile('image') ){
             if(!in_array($request->image->extension(), array('jpg','jpeg','png')))
                 throw new AppCustomHttpException("Only jpeg images allowed",422);
-    
+            if($request->image>getSize()>500000)
+                throw new AppCustomHttpException("File too large",422);
+        }
         $complaintModel = new Complaint;
         $complaintModel->title = $request['title']; 
         $complaintModel->description = $request['description']; 
@@ -265,9 +273,12 @@ class Complaint extends Model
            ! Status::is_editable($complaint->status_id))
             throw new AppCustomHttpException("Action not allowed",403);
 
-        if( $request->hasFile('image') )   
+        if( $request->hasFile('image') ){
             if(!in_array($request->image->extension(), array('jpg','jpeg','png')))
                 throw new AppCustomHttpException("Only jpeg images allowed",422);
+            if($request->image>getSize()>500000)
+                throw new AppCustomHttpException("File too large",422);
+        }
         
         $complaint->title = $request['title']; 
         $complaint->description = $request['description']; 

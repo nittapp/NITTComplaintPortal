@@ -18,8 +18,8 @@ class AdminDashboard extends React.Component {
     const complaints = this.props.complaints;
     console.log(complaints);
     //REMOVE BELOW COMMENT WHEN ADMIN ACTIONS ARE CHANGED TO 8080
-    //const statuses = this.props.statuses;
-    const statuses = [{ id: 1, name: 'private' }, { id: 2, name: 'public' }];
+    const statuses = this.props.statuses;
+    // const statuses = [{ id: 1, name: 'private' }, { id: 2, name: 'public' }];
 
     console.log(statuses);
     return (

@@ -5,6 +5,14 @@ import Comment from './Comment';
 import { List } from 'material-ui/List';
 import '../index.css';
 export default class UserModal extends React.Component {
+  complaintImage(image_path){
+    if(image_path.len)
+        return (<CardImage
+            className="img-fluid Modalimage"
+            src={"/images/"+image_path}
+          />)
+  }
+
   render() {
     const mappedComments = this.props.complaint.comments.map(
       (comment, i, arr) => <Comment key={comment.id} data={comment} />
@@ -16,12 +24,7 @@ export default class UserModal extends React.Component {
         </Modal.Header>
         <Modal.Body>
           <br />
-          {/* change the src of the picture for each complaint based on complaint */}
-          object.
-          <CardImage
-            className="img-fluid Modalimage"
-             src={"/images/"+this.props.complaint.image_path}
-          />
+            {this.complaintImage(this.props.complaint.image_path)}
           <br />
           <p>{this.props.complaint.description}</p>
           <br />
