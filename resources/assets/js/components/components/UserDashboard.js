@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Tabs, Tab, PageHeader } from 'react-bootstrap';
+import { Tabs, Tab, PageHeader, Button } from 'react-bootstrap';
 
 import UserComplaintList from './UserComplaintList';
 import PublicComplaintList from './PublicComplaintList';
@@ -37,11 +37,19 @@ class UserDashboard extends React.Component {
           Complaints Portal
         </PageHeader>
         <div>
+        <div style={{textAlign: 'center'}}>
+          <a href="/admin">
+            <Button bsStyle="info">
+                Admin Panel      
+            </Button>
+          </a>
+        </div>
           <Tabs
             onChange={this.handleChange}
             value={this.state.slideIndex}
             id="myTab"
           >
+
             <Tab title="Public Complaints" eventKey={0} >
               <div >
                 <PublicComplaintList data={publicComplaints} />
