@@ -24,19 +24,19 @@ services:
       context: ./
       dockerfile: dockerfiles/web.dockerfile
     volumes:
-        - ./logs/nginx-error.log:/var/log/nginx/error.log
-        - ./logs/nginx-access.log:/var/log/nginx/access.log
+        - ./logs:/var/log/nginx
         - ./public:/var/www/public       
         - ./default.conf:/etc/nginx/sites-available/default
         - ./default.conf:/etc/nginx/sites-enabled/default
     ports:
-        - 8080:80
+        - 3010:80
     container_name: nginx-server
 
   db:
     image: mysql:5.6
     volumes:
       - ./dbdata:/var/lib/mysql
+    env_file: '.env.prod'
     environment:
       - "MYSQL_DATABASE=homestead"
       - "MYSQL_USER=homestead"
@@ -50,8 +50,6 @@ services:
     links:
         - db
     ports:
-        - "3000:80"
+        - "3011:80"
     container_name: complaints-pma
-    
-volumes:
-    dbdata:
+

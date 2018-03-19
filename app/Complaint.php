@@ -229,7 +229,7 @@ class Complaint extends Model
         if( $request->hasFile('image') ){
             if(!in_array($request->image->extension(), array('jpg','jpeg','png')))
                 throw new AppCustomHttpException("Only jpeg images allowed",422);
-            if($request->image>getSize()>500000)
+            if($request->image->getSize()>500000)
                 throw new AppCustomHttpException("File too large",422);
         }
         $complaintModel = new Complaint;
@@ -276,7 +276,7 @@ class Complaint extends Model
         if( $request->hasFile('image') ){
             if(!in_array($request->image->extension(), array('jpg','jpeg','png')))
                 throw new AppCustomHttpException("Only jpeg images allowed",422);
-            if($request->image>getSize()>500000)
+            if($request->image->getSize()>500000)
                 throw new AppCustomHttpException("File too large",422);
         }
         

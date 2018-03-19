@@ -17,7 +17,7 @@
       You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
-    <script src="{{asset('js/app.js')}}" ></script>
+    <script src="/js/app.js" ></script>
     <script type="text/javascript">
         function getCookie(name) {
           var value = "; " + document.cookie;
